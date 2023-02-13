@@ -1,0 +1,34 @@
+Application should have something line
+/link
+and it should redirect to longer url
+
+There should be some system for counting how many times some route has been called, and take a note if it's a spam
+maybe?
+
+/api should give CRUD operations for the links user created
+
+should have ability to connect with frontend or with any http client
+
+should have ability to log in, create a new user, and also a feature to block creating new accounts
+
+expiry of link (either exact date or day/month/year from now)
+
+backend source code in one module
+integration tests in one module + testcontainers
+frontend kotlin/react in one module
+
+add docker for every dependency like database and similar
+
+where to store routes and user info?
+* in filesystem, so it doesn't depend on database
+* in a database (short url as a key, long url as a value)
+
+url path to give short url and get back as a json/text just the response what would it redirect to
+    maybe even as a query parameter in root path
+
+***What data structure would work as a map and how to map it in database?
+
+job to check if there are url's that are broken - return 404, 500 etc
+    configure if they should be removed permanently,
+    or it would be better just to let the user know and let him decide on the actions
+
