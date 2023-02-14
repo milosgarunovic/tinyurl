@@ -6,13 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.root() {
-
-    val repository = InMemoryRepository(HashMap())
-    repository.add("https://google.com")
-    repository.add("https://milosgarunovic.com")
-    repository.print()
-
+fun Application.root(repository: InMemoryRepository) {
     routing {
         get("/{path}") {
             val path = call.parameters["path"]

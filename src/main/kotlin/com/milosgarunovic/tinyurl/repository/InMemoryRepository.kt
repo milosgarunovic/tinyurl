@@ -4,9 +4,10 @@ import java.util.*
 
 class InMemoryRepository(private val urls: MutableMap<String, String>) {
 
-    fun add(url: String) {
+    fun add(url: String): String {
         val generatedTinyUrl = UUID.randomUUID().toString()
         urls[generatedTinyUrl] = url
+        return generatedTinyUrl
     }
 
     fun get(id: String): String? {

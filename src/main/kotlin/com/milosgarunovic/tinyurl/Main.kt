@@ -1,11 +1,13 @@
 package com.milosgarunovic.tinyurl
 
+import com.milosgarunovic.tinyurl.module.config
+import com.milosgarunovic.tinyurl.module.openApi
 import com.milosgarunovic.tinyurl.module.root
+import com.milosgarunovic.tinyurl.module.tinyUrl
+import com.milosgarunovic.tinyurl.repository.InMemoryRepository
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
 
 fun main() {
     embeddedServer(
@@ -16,5 +18,15 @@ fun main() {
 }
 
 fun Application.mainModule() {
-    root()
+    val repository = InMemoryRepository(HashMap())
+    repository.add("https://google.com")
+    repository.add("https://milosgarunovic.com")
+    repository.print()
+
+    config()
+
+    root(repository)
+    tinyUrl(repository)
+
+    openApi()
 }
