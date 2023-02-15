@@ -11,7 +11,7 @@ val RequestLogging = createApplicationPlugin(name = "CallLogging") {
     val reqStartTimeKey = AttributeKey<Instant>("reqStartTime")
     val reqIdKey = AttributeKey<String>("requestId")
 
-    onCallReceive { call ->
+    onCall { call ->
         val request = call.request
         val reqId = UUID.randomUUID().toString()
 
@@ -20,6 +20,7 @@ val RequestLogging = createApplicationPlugin(name = "CallLogging") {
 
         // todo add user@ip
         println("Req id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ];")
+//        call.application.environment.log.info("Req id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ];")
     }
 
     onCallRespond { call, _ ->
@@ -28,6 +29,6 @@ val RequestLogging = createApplicationPlugin(name = "CallLogging") {
         val reqStartTime = call.attributes[reqStartTimeKey]
         val reqId = call.attributes[reqIdKey]
         val elapsedRequestTime = (Clock.System.now() - reqStartTime).inWholeMilliseconds
-        println("Res id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ]; status=[${call.response.status()!!.value}]; Finished in ${elapsedRequestTime}ms;")
+        println("Res id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ]; status=[${call.response.status()?.value}]; Finished in ${elapsedRequestTime}ms;")
     }
 }

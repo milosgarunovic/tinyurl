@@ -11,9 +11,9 @@ PATCH localhost:8080/api/tinyUrl
 Content-Type: application/json
 
 {
-  "id": "a115979f-e9fd-478e-997c-19cbedb36ef3",
+  "id": "abd1af39-5c00-4e8e-a16c-bf2f8fe8195a",
   "url": "https://facebook.com"
 }
 
 ### delete
-DELETE localhost:8080/api/tinyUrl/eeb28744-936d-4fe6-b5a5-8cbe5340de8a
+DELETE localhost:8080/api/tinyUrl/abd1af39-5c00-4e8e-a16c-bf2f8fe8195a
