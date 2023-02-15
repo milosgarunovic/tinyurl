@@ -1,9 +1,10 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.repository.InMemoryRepository
+import com.milosgarunovic.tinyurl.util.respondRedirect
+import com.milosgarunovic.tinyurl.util.respondWithStatusCode
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.root(repository: InMemoryRepository) {
@@ -13,10 +14,9 @@ fun Application.root(repository: InMemoryRepository) {
             if (path != null) {
                 val url = repository.get(path);
                 if (url != null) {
-                    // add statistics for that url
-                    call.respondRedirect(url, true)
+                    call.respondRedirect(url) // TODO add statistics for that url
                 } else {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respondWithStatusCode(HttpStatusCode.NotFound)
                 }
             }
         }
