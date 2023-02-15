@@ -1,0 +1,19 @@
+### create
+POST localhost:8080/api/tinyUrl
+Content-Type: application/json
+
+{
+  "url": "https://instagram.com"
+}
+
+### update
+PATCH localhost:8080/api/tinyUrl
+Content-Type: application/json
+
+{
+  "id": "18f0655c-5327-47ce-aa02-d8484eab5e2e",
+  "url": "https://facebook.com"
+}
+
+### delete
+DELETE localhost:8080/api/tinyUrl/18f0655c-5327-47ce-aa02-d8484eab5e2e

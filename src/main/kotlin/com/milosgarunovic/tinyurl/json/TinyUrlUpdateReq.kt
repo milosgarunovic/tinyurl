@@ -3,4 +3,4 @@ package com.milosgarunovic.tinyurl.json
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TinyUrlAdd(val actualUrl: String)
+data class TinyUrlUpdateReq(val id: String, val url: String)
