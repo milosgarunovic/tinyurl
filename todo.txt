@@ -1,13 +1,9 @@
-Application should have something line
-/link
-and it should redirect to longer url
-
 There should be some system for counting how many times some route has been called, and take a note if it's a spam
 maybe?
 
 /api should give CRUD operations for the links user created
 
-should have ability to connect with frontend or with any http client
+should have ability to connect with frontend (requires CORS) or with any http client
 
 should have ability to log in, create a new user, and also a feature to block creating new accounts
 

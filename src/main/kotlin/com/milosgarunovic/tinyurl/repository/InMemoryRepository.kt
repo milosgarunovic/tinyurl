@@ -1,11 +1,12 @@
 package com.milosgarunovic.tinyurl.repository
 
-import java.util.*
+import com.milosgarunovic.tinyurl.util.UrlPathGenerator
 
 class InMemoryRepository(private val urls: MutableMap<String, String>) {
 
     fun add(url: String): String {
-        val generatedTinyUrl = UUID.randomUUID().toString()
+        val generatedTinyUrl = UrlPathGenerator.random8Chars()
+        // TODO check if generatedTinyUrl already exists
         urls[generatedTinyUrl] = url
         return generatedTinyUrl
     }

@@ -21,9 +21,9 @@ dependencies {
     implementation("io.ktor:ktor-server-request-validation:$ktorVersion")
     implementation("io.ktor:ktor-server-openapi:$ktorVersion")
 
-    //implementation("org.slf4j:slf4j-nop:2.0.6") // https://www.slf4j.org/codes.html#StaticLoggerBinder
     implementation("ch.qos.logback:logback-classic:1.4.5")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("commons-lang:commons-lang:2.6")
 
     testImplementation(kotlin("test"))
 }
