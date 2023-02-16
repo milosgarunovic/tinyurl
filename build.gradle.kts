@@ -1,6 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.serialization") version "1.8.10"
+    val kotlinVersion = "1.8.10"
+
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
     application // Apply the application plugin to add support for building a CLI application in Java.
 }
 
@@ -12,6 +14,7 @@ repositories {
 }
 
 val ktorVersion = "2.2.3"
+val kotlinVersion = "1.8.10"
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -26,6 +29,8 @@ dependencies {
     implementation("commons-lang:commons-lang:2.6")
 
     testImplementation(kotlin("test"))
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+
 }
 
 tasks.test {

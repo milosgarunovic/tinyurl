@@ -12,8 +12,10 @@ import io.ktor.server.routing.*
 
 fun Application.tinyUrl(repository: InMemoryRepository) {
     routing {
+
         route("/api/tinyUrl") {
-            post {
+
+        post {
                 val req = call.receive<TinyUrlAddReq>() // todo must be a valid url
                 val res = repository.add(req.url)
                 call.respond(HttpStatusCode.Created, res)

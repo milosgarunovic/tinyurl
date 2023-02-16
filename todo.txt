@@ -1,8 +1,6 @@
 There should be some system for counting how many times some route has been called, and take a note if it's a spam
 maybe?
 
-/api should give CRUD operations for the links user created
-
 should have ability to connect with frontend (requires CORS) or with any http client
 
 should have ability to log in, create a new user, and also a feature to block creating new accounts
@@ -24,7 +22,7 @@ url path to give short url and get back as a json/text just the response what wo
 
 ***What data structure would work as a map and how to map it in database?
 
-job to check if there are url's that are broken - return 404, 500 etc
+job to check if there are urls that are broken - return 404, 500 etc.
     configure if they should be removed permanently,
     or it would be better just to let the user know and let him decide on the actions
 
