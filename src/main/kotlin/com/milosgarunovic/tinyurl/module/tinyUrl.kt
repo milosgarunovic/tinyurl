@@ -4,7 +4,7 @@ import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
 import com.milosgarunovic.tinyurl.repository.InMemoryRepository
 import com.milosgarunovic.tinyurl.util.respondRedirect
-import com.milosgarunovic.tinyurl.util.respondWithStatusCode
+import com.milosgarunovic.tinyurl.util.respondStatusCode
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -21,7 +21,7 @@ fun Application.tinyUrl(repository: InMemoryRepository) {
                 if (url != null) {
                     call.respondRedirect(url) // TODO add statistics for that url
                 } else {
-                    call.respondWithStatusCode(HttpStatusCode.NotFound)
+                    call.respondStatusCode(HttpStatusCode.NotFound)
                 }
             }
         }
@@ -37,14 +37,14 @@ fun Application.tinyUrl(repository: InMemoryRepository) {
             patch {
                 val req = call.receive<TinyUrlUpdateReq>() // todo must be a valid url
                 repository.update(req.id, req.url)
-                call.respondWithStatusCode(HttpStatusCode.OK)
+                call.respondStatusCode(HttpStatusCode.OK)
             }
 
             delete("/{id}") {
                 val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
 
                 repository.delete(id)
-                call.respondWithStatusCode(HttpStatusCode.NoContent)
+                call.respondStatusCode(HttpStatusCode.NoContent)
             }
         }
     }
