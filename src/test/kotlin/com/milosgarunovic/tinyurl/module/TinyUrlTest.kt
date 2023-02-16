@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test
 
 class TinyUrlTest {
 
+    // TODO need tests to pass with /api/tinyurl - lower case, but that fails
+    val basePath = "/api/tinyUrl"
+
     @Nested
     inner class GetRootTests {
         @Test
@@ -39,7 +42,7 @@ class TinyUrlTest {
             // ACT
 
             // create a new post
-            val createdResponse = client.post("/api/tinyUrl") {
+            val createdResponse = client.post(basePath) {
                 contentType(ContentType.Application.Json)
                 setBody("""{"url": "$expectedUrl"}""")
             }
@@ -52,6 +55,26 @@ class TinyUrlTest {
             assertEquals(HttpStatusCode.MovedPermanently, response.status)
             assertEquals(expectedUrl, response.headers["Location"])
         }
+
+        @Test
+        fun `GET root with deleted path - returns 404`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val createdResponse = client.post(basePath) {
+                contentType(ContentType.Application.Json)
+                setBody("""{"url": "https://test.com"}""")
+            }
+            val id = createdResponse.bodyAsText()
+
+            client.delete("$basePath/$id")
+
+            val response = client.get("/$id")
+
+            // ASSERT
+            assertEquals(HttpStatusCode.NotFound, response.status)
+        }
     }
 
     @Nested
@@ -63,7 +86,7 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val response = client.post("/api/tinyUrl") {
+            val response = client.post(basePath) {
                 contentType(ContentType.Application.Json)
                 setBody("""{"url": "https://test.com"}""")
             }
@@ -84,19 +107,41 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val createdResponse = client.post("/api/tinyUrl") {
+            val createdResponse = client.post(basePath) {
                 contentType(ContentType.Application.Json)
                 setBody("""{"url": "https://test.com"}""")
             }
 
             val id = createdResponse.bodyAsText()
-            val response = client.patch("/api/tinyUrl") {
+            val response = client.patch(basePath) {
                 contentType(ContentType.Application.Json)
                 setBody("""{"id":"$id", "url":"https://test2.com"}""")
             }
 
             // ASSERT
             assertEquals(HttpStatusCode.OK, response.status)
+        }
+    }
+
+    @Nested
+    inner class DeleteApiTinyUrlTest {
+
+        @Test
+        fun `DELETE api-tinyUrl - return 204`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val createdResponse = client.post(basePath) {
+                contentType(ContentType.Application.Json)
+                setBody("""{"url": "https://test.com"}""")
+            }
+            val id = createdResponse.bodyAsText()
+
+            val response = client.delete("$basePath/$id")
+
+            // ASSERT
+            assertEquals(HttpStatusCode.NoContent, response.status)
         }
     }
 }

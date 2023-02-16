@@ -26,3 +26,10 @@ job to check if there are urls that are broken - return 404, 500 etc.
     configure if they should be removed permanently,
     or it would be better just to let the user know and let him decide on the actions
 
+---
+create a package named "ext" or "extension" that holds extension functions for kotlin, maybe that would be better than
+util.
+
+---
+urls can be low letter case, so I'd need to test if it works like "/api/tinyUrl" and "/api/tinyurl", maybe even change
+the path... for now in tests this doesn't work
