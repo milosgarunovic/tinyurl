@@ -3,6 +3,7 @@ package com.milosgarunovic.tinyurl.module
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
 import com.milosgarunovic.tinyurl.repository.InMemoryRepository
+import com.milosgarunovic.tinyurl.util.respondRedirect
 import com.milosgarunovic.tinyurl.util.respondWithStatusCode
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -13,9 +14,21 @@ import io.ktor.server.routing.*
 fun Application.tinyUrl(repository: InMemoryRepository) {
     routing {
 
+        get("/{path}") {
+            val path = call.parameters["path"]
+            if (path != null) {
+                val url = repository.get(path);
+                if (url != null) {
+                    call.respondRedirect(url) // TODO add statistics for that url
+                } else {
+                    call.respondWithStatusCode(HttpStatusCode.NotFound)
+                }
+            }
+        }
+
         route("/api/tinyUrl") {
 
-        post {
+            post {
                 val req = call.receive<TinyUrlAddReq>() // todo must be a valid url
                 val res = repository.add(req.url)
                 call.respond(HttpStatusCode.Created, res)

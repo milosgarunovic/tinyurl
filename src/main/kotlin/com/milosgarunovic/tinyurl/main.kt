@@ -2,7 +2,6 @@ package com.milosgarunovic.tinyurl
 
 import com.milosgarunovic.tinyurl.module.config
 import com.milosgarunovic.tinyurl.module.openApi
-import com.milosgarunovic.tinyurl.module.root
 import com.milosgarunovic.tinyurl.module.tinyUrl
 import com.milosgarunovic.tinyurl.repository.InMemoryRepository
 import io.ktor.server.application.*
@@ -25,7 +24,6 @@ fun Application.mainModule() {
 
     config()
 
-    root(repository)
     tinyUrl(repository)
 
     openApi()
