@@ -1,11 +1,11 @@
 package com.milosgarunovic.tinyurl.repository
 
-import com.milosgarunovic.tinyurl.util.UrlPathGenerator
+import com.milosgarunovic.tinyurl.util.random8Chars
 
 class InMemoryRepository(private val urls: MutableMap<String, String>) {
 
     fun add(url: String): String {
-        val generatedTinyUrl = UrlPathGenerator.random8Chars()
+        val generatedTinyUrl = random8Chars()
         // TODO check if generatedTinyUrl already exists
         urls[generatedTinyUrl] = url
         return generatedTinyUrl
@@ -21,9 +21,5 @@ class InMemoryRepository(private val urls: MutableMap<String, String>) {
 
     fun delete(id: String) {
         urls.remove(id)
-    }
-
-    fun print() {
-        urls.forEach { (short, long) -> println("short: $short, long $long") }
     }
 }

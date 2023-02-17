@@ -199,5 +199,17 @@ class TinyUrlTest {
             // ASSERT
             assertEquals(HttpStatusCode.NoContent, response.status)
         }
+
+        @Test
+        fun `DELETE api-tinyUrl without id - returns 404`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val response = client.delete("$basePath/")
+
+            // ASSERT
+            assertEquals(HttpStatusCode.NotFound, response.status)
+        }
     }
 }

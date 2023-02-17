@@ -15,19 +15,17 @@ fun Application.tinyUrl(repository: InMemoryRepository) {
     routing {
 
         get("/{path}") {
-            val path = call.parameters["path"]
+            val path = call.parameters["path"]!!
             val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
-            if (path != null) {
-                val url = repository.get(path)
-                if (url != null) {
-                    if (redirect) {
-                        call.respondRedirect(url) // TODO add statistics for that url
-                    } else {
-                        call.respond(HttpStatusCode.OK, url)
-                    }
+            val url = repository.get(path)
+            if (url != null) {
+                if (redirect) {
+                    call.respondRedirect(url) // TODO add statistics for that url
                 } else {
-                    call.respondStatusCode(HttpStatusCode.NotFound)
+                    call.respond(HttpStatusCode.OK, url)
                 }
+            } else {
+                call.respondStatusCode(HttpStatusCode.NotFound)
             }
         }
 
@@ -46,7 +44,7 @@ fun Application.tinyUrl(repository: InMemoryRepository) {
             }
 
             delete("/{id}") {
-                val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                val id = call.parameters["id"]!!
 
                 repository.delete(id)
                 call.respondStatusCode(HttpStatusCode.NoContent)

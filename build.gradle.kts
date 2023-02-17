@@ -3,6 +3,7 @@ plugins {
 
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
+    id("org.jetbrains.kotlinx.kover") version "0.6.1"
     application // Apply the application plugin to add support for building a CLI application in Java.
 }
 
@@ -42,5 +43,17 @@ kotlin {
 }
 
 application {
-    mainClass.set("com.milosgarunovic.tinyurl.Main.kt")
+    mainClass.set("com.milosgarunovic.tinyurl.MainKt")
+}
+
+// configuration for Kover to exclude some classes/packages
+kover {
+    filters {
+        classes {
+            excludes += listOf(
+                "com.milosgarunovic.tinyurl.MainKt", // main doesn't make sense to be tested
+                "com.milosgarunovic.tinyurl.json.*", // json doesn't make sense to be tested
+            )
+        }
+    }
 }

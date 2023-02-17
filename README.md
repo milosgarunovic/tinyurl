@@ -13,10 +13,11 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [x] Create the most basic version covered in tests without any users
 - [x] Add feature that doesn't return 301 but instead 200 and where that link is leading to
 - [ ] Tests
+  - [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
 - [ ] Add filesystem as a storage - most basic version without database. This way there's no db maintenance
 - [ ] Add database as a storage
-    - [ ] Docker and testcontainers
+  - [ ] Docker and testcontainers
 - [ ] Add statistics for how many times a route has been called
 - [ ] Add expiry of url
 - [ ] Add ability to limit creation of account to only one user
@@ -24,4 +25,5 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
   to create a tiny url
 - [ ] Add a job to check links periodically to see if there are any broken links, and then check with user what to do
   about those links - delete them, replace them or whatever.
-- [ ] Add frontend (maybe with Kotlin/React) 
+- [ ] Add frontend (maybe with Kotlin/React)
+- [ ] Add openApi/swagger
