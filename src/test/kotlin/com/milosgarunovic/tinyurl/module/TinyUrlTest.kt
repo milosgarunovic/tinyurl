@@ -37,7 +37,7 @@ class TinyUrlTest {
             val client = createClient {
                 followRedirects = false
             }
-            val expectedUrl = """https://test.com"""
+            val expectedUrl = "https://test.com"
 
             // ACT
 
@@ -74,6 +74,62 @@ class TinyUrlTest {
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, response.status)
+        }
+
+        @Test
+        fun `GET root with redirect=true - returns 301 (works same as without query parameter)`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // custom client that doesn't follow redirects
+            val client = createClient {
+                followRedirects = false
+            }
+            val expectedUrl = "https://test.com"
+
+            // ACT
+
+            // create a new post
+            val createdResponse = client.post(basePath) {
+                contentType(ContentType.Application.Json)
+                setBody("""{"url": "$expectedUrl"}""")
+            }
+            val id = createdResponse.bodyAsText()
+
+            // get created url
+            val response = client.get("/$id?redirect=true")
+
+            // ASSERT
+            assertEquals(HttpStatusCode.MovedPermanently, response.status)
+            assertEquals(expectedUrl, response.headers["Location"])
+        }
+
+        @Test
+        fun `GET root with redirect=false - returns 200 with body as url`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // custom client that doesn't follow redirects
+            val client = createClient {
+                followRedirects = false
+            }
+            val expectedUrl = "https://test.com"
+
+            // ACT
+
+            // create a new post
+            val createdResponse = client.post(basePath) {
+                contentType(ContentType.Application.Json)
+                setBody("""{"url": "$expectedUrl"}""")
+            }
+            val id = createdResponse.bodyAsText()
+
+            // get created url
+            val response = client.get("/$id?redirect=false")
+
+            // ASSERT
+            assertEquals(HttpStatusCode.OK, response.status)
+            assertEquals(expectedUrl, response.bodyAsText())
         }
     }
 

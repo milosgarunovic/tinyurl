@@ -16,10 +16,15 @@ fun Application.tinyUrl(repository: InMemoryRepository) {
 
         get("/{path}") {
             val path = call.parameters["path"]
+            val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
             if (path != null) {
-                val url = repository.get(path);
+                val url = repository.get(path)
                 if (url != null) {
-                    call.respondRedirect(url) // TODO add statistics for that url
+                    if (redirect) {
+                        call.respondRedirect(url) // TODO add statistics for that url
+                    } else {
+                        call.respond(HttpStatusCode.OK, url)
+                    }
                 } else {
                     call.respondStatusCode(HttpStatusCode.NotFound)
                 }
