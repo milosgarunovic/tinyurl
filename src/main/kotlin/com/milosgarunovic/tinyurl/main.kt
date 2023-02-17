@@ -18,9 +18,6 @@ fun main() {
 
 fun Application.mainModule() {
     val repository = InMemoryRepository(HashMap())
-    repository.add("https://google.com")
-    repository.add("https://milosgarunovic.com")
-    repository.print()
 
     config()
 
