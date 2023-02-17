@@ -1,4 +1,4 @@
-package com.milosgarunovic.tinyurl.util
+package com.milosgarunovic.tinyurl.ext
 
 import io.ktor.http.*
 import io.ktor.http.content.*

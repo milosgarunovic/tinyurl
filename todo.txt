@@ -12,9 +12,5 @@ frontend kotlin/react in one module
 ***What data structure would work as a map and how to map it in database?
 
 ---
-create a package named "ext" or "extension" that holds extension functions for kotlin, maybe that would be better than
-util.
-
----
 urls can be low letter case, so I'd need to test if it works like "/api/tinyUrl" and "/api/tinyurl", maybe even change
 the path... for now in tests this doesn't work

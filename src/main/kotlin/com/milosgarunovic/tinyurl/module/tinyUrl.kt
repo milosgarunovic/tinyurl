@@ -1,10 +1,10 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.ext.respondRedirect
+import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
 import com.milosgarunovic.tinyurl.repository.InMemoryRepository
-import com.milosgarunovic.tinyurl.util.respondRedirect
-import com.milosgarunovic.tinyurl.util.respondStatusCode
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
