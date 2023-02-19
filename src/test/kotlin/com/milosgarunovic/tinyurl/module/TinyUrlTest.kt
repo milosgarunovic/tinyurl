@@ -6,11 +6,14 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.time.Clock
+import java.time.Instant
 import kotlin.time.Duration.Companion.days
 
 class TinyUrlTest {
@@ -21,7 +24,8 @@ class TinyUrlTest {
     @Nested
     inner class GetRootTests {
         @Test
-        fun `GET root - returns 404`() = testApplication {
+        @DisplayName("GET / returns 404")
+        fun `GET root returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
 
@@ -33,7 +37,8 @@ class TinyUrlTest {
         }
 
         @Test
-        fun `GET root with path - returns 301`() = testApplication {
+        @DisplayName("GET /path returns 301")
+        fun `GET root with path returns 301`() = testApplication {
             // ARRANGE
             application { mainModule() }
             val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
@@ -56,7 +61,8 @@ class TinyUrlTest {
         }
 
         @Test
-        fun `GET root with deleted path - returns 404`() = testApplication {
+        @DisplayName("GET /path with deleted path returns 404")
+        fun `GET root with deleted path returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
 
@@ -75,8 +81,12 @@ class TinyUrlTest {
             assertEquals(HttpStatusCode.NotFound, response.status)
         }
 
+        /**
+         * This tests works the same as [GET root with path returns 301]
+         */
         @Test
-        fun `GET root with redirect=true - returns 301 (works same as without query parameter)`() = testApplication {
+        @DisplayName("GET /path?redirect=true returns 301")
+        fun `GET root with redirect=true returns 301 (works same as without query parameter)`() = testApplication {
             // ARRANGE
             application { mainModule() }
             val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
@@ -99,7 +109,8 @@ class TinyUrlTest {
         }
 
         @Test
-        fun `GET root with redirect=false - returns 200 with body as url`() = testApplication {
+        @DisplayName("GET /path?redirect=false returns 200 with body as url")
+        fun `GET root with redirect=false returns 200 with body as url`() = testApplication {
             // ARRANGE
             application { mainModule() }
             val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
@@ -120,13 +131,40 @@ class TinyUrlTest {
             assertEquals(HttpStatusCode.OK, response.status)
             assertEquals(expectedUrl, response.bodyAsText())
         }
+
+        @Test
+        @DisplayName("GET /path with expired path returns 404")
+        fun `GET root with expired path returns 404`() = testApplication {
+            // ARRANGE
+            val clock = mockk<Clock>()
+            val now = Instant.now()
+            every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
+            application { mainModule(InMemoryRepository(clock)) }
+
+            val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
+
+            // ACT
+            val url = client.post(basePath) {// clock first call = now
+                contentType(ContentType.Application.Json)
+                // language=json
+                setBody("""{"url": "https://test.com", "expires":{"type": "in","milliseconds": ${1.days.inWholeMilliseconds}}}""")
+            }.bodyAsText()
+
+            // ASSERT
+            val get = client.get("/$url") // clock second call = now
+            assertEquals(HttpStatusCode.MovedPermanently, get.status)
+
+            val getInTwoDays = client.get("/$url") // clock third call = now + 2 days
+            assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
+        }
     }
 
     @Nested
     inner class PostApiTinyUrlTests {
 
         @Test
-        fun `POST api-tinyUrl with url returns 201 and has length 8`() = testApplication {
+        @DisplayName("POST /api/tinyUrl with url in body returns 201 and has length 8")
+        fun `POST api-tinyUrl with url in body returns 201 and has length 8`() = testApplication {
             // ARRANGE
             application { mainModule() }
 
@@ -142,47 +180,13 @@ class TinyUrlTest {
             assertEquals(8, response.bodyAsText().length)
         }
 
-        @Test
-        @Disabled
-        fun `POST api-tinyUrl with url and expires returns 201 and has length 8`() = testApplication {
-            // ARRANGE
-            val clock = Clock.systemUTC()
-            application {
-                mainModule(InMemoryRepository(clock))
-            }
-            val client = createClient {
-                followRedirects = false
-                developmentMode = true // advanced stacktrace
-            }
-            val oneDayInMillis = 1.days.inWholeMilliseconds
-
-            // ACT
-            val response = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                // language=json
-                setBody("""{"url": "https://test.com", "expires":{"type": "in","milliseconds": $oneDayInMillis}}""")
-            }
-
-            // ASSERT
-            assertEquals(HttpStatusCode.Created, response.status)
-            val url = response.bodyAsText()
-            assertEquals(8, url.length)
-
-            // ACT
-            val get = client.get("/$url")
-            assertEquals(HttpStatusCode.MovedPermanently, get.status)
-
-            // TODO advance clock
-            val getInTwoDays = client.get("/$url")
-            assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
-        }
-
     }
 
     @Nested
     inner class PatchApiTinyUrlTests {
 
         @Test
+        @DisplayName("PATCH /api/tinyUrl with body returns 200")
         fun `PATCH api-tinyUrl with body returns 200`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -209,7 +213,8 @@ class TinyUrlTest {
     inner class DeleteApiTinyUrlTest {
 
         @Test
-        fun `DELETE api-tinyUrl - return 204`() = testApplication {
+        @DisplayName("DELETE /api/tinyUrl returns 204")
+        fun `DELETE api-tinyUrl returns 204`() = testApplication {
             // ARRANGE
             application { mainModule() }
 
@@ -227,7 +232,8 @@ class TinyUrlTest {
         }
 
         @Test
-        fun `DELETE api-tinyUrl without id - returns 404`() = testApplication {
+        @DisplayName("DELETE /api/tinyUrl without id returns 404")
+        fun `DELETE api-tinyUrl without id returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
 

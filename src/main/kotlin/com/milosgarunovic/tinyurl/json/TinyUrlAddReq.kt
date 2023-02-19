@@ -13,8 +13,8 @@ data class TinyUrlAddReq(
 )
 
 fun TinyUrlAddReq.toTinyUrl(shortUrl: String, clock: Clock): TinyUrl {
-    val dateCreated = Instant.now(clock)
-    var calculatedExpiry: Instant? = when (expires) {
+    val dateCreated = clock.instant()
+    val calculatedExpiry: Instant? = when (expires) {
         is Expires.At -> {
             if (expires.dateTime.isAfter(dateCreated.atZone(ZoneId.of("UTC")))) {
                 expires.dateTime.toInstant()

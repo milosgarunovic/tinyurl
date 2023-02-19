@@ -16,6 +16,7 @@ repositories {
 
 val ktorVersion = "2.2.3"
 val kotlinVersion = "1.8.10"
+val mockkVersion = "1.13.4"
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -30,6 +31,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 
 }
 
