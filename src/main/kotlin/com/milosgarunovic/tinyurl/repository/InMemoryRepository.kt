@@ -8,8 +8,13 @@ import com.milosgarunovic.tinyurl.util.random8Chars
 class InMemoryRepository(private val urls: MutableList<TinyUrl> = ArrayList()) {
 
     fun add(tinyUrlAddReq: TinyUrlAddReq): String {
-        val shortUrl = random8Chars()
-        // TODO check if generatedTinyUrl already exists
+        var shortUrl: String
+
+        do {
+            // generate new if it already exists
+            shortUrl = random8Chars()
+        } while (urls.indexOfFirst { it.shortUrl == shortUrl } != -1)
+
         urls.add(tinyUrlAddReq.toTinyUrl(shortUrl))
 
         return shortUrl
