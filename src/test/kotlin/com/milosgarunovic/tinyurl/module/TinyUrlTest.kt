@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.Instant
+import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
 
 class TinyUrlTest {
@@ -148,6 +149,36 @@ class TinyUrlTest {
                 contentType(ContentType.Application.Json)
                 // language=json
                 setBody("""{"url": "https://test.com", "expires":{"type": "in","milliseconds": ${1.days.inWholeMilliseconds}}}""")
+            }.bodyAsText()
+
+            // ASSERT
+            val get = client.get("/$url") // clock second call = now
+            assertEquals(HttpStatusCode.MovedPermanently, get.status)
+
+            val getInTwoDays = client.get("/$url") // clock third call = now + 2 days
+            assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
+        }
+
+        @Test
+        @DisplayName("GET /path with expired path returns 404 2")
+        fun `GET root with expired path returns 404 2`() = testApplication {
+            // ARRANGE
+            val clock = mockk<Clock>()
+            val now = Instant.now()
+            every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
+            application { mainModule(InMemoryRepository(clock)) }
+
+            val client = createClient {
+                followRedirects = false; developmentMode = true
+            } // custom client that doesn't follow redirects
+            val oneDayInFuture = now.plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
+
+            // ACT
+            val url = client.post(basePath) {// clock first call = now
+                contentType(ContentType.Application.Json)
+                // language=json
+                setBody("""{"url": "https://test.com", "expires":{"type": "at","dateTime": "$oneDayInFuture"}}""")
+//              {"url": "https://test.com", "expires":{"type": "at","dateTime": "2023-02-20T22:28:25.943497Z[UTC]"}}
             }.bodyAsText()
 
             // ASSERT

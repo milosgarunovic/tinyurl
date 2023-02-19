@@ -1,6 +1,6 @@
 package com.milosgarunovic.tinyurl.json
 
-import kotlinx.serialization.Contextual
+import com.milosgarunovic.tinyurl.serializer.ZonedDateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
@@ -14,5 +14,8 @@ sealed class Expires {
 
     @Serializable
     @SerialName("at")
-    data class At(@Contextual val dateTime: ZonedDateTime) : Expires()
+    data class At(
+        @Serializable(ZonedDateTimeSerializer::class)
+        val dateTime: ZonedDateTime
+    ) : Expires()
 }

@@ -12,6 +12,7 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 
 - [x] Create the most basic version covered in tests without any users
 - [x] Add feature that doesn't return 301 but instead 200 and where that link is leading to
+- [x] Add expiry of url
 - [ ] Tests
   - [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
@@ -19,7 +20,6 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [ ] Add database as a storage
   - [ ] Docker and testcontainers
 - [ ] Add statistics for how many times a route has been called
-- [ ] Add expiry of url **IN PROGRESS**
 - [ ] Add ability to limit creation of account to only one user
 - [ ] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
   to create a tiny url

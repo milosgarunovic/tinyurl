@@ -12,6 +12,7 @@ data class TinyUrlAddReq(
     val expires: Expires?,
 )
 
+// TODO add unit tests for this
 fun TinyUrlAddReq.toTinyUrl(shortUrl: String, clock: Clock): TinyUrl {
     val dateCreated = clock.instant()
     val calculatedExpiry: Instant? = when (expires) {
