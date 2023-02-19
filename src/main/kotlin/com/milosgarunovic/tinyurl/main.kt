@@ -16,8 +16,7 @@ fun main() {
     ).start(wait = true)
 }
 
-fun Application.mainModule() {
-    val repository = InMemoryRepository()
+fun Application.mainModule(repository: InMemoryRepository = InMemoryRepository()) {
 
     config()
 
