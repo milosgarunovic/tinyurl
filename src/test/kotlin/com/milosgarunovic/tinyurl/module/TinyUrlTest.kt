@@ -134,8 +134,8 @@ class TinyUrlTest {
         }
 
         @Test
-        @DisplayName("GET /path with expired path returns 404")
-        fun `GET root with expired path returns 404`() = testApplication {
+        @DisplayName("GET /path with expired path returns 404 - created using milliseconds")
+        fun `GET root with expired path returns 404 - created using milliseconds`() = testApplication {
             // ARRANGE
             val clock = mockk<Clock>()
             val now = Instant.now()
@@ -160,8 +160,8 @@ class TinyUrlTest {
         }
 
         @Test
-        @DisplayName("GET /path with expired path returns 404 2")
-        fun `GET root with expired path returns 404 2`() = testApplication {
+        @DisplayName("GET /path with expired path returns 404 - created using dateTime")
+        fun `GET root with expired path returns 404 - created using dateTime`() = testApplication {
             // ARRANGE
             val clock = mockk<Clock>()
             val now = Instant.now()
