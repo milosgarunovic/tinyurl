@@ -1,41 +1,40 @@
 package com.milosgarunovic.tinyurl.repository
 
-import com.milosgarunovic.tinyurl.json.Expires
+import com.milosgarunovic.tinyurl.entity.TinyUrl
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
+import com.milosgarunovic.tinyurl.json.toTinyUrl
 import com.milosgarunovic.tinyurl.util.random8Chars
 
-class InMemoryRepository(private val urls: MutableMap<String, TinyUrlAddReq>) {
+class InMemoryRepository(private val urls: MutableList<TinyUrl> = ArrayList()) {
 
     fun add(tinyUrlAddReq: TinyUrlAddReq): String {
-        val generatedTinyUrl = random8Chars()
+        val shortUrl = random8Chars()
         // TODO check if generatedTinyUrl already exists
-        urls[generatedTinyUrl] = tinyUrlAddReq
+        urls.add(tinyUrlAddReq.toTinyUrl(shortUrl))
 
-        return generatedTinyUrl
+        return shortUrl
     }
 
-    fun get(id: String): String? {
-        val tinyUrlAddReq = urls[id]
-        if (tinyUrlAddReq?.expires != null) {
-            val e = tinyUrlAddReq.expires
-            // if expired, return null - which will return 404, as in expired or 410 - Gone
-            when (e) {
-                is Expires.In -> {
-                }
-
-                is Expires.At -> {
-                }
-            }
+    fun get(shortUrl: String): String? {
+        val tinyUrl = urls.find { it.shortUrl == shortUrl }
+        if (tinyUrl != null) {
+            return tinyUrl.url
         }
-        return urls[id]?.url
+        return null
     }
 
-    fun update(id: String, url: String) {
-        val copy = urls[id]?.copy(url = url)
-        urls[id] = copy!!
+    fun update(shortUrl: String, url: String) {
+        val index = urls.indexOfFirst { it.shortUrl == shortUrl }
+        if (index != -1) {
+            urls[index] = urls[index].copy(url = url)
+        }
     }
 
-    fun delete(id: String) {
-        urls.remove(id)
+    fun delete(shortUrl: String) {
+        // TODO add active attribute to search for that value
+        val tinyUrl = urls.find { it.shortUrl == shortUrl }
+        if (tinyUrl != null) {
+            urls.remove(tinyUrl)
+        }
     }
 }

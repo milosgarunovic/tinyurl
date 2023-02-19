@@ -17,7 +17,7 @@ fun main() {
 }
 
 fun Application.mainModule() {
-    val repository = InMemoryRepository(HashMap())
+    val repository = InMemoryRepository()
 
     config()
 

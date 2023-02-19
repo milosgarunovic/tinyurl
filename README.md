@@ -19,7 +19,7 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [ ] Add database as a storage
   - [ ] Docker and testcontainers
 - [ ] Add statistics for how many times a route has been called
-- [ ] Add expiry of url
+- [ ] Add expiry of url **IN PROGRESS**
 - [ ] Add ability to limit creation of account to only one user
 - [ ] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
   to create a tiny url
@@ -27,3 +27,4 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
   about those links - delete them, replace them or whatever.
 - [ ] Add frontend (maybe with Kotlin/React)
 - [ ] Add openApi/swagger
+- [ ] Add Dokka for code documentation

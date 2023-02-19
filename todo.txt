@@ -14,3 +14,5 @@ frontend kotlin/react in one module
 ---
 urls can be low letter case, so I'd need to test if it works like "/api/tinyUrl" and "/api/tinyurl", maybe even change
 the path... for now in tests this doesn't work
+---
+set logger to write in UTC and everything to be stored in UTC and calculated accordingly
