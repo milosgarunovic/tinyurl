@@ -3,24 +3,22 @@ package com.milosgarunovic.tinyurl.plugin
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.util.*
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import java.time.Clock
 import java.util.*
 
 val RequestLogging = createApplicationPlugin(name = "CallLogging") {
-    val reqStartTimeKey = AttributeKey<Instant>("reqStartTime")
+    val reqStartTimeKey = AttributeKey<Long>("reqStartTime")
     val reqIdKey = AttributeKey<String>("requestId")
 
     onCall { call ->
         val request = call.request
         val reqId = UUID.randomUUID().toString()
 
-        call.attributes.put(reqStartTimeKey, Clock.System.now())
+        call.attributes.put(reqStartTimeKey, Clock.systemUTC().millis())
         call.attributes.put(reqIdKey, reqId)
 
         // todo add user@ip
-        println("Req id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ];")
-//        call.application.environment.log.info("Req id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ];")
+        call.application.environment.log.info("Req id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ];")
     }
 
     onCallRespond { call, _ ->
@@ -28,7 +26,7 @@ val RequestLogging = createApplicationPlugin(name = "CallLogging") {
 
         val reqStartTime = call.attributes[reqStartTimeKey]
         val reqId = call.attributes[reqIdKey]
-        val elapsedRequestTime = (Clock.System.now() - reqStartTime).inWholeMilliseconds
-        println("Res id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ]; status=[${call.response.status()?.value}]; Finished in ${elapsedRequestTime}ms;")
+        val elapsedRequestTime = Clock.systemUTC().millis() - reqStartTime
+        call.application.environment.log.info("Res id=[ $reqId ]; url=[ ${request.httpMethod.value} ${request.uri} ]; status=[${call.response.status()?.value}]; elapsedTime=[${elapsedRequestTime}ms];")
     }
 }

@@ -33,7 +33,7 @@ fun Application.tinyUrl(repository: InMemoryRepository) {
 
             post {
                 val req = call.receive<TinyUrlAddReq>() // todo must be a valid url
-                val res = repository.add(req.url)
+                val res = repository.add(req)
                 call.respond(HttpStatusCode.Created, res)
             }
 

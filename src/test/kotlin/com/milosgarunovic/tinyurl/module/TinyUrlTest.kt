@@ -5,9 +5,14 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.days
 
 class TinyUrlTest {
 
@@ -64,6 +69,7 @@ class TinyUrlTest {
             // ACT
             val createdResponse = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                // language=json
                 setBody("""{"url": "https://test.com"}""")
             }
             val id = createdResponse.bodyAsText()
@@ -137,13 +143,14 @@ class TinyUrlTest {
     inner class PostApiTinyUrlTests {
 
         @Test
-        fun `POST api-tinyUrl with body returns 201 and has length 8`() = testApplication {
+        fun `POST api-tinyUrl with url returns 201 and has length 8`() = testApplication {
             // ARRANGE
             application { mainModule() }
 
             // ACT
             val response = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                // language=json
                 setBody("""{"url": "https://test.com"}""")
             }
 
@@ -152,6 +159,41 @@ class TinyUrlTest {
             assertEquals(8, response.bodyAsText().length)
         }
 
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @Disabled("feature not implemented yet")
+        @Test
+        fun `POST api-tinyUrl with url and expires returns 201 and has length 8`() = runTest {
+
+            testApplication {
+                // ARRANGE
+                application { mainModule() }
+                val client = createClient {
+                    followRedirects = false
+                    developmentMode = true // advanced stacktrace
+                }
+
+                // ACT
+                val response = client.post(basePath) {
+                    contentType(ContentType.Application.Json)
+                    // language=json
+                    setBody("""{"url": "https://test.com", "expires":{"type": "in","days": 1}}""")
+                }
+
+                // ASSERT
+                assertEquals(HttpStatusCode.Created, response.status)
+                val url = response.bodyAsText()
+                assertEquals(8, url.length)
+
+                // ACT
+                val get = client.get("/$url")
+                assertEquals(HttpStatusCode.MovedPermanently, get.status)
+
+                advanceTimeBy(2.days.inWholeMilliseconds)
+
+                val getInTwoDays = client.get("/$url")
+                assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
+            }
+        }
     }
 
     @Nested
@@ -165,12 +207,14 @@ class TinyUrlTest {
             // ACT
             val createdResponse = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                // language=json
                 setBody("""{"url": "https://test.com"}""")
             }
 
             val id = createdResponse.bodyAsText()
             val response = client.patch(basePath) {
                 contentType(ContentType.Application.Json)
+                // language=json
                 setBody("""{"id":"$id", "url":"https://test2.com"}""")
             }
 
@@ -190,6 +234,7 @@ class TinyUrlTest {
             // ACT
             val createdResponse = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                // language=json
                 setBody("""{"url": "https://test.com"}""")
             }
             val id = createdResponse.bodyAsText()
