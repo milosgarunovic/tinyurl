@@ -16,6 +16,7 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [ ] Tests
   - [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
+  - [ ] Add security tests
 - [ ] Add filesystem as a storage - most basic version without database. This way there's no db maintenance
 - [ ] Add database as a storage
   - [ ] Docker and testcontainers

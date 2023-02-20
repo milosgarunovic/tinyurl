@@ -21,8 +21,13 @@ import kotlin.time.Duration.Companion.days
 class TinyUrlTest {
 
     // TODO need tests to pass with /api/tinyurl - lower case, but that fails
-    val basePath = "/api/tinyUrl"
+    private val basePath = "/api/tinyUrl"
 
+    private val auth = "user" to "password"
+
+    /**
+     * Creates a http client that doesn't follow redirects.
+     */
     private fun ApplicationTestBuilder.httpClient() = createClient { followRedirects = false }
 
     @Nested
@@ -45,14 +50,13 @@ class TinyUrlTest {
         fun `GET root with path returns 301`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
+            val client = httpClient()
             val expectedUrl = "https://test.com"
 
             // ACT
 
             // create a new url
-            val reqBody = """{"url": "$expectedUrl"}"""
-            val id = post(client, basePath, reqBody, "user" to "password").bodyAsText()
+            val id = post(client, basePath, """{"url": "$expectedUrl"}""", auth).bodyAsText()
 
             // get created url
             val response = client.get("/$id")
@@ -69,18 +73,9 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val id = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                // language=json
-                setBody("""{"url": "https://test.com"}""")
-            }.bodyAsText()
-
-            client.delete("$basePath/$id") {
-                basicAuth("user", "password")
-            }
-
-            val response = client.get("/$id")
+            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
+            delete(client, "$basePath/$id", auth) // delete created post
+            val response = client.get("/$id") // try to get it after deletion
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, response.status)
@@ -91,17 +86,16 @@ class TinyUrlTest {
          */
         @Test
         @DisplayName("GET /path?redirect=true returns 301")
-        fun `GET root with redirect=true returns 301 (works same as without query parameter)`() = testApplication {
+        fun `GET root with redirect=true returns 301`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
+            val client = httpClient()
             val expectedUrl = "https://test.com"
 
             // ACT
 
             // create a new post
-            val reqBody = """{"url": "$expectedUrl"}"""
-            val id = post(client, basePath, reqBody, "user" to "password").bodyAsText()
+            val id = post(client, basePath, """{"url": "$expectedUrl"}""", auth).bodyAsText()
 
             // get created url
             val response = client.get("/$id?redirect=true")
@@ -116,15 +110,13 @@ class TinyUrlTest {
         fun `GET root with redirect=false returns 200 with body as url`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
+            val client = httpClient()
             val expectedUrl = "https://test.com"
 
             // ACT
 
             // create a new post
-            val reqBody = """{"url": "$expectedUrl"}"""
-            val id = post(client, basePath, reqBody, "user" to "password").bodyAsText()
-
+            val id = post(client, basePath, """{"url": "$expectedUrl"}""", auth).bodyAsText()
             // get created url
             val response = client.get("/$id?redirect=false")
 
@@ -135,29 +127,28 @@ class TinyUrlTest {
 
         @Test
         @DisplayName("GET /path with expired path returns 404 - created using milliseconds")
-        fun `GET root with expired path returns 404 - created using milliseconds`() = testApplication {
-            // ARRANGE
-            val clock = mockk<Clock>()
-            val now = Instant.now()
-            every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
-            application { mainModule(InMemoryRepository(clock)) }
+        fun `GET root with expired path returns 404 - created using milliseconds`() {
+            testApplication {
+                // ARRANGE
+                val clock = mockk<Clock>()
+                val now = Instant.now()
+                every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
+                application { mainModule(InMemoryRepository(clock)) }
 
-            val client = createClient { followRedirects = false } // custom client that doesn't follow redirects
+                val client = httpClient()
+                val oneDayMillis = 1.days.inWholeMilliseconds
 
-            // ACT
-            val url = client.post(basePath) {// clock first call = now
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                // language=json
-                setBody("""{"url": "https://test.com", "expires":{"type": "in","milliseconds": ${1.days.inWholeMilliseconds}}}""")
-            }.bodyAsText()
+                // ACT
+                val reqBody = """{"url": "https://test.com", "expires":{"type": "in","milliseconds": $oneDayMillis}}"""
+                val url = post(client, basePath, reqBody, auth).bodyAsText()
 
-            // ASSERT
-            val get = client.get("/$url") // clock second call = now
-            assertEquals(HttpStatusCode.MovedPermanently, get.status)
+                // ASSERT
+                val get = client.get("/$url") // clock second call = now
+                assertEquals(HttpStatusCode.MovedPermanently, get.status)
 
-            val getInTwoDays = client.get("/$url") // clock third call = now + 2 days
-            assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
+                val getInTwoDays = client.get("/$url") // clock third call = now + 2 days
+                assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
+            }
         }
 
         // TODO make this a parametrized test since just the json body is different from previous one
@@ -170,39 +161,19 @@ class TinyUrlTest {
             every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
             application { mainModule(InMemoryRepository(clock)) }
 
-            val client = httpClient() // custom client that doesn't follow redirects
+            val client = httpClient()
             val oneDayInFuture = now.plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
 
             // ACT
-            val url = client.post(basePath) {// clock first call = now
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                // language=json
-                setBody("""{"url": "https://test.com", "expires":{"type": "at","dateTime": "$oneDayInFuture"}}""")
-//              {"url": "https://test.com", "expires":{"type": "at","dateTime": "2023-02-20T22:28:25.943497Z[UTC]"}}
-            }.bodyAsText()
+            val reqBody = """{"url": "https://test.com", "expires":{"type": "at","dateTime": "$oneDayInFuture"}}"""
+            val url = post(client, basePath, reqBody, auth).bodyAsText()
 
             // ASSERT
-            val get = client.get("/$url") // clock second call = now
-            assertEquals(HttpStatusCode.MovedPermanently, get.status)
+            val resNow = client.get("/$url") // clock second call = now
+            assertEquals(HttpStatusCode.MovedPermanently, resNow.status)
 
-            val getInTwoDays = client.get("/$url") // clock third call = now + 2 days
-            assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
-        }
-    }
-
-    private suspend fun post(
-        client: HttpClient,
-        path: String,
-        reqBody: String,
-        basicAuth: Pair<String, String>?
-    ): HttpResponse {
-        return client.post(path) {
-            contentType(ContentType.Application.Json)
-            if (basicAuth != null) {
-                basicAuth(basicAuth.first, basicAuth.second)
-            }
-            setBody(reqBody)
+            val resInTwoDays = client.get("/$url") // clock third call = now + 2 days
+            assertEquals(HttpStatusCode.NotFound, resInTwoDays.status)
         }
     }
 
@@ -216,16 +187,12 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val response = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                // language=json
-                setBody("""{"url": "https://test.com"}""")
-            }
+            val reqBody = """{"url": "https://test.com"}"""
+            val res = post(client, basePath, reqBody, auth)
 
             // ASSERT
-            assertEquals(HttpStatusCode.Created, response.status)
-            assertEquals(8, response.bodyAsText().length)
+            assertEquals(HttpStatusCode.Created, res.status)
+            assertEquals(8, res.bodyAsText().length)
         }
 
     }
@@ -238,24 +205,19 @@ class TinyUrlTest {
         fun `PATCH api-tinyUrl with body returns 200`() = testApplication {
             // ARRANGE
             application { mainModule() }
+            val client = httpClient()
+            val expectedUrl = "https://test2.com"
 
             // ACT
-            val id = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                // language=json
-                setBody("""{"url": "https://test.com"}""")
-            }.bodyAsText()
-
-            val response = client.patch(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                // language=json
-                setBody("""{"id":"$id", "url":"https://test2.com"}""")
-            }
+            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
+            val res = patch(client, basePath, """{"id":"$id", "url":"$expectedUrl"}""", auth)
 
             // ASSERT
-            assertEquals(HttpStatusCode.OK, response.status)
+            assertEquals(HttpStatusCode.OK, res.status)
+
+            val get = client.get("/$id")
+            assertEquals(HttpStatusCode.MovedPermanently, get.status)
+            assertEquals(expectedUrl, get.headers["Location"])
         }
     }
 
@@ -269,16 +231,10 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val id = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                // language=json
-                setBody("""{"url": "https://test.com"}""")
-            }.bodyAsText()
+            val reqBody = """{"url": "https://test.com"}"""
+            val id = post(client, basePath, reqBody, auth).bodyAsText()
 
-            val response = client.delete("$basePath/$id") {
-                basicAuth("user", "password")
-            }
+            val response = delete(client, "$basePath/$id", auth)
 
             // ASSERT
             assertEquals(HttpStatusCode.NoContent, response.status)
@@ -291,12 +247,46 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val response = client.delete("$basePath/") {
-                basicAuth("user", "password")
-            }
+            val response = delete(client, "$basePath/", auth)
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, response.status)
+        }
+    }
+
+    private suspend fun post(
+        client: HttpClient,
+        path: String,
+        reqBody: String,
+        basicAuth: Pair<String, String>?
+    ): HttpResponse = client.post(path) {
+        contentType(ContentType.Application.Json)
+        if (basicAuth != null) {
+            basicAuth(basicAuth.first, basicAuth.second)
+        }
+        setBody(reqBody)
+    }
+
+    private suspend fun patch(
+        client: HttpClient,
+        path: String,
+        reqBody: String,
+        basicAuth: Pair<String, String>?
+    ): HttpResponse = client.patch(path) {
+        contentType(ContentType.Application.Json)
+        if (basicAuth != null) {
+            basicAuth(basicAuth.first, basicAuth.second)
+        }
+        setBody(reqBody)
+    }
+
+    private suspend fun delete(
+        client: HttpClient,
+        path: String,
+        basicAuth: Pair<String, String>?
+    ): HttpResponse = client.delete(path) {
+        if (basicAuth != null) {
+            basicAuth(basicAuth.first, basicAuth.second)
         }
     }
 }
