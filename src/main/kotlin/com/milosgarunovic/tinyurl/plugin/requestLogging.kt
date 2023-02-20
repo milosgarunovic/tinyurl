@@ -1,7 +1,6 @@
 package com.milosgarunovic.tinyurl.plugin
 
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.util.*
 import java.time.Instant
@@ -16,15 +15,17 @@ val RequestLogging = createApplicationPlugin(name = "CallLogging") {
     onCall { call ->
         val request = call.request
         val reqId = UUID.randomUUID().toString()
-        val username = call.principal<UserIdPrincipal>()?.name ?: ""
+        val username = getUsername(request)
         val ipAddress = call.request.host()
 
         call.attributes.put(reqStartTimeKey, Instant.now().toEpochMilli())
         call.attributes.put(reqIdKey, reqId)
         call.attributes.put(usernameKey, username)
         call.attributes.put(ipAddressKey, ipAddress)
-        // todo add user@ip
-        call.application.environment.log.info("Req id=[ $reqId ]; user=[ $username/$ipAddress]; url=[ ${request.httpMethod.value} ${request.uri} ];")
+        val httpMethod = request.httpMethod.value
+        val url = request.uri
+
+        call.application.environment.log.info(commonMessage(reqId, username, ipAddress, httpMethod, url))
     }
 
     onCallRespond { call, _ ->
@@ -34,8 +35,23 @@ val RequestLogging = createApplicationPlugin(name = "CallLogging") {
         val reqId = call.attributes[reqIdKey]
         val username = call.attributes[usernameKey]
         val ipAddress = call.attributes[ipAddressKey]
-
+        val httpMethod = request.httpMethod.value
+        val url = request.uri
         val elapsedRequestTime = Instant.now().toEpochMilli() - reqStartTime
-        call.application.environment.log.info("Res id=[ $reqId ]; user=[ $username/$ipAddress]; url=[ ${request.httpMethod.value} ${request.uri} ]; status=[${call.response.status()?.value}]; elapsedTime=[${elapsedRequestTime}ms];")
+        val httpStatusCode = call.response.status()?.value
+
+        val common = commonMessage(reqId, username, ipAddress, httpMethod, url)
+        val onRespond = "status=[$httpStatusCode]; elapsedTime=[${elapsedRequestTime}ms];"
+        call.application.environment.log.info("$common $onRespond")
     }
+}
+
+private fun getUsername(request: ApplicationRequest): String {
+//  val username = call.principal<UserIdPrincipal>("auth-basic")?.name ?: "" // doesn't work
+    // workaround is to parse basic auth myself
+    return request.authorization()?.removePrefix("Basic ")?.decodeBase64String()?.split(":")?.get(0) ?: ""
+}
+
+fun commonMessage(reqId: String, username: String, ipAddress: String, httpMethod: String, url: String): String {
+    return "Res id=[ $reqId ]; user=[ $username@$ipAddress]; url=[ $httpMethod $url ];"
 }
