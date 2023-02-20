@@ -20,7 +20,6 @@ class InMemoryRepository(
             shortUrl = random8Chars()
         } while (urls.indexOfFirst { it.shortUrl == shortUrl } != -1)
 
-
         urls.add(tinyUrlAddReq.toTinyUrl(shortUrl, clock))
 
         return shortUrl

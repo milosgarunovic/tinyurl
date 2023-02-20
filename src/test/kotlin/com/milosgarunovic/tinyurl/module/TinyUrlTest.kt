@@ -50,6 +50,7 @@ class TinyUrlTest {
             // create a new url
             val id = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 setBody("""{"url": "$expectedUrl"}""")
             }.bodyAsText()
 
@@ -70,11 +71,14 @@ class TinyUrlTest {
             // ACT
             val id = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 // language=json
                 setBody("""{"url": "https://test.com"}""")
             }.bodyAsText()
 
-            client.delete("$basePath/$id")
+            client.delete("$basePath/$id") {
+                basicAuth("user", "password")
+            }
 
             val response = client.get("/$id")
 
@@ -98,6 +102,7 @@ class TinyUrlTest {
             // create a new post
             val id = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 setBody("""{"url": "$expectedUrl"}""")
             }.bodyAsText()
 
@@ -122,6 +127,7 @@ class TinyUrlTest {
             // create a new post
             val id = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 setBody("""{"url": "$expectedUrl"}""")
             }.bodyAsText()
 
@@ -147,6 +153,7 @@ class TinyUrlTest {
             // ACT
             val url = client.post(basePath) {// clock first call = now
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 // language=json
                 setBody("""{"url": "https://test.com", "expires":{"type": "in","milliseconds": ${1.days.inWholeMilliseconds}}}""")
             }.bodyAsText()
@@ -159,6 +166,7 @@ class TinyUrlTest {
             assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
         }
 
+        // TODO make this a parametrized test since just the json body is different from previous one
         @Test
         @DisplayName("GET /path with expired path returns 404 - created using dateTime")
         fun `GET root with expired path returns 404 - created using dateTime`() = testApplication {
@@ -176,6 +184,7 @@ class TinyUrlTest {
             // ACT
             val url = client.post(basePath) {// clock first call = now
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 // language=json
                 setBody("""{"url": "https://test.com", "expires":{"type": "at","dateTime": "$oneDayInFuture"}}""")
 //              {"url": "https://test.com", "expires":{"type": "at","dateTime": "2023-02-20T22:28:25.943497Z[UTC]"}}
@@ -202,6 +211,7 @@ class TinyUrlTest {
             // ACT
             val response = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 // language=json
                 setBody("""{"url": "https://test.com"}""")
             }
@@ -225,12 +235,14 @@ class TinyUrlTest {
             // ACT
             val id = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 // language=json
                 setBody("""{"url": "https://test.com"}""")
             }.bodyAsText()
 
             val response = client.patch(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 // language=json
                 setBody("""{"id":"$id", "url":"https://test2.com"}""")
             }
@@ -252,11 +264,14 @@ class TinyUrlTest {
             // ACT
             val id = client.post(basePath) {
                 contentType(ContentType.Application.Json)
+                basicAuth("user", "password")
                 // language=json
                 setBody("""{"url": "https://test.com"}""")
             }.bodyAsText()
 
-            val response = client.delete("$basePath/$id")
+            val response = client.delete("$basePath/$id") {
+                basicAuth("user", "password")
+            }
 
             // ASSERT
             assertEquals(HttpStatusCode.NoContent, response.status)
@@ -269,7 +284,9 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val response = client.delete("$basePath/")
+            val response = client.delete("$basePath/") {
+                basicAuth("user", "password")
+            }
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, response.status)

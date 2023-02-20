@@ -25,9 +25,12 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("io.ktor:ktor-server-request-validation:$ktorVersion")
     implementation("io.ktor:ktor-server-openapi:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth:$ktorVersion")
 
     implementation("ch.qos.logback:logback-classic:1.4.5")
     implementation("commons-lang:commons-lang:2.6")
+    implementation("io.ktor:ktor-server-auth-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-core-jvm:2.2.3")
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
