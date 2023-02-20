@@ -2,6 +2,7 @@ package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
 import com.milosgarunovic.tinyurl.repository.InMemoryRepository
+import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -21,6 +22,8 @@ class TinyUrlTest {
 
     // TODO need tests to pass with /api/tinyurl - lower case, but that fails
     val basePath = "/api/tinyUrl"
+
+    private fun ApplicationTestBuilder.httpClient() = createClient { followRedirects = false }
 
     @Nested
     inner class GetRootTests {
@@ -48,11 +51,8 @@ class TinyUrlTest {
             // ACT
 
             // create a new url
-            val id = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                setBody("""{"url": "$expectedUrl"}""")
-            }.bodyAsText()
+            val reqBody = """{"url": "$expectedUrl"}"""
+            val id = post(client, basePath, reqBody, "user" to "password").bodyAsText()
 
             // get created url
             val response = client.get("/$id")
@@ -100,11 +100,8 @@ class TinyUrlTest {
             // ACT
 
             // create a new post
-            val id = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                setBody("""{"url": "$expectedUrl"}""")
-            }.bodyAsText()
+            val reqBody = """{"url": "$expectedUrl"}"""
+            val id = post(client, basePath, reqBody, "user" to "password").bodyAsText()
 
             // get created url
             val response = client.get("/$id?redirect=true")
@@ -125,11 +122,8 @@ class TinyUrlTest {
             // ACT
 
             // create a new post
-            val id = client.post(basePath) {
-                contentType(ContentType.Application.Json)
-                basicAuth("user", "password")
-                setBody("""{"url": "$expectedUrl"}""")
-            }.bodyAsText()
+            val reqBody = """{"url": "$expectedUrl"}"""
+            val id = post(client, basePath, reqBody, "user" to "password").bodyAsText()
 
             // get created url
             val response = client.get("/$id?redirect=false")
@@ -176,9 +170,7 @@ class TinyUrlTest {
             every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
             application { mainModule(InMemoryRepository(clock)) }
 
-            val client = createClient {
-                followRedirects = false; developmentMode = true
-            } // custom client that doesn't follow redirects
+            val client = httpClient() // custom client that doesn't follow redirects
             val oneDayInFuture = now.plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
 
             // ACT
@@ -196,6 +188,21 @@ class TinyUrlTest {
 
             val getInTwoDays = client.get("/$url") // clock third call = now + 2 days
             assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
+        }
+    }
+
+    private suspend fun post(
+        client: HttpClient,
+        path: String,
+        reqBody: String,
+        basicAuth: Pair<String, String>?
+    ): HttpResponse {
+        return client.post(path) {
+            contentType(ContentType.Application.Json)
+            if (basicAuth != null) {
+                basicAuth(basicAuth.first, basicAuth.second)
+            }
+            setBody(reqBody)
         }
     }
 
