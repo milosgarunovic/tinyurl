@@ -15,8 +15,6 @@ frontend kotlin/react in one module
 urls can be low letter case, so I'd need to test if it works like "/api/tinyUrl" and "/api/tinyurl", maybe even change
 the path... for now in tests this doesn't work
 ---
-set logger to write in UTC and everything to be stored in UTC and calculated accordingly
----
 create a user, TinyUrl should be related to a user if one exists
 can continue developing this way and then migrate or allow multiple options to users (basic, jwt, oauth...)
 need to make a create user path

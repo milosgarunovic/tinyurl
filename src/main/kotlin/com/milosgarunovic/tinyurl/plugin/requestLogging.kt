@@ -49,9 +49,10 @@ val RequestLogging = createApplicationPlugin(name = "CallLogging") {
 private fun getUsername(request: ApplicationRequest): String {
 //  val username = call.principal<UserIdPrincipal>("auth-basic")?.name ?: "" // doesn't work
     // workaround is to parse basic auth myself
-    return request.authorization()?.removePrefix("Basic ")?.decodeBase64String()?.split(":")?.get(0) ?: ""
+    val username = request.authorization()?.removePrefix("Basic ")?.decodeBase64String()?.split(":")?.get(0)
+    return if (username != null) "$username@" else ""
 }
 
 fun commonMessage(reqId: String, username: String, ipAddress: String, httpMethod: String, url: String): String {
-    return "Res id=[ $reqId ]; user=[ $username@$ipAddress]; url=[ $httpMethod $url ];"
+    return "Res id=[ $reqId ]; user=[ $username$ipAddress ]; url=[ $httpMethod $url ];"
 }
