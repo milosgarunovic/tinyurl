@@ -195,6 +195,20 @@ class TinyUrlTest {
             assertEquals(8, res.bodyAsText().length)
         }
 
+        @Test
+        @DisplayName("POST /api/tinyUrl withouth authorization returns 401")
+        fun `POST api-tinyUrl without authorization returns 401`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val reqBody = """{"url": "https://test.com"}"""
+            val res = post(client, basePath, reqBody, null)
+
+            // TODO check logs see why it doesn't pick up 401 in status code.. must be out of scope
+            // ASSERT
+            assertEquals(HttpStatusCode.Unauthorized, res.status)
+        }
     }
 
     @Nested
@@ -219,6 +233,21 @@ class TinyUrlTest {
             assertEquals(HttpStatusCode.MovedPermanently, get.status)
             assertEquals(expectedUrl, get.headers["Location"])
         }
+
+        @Test
+        @DisplayName("PATCH /api/tinyUrl withouth authorization returns 401")
+        fun `PATCH api-tinyUrl without authorization returns 401`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
+            val res = patch(client, basePath, """{"id":"$id", "url":"https://test2.com"}""", null)
+
+            // TODO check logs see why it doesn't pick up 401 in status code.. must be out of scope
+            // ASSERT
+            assertEquals(HttpStatusCode.Unauthorized, res.status)
+        }
     }
 
     @Nested
@@ -231,8 +260,7 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val reqBody = """{"url": "https://test.com"}"""
-            val id = post(client, basePath, reqBody, auth).bodyAsText()
+            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
 
             val response = delete(client, "$basePath/$id", auth)
 
@@ -251,6 +279,21 @@ class TinyUrlTest {
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, response.status)
+        }
+
+        @Test
+        @DisplayName("DELETE /api/tinyUrl without basic auth returns 401")
+        fun `DELETE api-tinyUrl without basic auth returns 401`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
+
+            val response = delete(client, "$basePath/$id", null)
+
+            // ASSERT
+            assertEquals(HttpStatusCode.Unauthorized, response.status)
         }
     }
 
