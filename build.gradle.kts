@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
+    id("org.jetbrains.dokka") version "1.7.20"
     application // Apply the application plugin to add support for building a CLI application in Java.
 }
 
@@ -29,8 +30,6 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.4.5")
     implementation("commons-lang:commons-lang:2.6")
-    implementation("io.ktor:ktor-server-auth-jvm:2.2.3")
-    implementation("io.ktor:ktor-server-core-jvm:2.2.3")
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")

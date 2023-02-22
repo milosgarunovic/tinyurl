@@ -13,8 +13,10 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [x] Create the most basic version covered in tests without any users
 - [x] Add feature that doesn't return 301 but instead 200 and where that link is leading to
 - [x] Add expiry of url
+- [x] Add Dokka for code documentation
 - [ ] Tests
-  - [x] Added Kover as code coverage tool
+  - [ ] Maintain test coverage above 90%
+- [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
   - [x] Add basic auth (partially done, still need to create a store for users, now it's hardcoded)
   - [ ] Add security tests
@@ -29,4 +31,12 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
   about those links - delete them, replace them or whatever.
 - [ ] Add frontend (maybe with Kotlin/React)
 - [ ] Add openApi/swagger
-- [ ] Add Dokka for code documentation
+
+---
+
+### Gradle tasks
+
+`./gradlew dokkaHtml` to generate html documentation for the code. This task doesn't print out location of created,
+but you can look it up manually. It should be found in `build/dokka/index.html`
+
+`./gradlew koverHtmlReport` generates html code coverage. This tasks will give you link to html.
