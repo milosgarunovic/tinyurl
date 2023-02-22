@@ -16,7 +16,7 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [x] Add Dokka for code documentation
 - [ ] Tests
   - [ ] Maintain test coverage above 90%
-- [x] Added Kover as code coverage tool
+  - [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
   - [x] Add basic auth (partially done, still need to create a store for users, now it's hardcoded)
   - [ ] Add security tests
