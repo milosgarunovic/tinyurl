@@ -8,6 +8,13 @@ The idea is to make a self-hosted version of tiny url.
 
 Project uses Ktor and Kotlin, it has a small api for creating urls.
 
+### Intentions of use
+
+* For personal use once deployed.
+* For API and e2e testing. I've worked for IT Bootcamp, and we worked with Selenium and Postman, this project will help
+  students test some familiar website without ads.
+* For anyone else who wants to use OSS.
+
 ### Roadmap (incomplete)
 
 - [x] Create the most basic version covered in tests without any users
