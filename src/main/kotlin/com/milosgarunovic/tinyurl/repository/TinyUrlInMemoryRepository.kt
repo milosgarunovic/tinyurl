@@ -44,7 +44,7 @@ class TinyUrlInMemoryRepository(
         // TODO add active attribute to search for that value
         val index = urls.indexOfFirst { it.shortUrl == shortUrl }
         if (index != -1) {
-            urls[index].active = false
+            urls[index].deactivate()
         }
     }
 }
