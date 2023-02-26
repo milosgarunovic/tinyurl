@@ -14,10 +14,10 @@ data class TinyUrlAddReq(
 
 // TODO add unit tests for this
 fun TinyUrlAddReq.toTinyUrl(shortUrl: String, clock: Clock): TinyUrl {
-    val dateCreated = clock.instant()
+    val now = clock.instant()
     val calculatedExpiry: Instant? = when (expires) {
         is Expires.At -> {
-            if (expires.dateTime.isAfter(dateCreated.atZone(ZoneId.of("UTC")))) {
+            if (expires.dateTime.isAfter(now.atZone(ZoneId.of("UTC")))) {
                 expires.dateTime.toInstant()
             } else {
                 // TODO throw exception because it's not in future, or check this in the request validator
@@ -25,9 +25,9 @@ fun TinyUrlAddReq.toTinyUrl(shortUrl: String, clock: Clock): TinyUrl {
             }
         }
 
-        is Expires.In -> dateCreated.plusMillis(expires.milliseconds)
+        is Expires.In -> now.plusMillis(expires.milliseconds)
         else -> null
     }
 
-    return TinyUrl(shortUrl = shortUrl, url = this.url, dateCreated = dateCreated, calculatedExpiry = calculatedExpiry)
+    return TinyUrl(shortUrl = shortUrl, url = this.url, calculatedExpiry = calculatedExpiry)
 }

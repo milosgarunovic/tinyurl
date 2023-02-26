@@ -7,7 +7,7 @@ import com.milosgarunovic.tinyurl.util.random8Chars
 import java.time.Clock
 import java.time.Instant
 
-class InMemoryRepository(
+class TinyUrlInMemoryRepository(
     private val clock: Clock = Clock.systemUTC(),
     private val urls: MutableList<TinyUrl> = ArrayList()
 ) {

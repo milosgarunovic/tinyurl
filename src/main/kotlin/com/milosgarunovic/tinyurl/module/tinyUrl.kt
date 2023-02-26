@@ -4,7 +4,7 @@ import com.milosgarunovic.tinyurl.ext.respondRedirect
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
-import com.milosgarunovic.tinyurl.repository.InMemoryRepository
+import com.milosgarunovic.tinyurl.repository.TinyUrlInMemoryRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -12,7 +12,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.tinyUrl(repository: InMemoryRepository) {
+fun Application.tinyUrl(repository: TinyUrlInMemoryRepository) {
     routing {
 
         get("/{path}") {

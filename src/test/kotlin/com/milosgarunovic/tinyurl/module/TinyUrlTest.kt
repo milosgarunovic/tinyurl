@@ -1,7 +1,7 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
-import com.milosgarunovic.tinyurl.repository.InMemoryRepository
+import com.milosgarunovic.tinyurl.repository.TinyUrlInMemoryRepository
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -133,7 +133,7 @@ class TinyUrlTest {
                 val clock = mockk<Clock>()
                 val now = Instant.now()
                 every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
-                application { mainModule(InMemoryRepository(clock)) }
+                application { mainModule(TinyUrlInMemoryRepository(clock)) }
 
                 val client = httpClient()
                 val oneDayMillis = 1.days.inWholeMilliseconds
@@ -159,7 +159,7 @@ class TinyUrlTest {
             val clock = mockk<Clock>()
             val now = Instant.now()
             every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
-            application { mainModule(InMemoryRepository(clock)) }
+            application { mainModule(TinyUrlInMemoryRepository(clock)) }
 
             val client = httpClient()
             val oneDayInFuture = now.plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
