@@ -41,9 +41,9 @@ class TinyUrlInMemoryRepository(
     }
 
     fun delete(shortUrl: String) {
-        // TODO add active attribute to search for that value
         val index = urls.indexOfFirst { it.shortUrl == shortUrl }
         if (index != -1) {
+            // TODO what if it's already deleted? Is it even possible to access that entity
             urls[index].deactivate()
         }
     }
