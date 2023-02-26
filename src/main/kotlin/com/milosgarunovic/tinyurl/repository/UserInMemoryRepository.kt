@@ -18,4 +18,8 @@ class UserInMemoryRepository {
 
     }
 
+    fun updatePassword() {
+
+    }
+
 }

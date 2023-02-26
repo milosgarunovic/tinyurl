@@ -28,7 +28,9 @@ class TinyUrlInMemoryRepository(
     fun get(shortUrl: String): String? {
         val tinyUrl = urls.find { it.shortUrl == shortUrl }
         if (tinyUrl != null) {
-            if (tinyUrl.calculatedExpiry != null && Instant.now(clock).isAfter(tinyUrl.calculatedExpiry)) {
+            if (!tinyUrl.active ||
+                tinyUrl.calculatedExpiry?.isBefore(Instant.now(clock)) == true
+            ) {
                 return null
             }
             return tinyUrl.url
@@ -45,9 +47,9 @@ class TinyUrlInMemoryRepository(
 
     fun delete(shortUrl: String) {
         // TODO add active attribute to search for that value
-        val tinyUrl = urls.find { it.shortUrl == shortUrl }
-        if (tinyUrl != null) {
-            urls.remove(tinyUrl)
+        val index = urls.indexOfFirst { it.shortUrl == shortUrl }
+        if (index != -1) {
+            urls[index].active = false
         }
     }
 }
