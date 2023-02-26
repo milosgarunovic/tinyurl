@@ -27,12 +27,7 @@ class TinyUrlInMemoryRepository(
 
     fun get(shortUrl: String): String? {
         val tinyUrl = urls.find { it.shortUrl == shortUrl }
-        if (tinyUrl != null) {
-            if (!tinyUrl.active ||
-                tinyUrl.calculatedExpiry?.isBefore(Instant.now(clock)) == true
-            ) {
-                return null
-            }
+        if (tinyUrl?.active == true && tinyUrl.calculatedExpiry?.isAfter(Instant.now(clock)) != false) {
             return tinyUrl.url
         }
         return null
