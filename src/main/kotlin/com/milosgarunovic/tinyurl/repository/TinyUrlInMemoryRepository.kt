@@ -26,11 +26,11 @@ class TinyUrlInMemoryRepository(
     }
 
     fun get(shortUrl: String): String? {
-        val tinyUrl = urls.find { it.shortUrl == shortUrl }
-        if (tinyUrl?.active == true && tinyUrl.calculatedExpiry?.isAfter(Instant.now(clock)) != false) {
-            return tinyUrl.url
-        }
-        return null
+        return urls.find {
+            it.shortUrl == shortUrl &&
+                    it.active &&
+                    it.calculatedExpiry?.isAfter(Instant.now(clock)) != false
+        }?.url
     }
 
     fun update(shortUrl: String, url: String) {

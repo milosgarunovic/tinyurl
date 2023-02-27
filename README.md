@@ -41,6 +41,7 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [ ] Add frontend (maybe with Kotlin/React)
 - [ ] Add openApi/swagger
 - [ ] Add GraalVM for smaller footprint (cpu, memory..)
+- [ ] Add auditing
 
 ---
 
