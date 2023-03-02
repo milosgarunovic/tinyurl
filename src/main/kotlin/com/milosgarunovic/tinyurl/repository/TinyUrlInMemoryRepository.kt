@@ -3,14 +3,10 @@ package com.milosgarunovic.tinyurl.repository
 import com.milosgarunovic.tinyurl.entity.TinyUrl
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.toTinyUrl
+import com.milosgarunovic.tinyurl.util.InstantUtil
 import com.milosgarunovic.tinyurl.util.random8Chars
-import java.time.Clock
-import java.time.Instant
 
-class TinyUrlInMemoryRepository(
-    private val clock: Clock = Clock.systemUTC(),
-    private val urls: MutableList<TinyUrl> = ArrayList()
-) {
+class TinyUrlInMemoryRepository(private val urls: MutableList<TinyUrl> = ArrayList()) {
 
     fun add(tinyUrlAddReq: TinyUrlAddReq): String {
         var shortUrl: String
@@ -20,7 +16,7 @@ class TinyUrlInMemoryRepository(
             shortUrl = random8Chars()
         } while (urls.indexOfFirst { it.shortUrl == shortUrl } != -1)
 
-        urls.add(tinyUrlAddReq.toTinyUrl(shortUrl, clock))
+        urls.add(tinyUrlAddReq.toTinyUrl(shortUrl))
 
         return shortUrl
     }
@@ -29,7 +25,7 @@ class TinyUrlInMemoryRepository(
         return urls.find {
             it.shortUrl == shortUrl &&
                     it.active &&
-                    it.calculatedExpiry?.isAfter(Instant.now(clock)) != false
+                    it.calculatedExpiry?.isAfter(InstantUtil.now()) != false
         }?.url
     }
 

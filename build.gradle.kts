@@ -33,8 +33,6 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
-
 }
 
 tasks.test {

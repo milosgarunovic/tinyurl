@@ -2,7 +2,6 @@ package com.milosgarunovic.tinyurl.json
 
 import com.milosgarunovic.tinyurl.entity.TinyUrl
 import kotlinx.serialization.Serializable
-import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 
@@ -13,8 +12,8 @@ data class TinyUrlAddReq(
 )
 
 // TODO add unit tests for this
-fun TinyUrlAddReq.toTinyUrl(shortUrl: String, clock: Clock): TinyUrl {
-    val now = clock.instant()
+fun TinyUrlAddReq.toTinyUrl(shortUrl: String): TinyUrl {
+    val now = Instant.now()
     val calculatedExpiry: Instant? = when (expires) {
         is Expires.At -> {
             if (expires.dateTime.isAfter(now.atZone(ZoneId.of("UTC")))) {

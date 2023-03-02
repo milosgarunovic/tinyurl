@@ -1,19 +1,16 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
-import com.milosgarunovic.tinyurl.repository.TinyUrlInMemoryRepository
+import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
@@ -146,10 +143,9 @@ class TinyUrlTest {
         fun `GET root with expired path returns 404 - created using milliseconds`() {
             testApplication {
                 // ARRANGE
-                val clock = mockk<Clock>()
                 val now = Instant.now()
-                every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
-                application { mainModule(TinyUrlInMemoryRepository(clock)) }
+                InstantUtil.setFixed(now)
+                application { mainModule() }
                 client.post("/api/user/register") {
                     contentType(ContentType.Application.Json)
                     setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
@@ -163,11 +159,13 @@ class TinyUrlTest {
                 val url = post(client, basePath, reqBody, auth).bodyAsText()
 
                 // ASSERT
-                val get = client.get("/$url") // clock second call = now
+                val get = client.get("/$url")
                 assertEquals(HttpStatusCode.MovedPermanently, get.status)
 
-                val getInTwoDays = client.get("/$url") // clock third call = now + 2 days
+                InstantUtil.plusDays(2)
+                val getInTwoDays = client.get("/$url")
                 assertEquals(HttpStatusCode.NotFound, getInTwoDays.status)
+                InstantUtil.clear()
             }
         }
 
@@ -176,28 +174,28 @@ class TinyUrlTest {
         @DisplayName("GET /path with expired path returns 404 - created using dateTime")
         fun `GET root with expired path returns 404 - created using dateTime`() = testApplication {
             // ARRANGE
-            val clock = mockk<Clock>()
-            val now = Instant.now()
-            every { clock.instant() } returns now andThen now andThen now.plusMillis(2.days.inWholeMilliseconds)
-            application { mainModule(TinyUrlInMemoryRepository(clock)) }
+            InstantUtil.setFixed(Instant.now())
+            application { mainModule() }
             client.post("/api/user/register") {
                 contentType(ContentType.Application.Json)
                 setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
             }
 
             val client = httpClient()
-            val oneDayInFuture = now.plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
+            val oneDayInFuture = InstantUtil.now().plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
 
             // ACT
             val reqBody = """{"url": "https://test.com", "expires":{"type": "at","dateTime": "$oneDayInFuture"}}"""
             val url = post(client, basePath, reqBody, auth).bodyAsText()
 
             // ASSERT
-            val resNow = client.get("/$url") // clock second call = now
+            val resNow = client.get("/$url")
             assertEquals(HttpStatusCode.MovedPermanently, resNow.status)
 
-            val resInTwoDays = client.get("/$url") // clock third call = now + 2 days
+            InstantUtil.plusDays(2)
+            val resInTwoDays = client.get("/$url")
             assertEquals(HttpStatusCode.NotFound, resInTwoDays.status)
+            InstantUtil.clear()
         }
     }
 
