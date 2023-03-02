@@ -9,6 +9,8 @@ interface UrlRepository {
 
     fun get(shortUrl: String): TinyUrl?
 
+    fun getUrl(shortUrl: String): String?
+
     fun update(shortUrl: String, url: String)
 
     fun delete(shortUrl: String)

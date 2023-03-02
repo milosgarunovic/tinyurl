@@ -30,6 +30,10 @@ class UrlRepositoryInMemory(private val urls: MutableList<TinyUrl> = ArrayList()
         }
     }
 
+    override fun getUrl(shortUrl: String): String? {
+        TODO("Not yet implemented")
+    }
+
     override fun update(shortUrl: String, url: String) {
         val index = urls.indexOfFirst { it.shortUrl == shortUrl }
         if (index != -1) {

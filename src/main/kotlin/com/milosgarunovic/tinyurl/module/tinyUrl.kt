@@ -22,7 +22,7 @@ fun Application.tinyUrl() {
         get("/{path}") {
             val path = call.parameters["path"]!!
             val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
-            val url = repository.get(path)?.url
+            val url = repository.getUrl(path)
             if (url != null) {
                 if (redirect) {
                     call.respondRedirect(url) // TODO add statistics for that url
