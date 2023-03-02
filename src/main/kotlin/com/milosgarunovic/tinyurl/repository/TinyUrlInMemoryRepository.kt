@@ -6,9 +6,9 @@ import com.milosgarunovic.tinyurl.json.toTinyUrl
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import com.milosgarunovic.tinyurl.util.random8Chars
 
-class TinyUrlInMemoryRepository(private val urls: MutableList<TinyUrl> = ArrayList()) {
+class TinyUrlInMemoryRepository(private val urls: MutableList<TinyUrl> = ArrayList()) : UrlRepository {
 
-    fun add(tinyUrlAddReq: TinyUrlAddReq): String {
+    override fun add(tinyUrlAddReq: TinyUrlAddReq): TinyUrl {
         var shortUrl: String
 
         do {
@@ -16,27 +16,28 @@ class TinyUrlInMemoryRepository(private val urls: MutableList<TinyUrl> = ArrayLi
             shortUrl = random8Chars()
         } while (urls.indexOfFirst { it.shortUrl == shortUrl } != -1)
 
-        urls.add(tinyUrlAddReq.toTinyUrl(shortUrl))
+        val url = tinyUrlAddReq.toTinyUrl(shortUrl)
+        urls.add(url)
 
-        return shortUrl
+        return url
     }
 
-    fun get(shortUrl: String): String? {
+    override fun get(shortUrl: String): TinyUrl? {
         return urls.find {
             it.shortUrl == shortUrl &&
                     it.active &&
                     it.calculatedExpiry?.isAfter(InstantUtil.now()) != false
-        }?.url
+        }
     }
 
-    fun update(shortUrl: String, url: String) {
+    override fun update(shortUrl: String, url: String) {
         val index = urls.indexOfFirst { it.shortUrl == shortUrl }
         if (index != -1) {
             urls[index] = urls[index].copy(url = url)
         }
     }
 
-    fun delete(shortUrl: String) {
+    override fun delete(shortUrl: String) {
         val index = urls.indexOfFirst { it.shortUrl == shortUrl }
         if (index != -1) {
             // TODO what if it's already deleted? Is it even possible to access that entity

@@ -18,7 +18,7 @@ fun Application.tinyUrl(repository: TinyUrlInMemoryRepository = TinyUrlInMemoryR
         get("/{path}") {
             val path = call.parameters["path"]!!
             val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
-            val url = repository.get(path)
+            val url = repository.get(path)?.url
             if (url != null) {
                 if (redirect) {
                     call.respondRedirect(url) // TODO add statistics for that url
@@ -36,7 +36,7 @@ fun Application.tinyUrl(repository: TinyUrlInMemoryRepository = TinyUrlInMemoryR
                 post {
                     val req = call.receive<TinyUrlAddReq>() // todo must be a valid url
                     val res = repository.add(req)
-                    call.respond(HttpStatusCode.Created, res)
+                    call.respond(HttpStatusCode.Created, res.shortUrl)
                 }
 
                 patch {
