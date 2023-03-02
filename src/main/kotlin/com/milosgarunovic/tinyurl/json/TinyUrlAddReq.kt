@@ -28,5 +28,5 @@ fun TinyUrlAddReq.toTinyUrl(shortUrl: String): TinyUrl {
         else -> null
     }
 
-    return TinyUrl(shortUrl = shortUrl, url = this.url, calculatedExpiry = calculatedExpiry)
+    return TinyUrl(shortUrl, this.url, calculatedExpiry)
 }

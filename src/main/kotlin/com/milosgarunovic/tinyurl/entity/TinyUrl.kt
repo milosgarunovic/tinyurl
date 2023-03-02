@@ -6,7 +6,6 @@ import java.time.Instant
 data class TinyUrl(
     val shortUrl: String,
     val url: String,
-    val expires: Expires? = null,
     /**
      * calculated if [expires] field is present, and it's adjusted based on [dateCreated] when [Expires.In] is used.
      * In case of [Expires.At] it's that date. Must be ahead of [dateCreated].

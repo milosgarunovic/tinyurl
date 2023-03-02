@@ -31,6 +31,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.5")
     implementation("commons-lang:commons-lang:2.6")
 
+    implementation("org.xerial:sqlite-jdbc:3.41.0.0")
+
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
 }

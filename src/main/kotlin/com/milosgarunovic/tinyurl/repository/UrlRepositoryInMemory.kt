@@ -6,7 +6,7 @@ import com.milosgarunovic.tinyurl.json.toTinyUrl
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import com.milosgarunovic.tinyurl.util.random8Chars
 
-class TinyUrlInMemoryRepository(private val urls: MutableList<TinyUrl> = ArrayList()) : UrlRepository {
+class UrlRepositoryInMemory(private val urls: MutableList<TinyUrl> = ArrayList()) : UrlRepository {
 
     override fun add(tinyUrlAddReq: TinyUrlAddReq): TinyUrl {
         var shortUrl: String

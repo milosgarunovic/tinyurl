@@ -4,8 +4,8 @@ import java.time.Instant
 import java.util.*
 
 abstract class BaseEntity(
-    val id: String = UUID.randomUUID().toString(),
-    val dateCreated: Instant = Instant.now(),
+    var id: String = UUID.randomUUID().toString(),
+    var dateCreated: Instant = Instant.now(),
     var active: Boolean = true,
     private var dateDeactivated: Instant? = null,
 ) {

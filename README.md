@@ -28,7 +28,7 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [ ] Add authentication and authorization
   - [x] Add basic auth (partially done, still need to create a store for users, now it's hardcoded)
   - [ ] Add security tests
-- [ ] Add filesystem as a storage - most basic version without database. This way there's no db maintenance
+- [ ] Add SQLite as a storage - most basic version with local. This way there's no db maintenance.
 - [ ] Add database as a storage
   - [ ] Docker and testcontainers
 - [ ] Add statistics for how many times a route has been called
