@@ -12,7 +12,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.tinyUrl(repository: TinyUrlInMemoryRepository) {
+fun Application.tinyUrl(repository: TinyUrlInMemoryRepository = TinyUrlInMemoryRepository()) {
     routing {
 
         get("/{path}") {

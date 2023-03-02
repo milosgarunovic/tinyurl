@@ -4,7 +4,6 @@ import com.milosgarunovic.tinyurl.module.config
 import com.milosgarunovic.tinyurl.module.openApi
 import com.milosgarunovic.tinyurl.module.tinyUrl
 import com.milosgarunovic.tinyurl.module.user
-import com.milosgarunovic.tinyurl.repository.TinyUrlInMemoryRepository
 import com.milosgarunovic.tinyurl.repository.UserInMemoryRepository
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
@@ -18,7 +17,7 @@ fun main() {
     ).start(wait = true)
 }
 
-fun Application.mainModule(repository: TinyUrlInMemoryRepository = TinyUrlInMemoryRepository()) {
+fun Application.mainModule() {
 
     val userRepository = UserInMemoryRepository()
 
@@ -26,7 +25,7 @@ fun Application.mainModule(repository: TinyUrlInMemoryRepository = TinyUrlInMemo
 
     user(userRepository)
 
-    tinyUrl(repository)
+    tinyUrl()
 
     openApi()
 }
