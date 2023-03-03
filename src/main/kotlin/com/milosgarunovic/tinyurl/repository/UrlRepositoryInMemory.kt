@@ -3,7 +3,6 @@ package com.milosgarunovic.tinyurl.repository
 import com.milosgarunovic.tinyurl.entity.TinyUrl
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.toTinyUrl
-import com.milosgarunovic.tinyurl.util.InstantUtil
 import com.milosgarunovic.tinyurl.util.random8Chars
 
 class UrlRepositoryInMemory(private val urls: MutableList<TinyUrl> = ArrayList()) : UrlRepository {
@@ -20,14 +19,6 @@ class UrlRepositoryInMemory(private val urls: MutableList<TinyUrl> = ArrayList()
         urls.add(url)
 
         return url
-    }
-
-    override fun get(shortUrl: String): TinyUrl? {
-        return urls.find {
-            it.shortUrl == shortUrl &&
-                    it.active &&
-                    it.calculatedExpiry?.isAfter(InstantUtil.now()) != false
-        }
     }
 
     override fun getUrl(shortUrl: String): String? {
@@ -47,5 +38,9 @@ class UrlRepositoryInMemory(private val urls: MutableList<TinyUrl> = ArrayList()
             // TODO what if it's already deleted? Is it even possible to access that entity
             urls[index].deactivate()
         }
+    }
+
+    override fun exists(shortUrl: String): Boolean {
+        TODO("Not yet implemented")
     }
 }

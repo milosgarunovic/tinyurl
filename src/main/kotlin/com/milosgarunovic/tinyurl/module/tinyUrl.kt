@@ -22,6 +22,7 @@ fun Application.tinyUrl() {
         get("/{path}") {
             val path = call.parameters["path"]!!
             val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
+            // TODO add validation, this can be only 8 chars long
             val url = repository.getUrl(path)
             if (url != null) {
                 if (redirect) {

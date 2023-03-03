@@ -1,6 +1,7 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
+import com.milosgarunovic.tinyurl.repository.SQLite
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -206,6 +207,8 @@ class TinyUrlTest {
         @DisplayName("POST /api/tinyUrl with url in body returns 201 and has length 8")
         fun `POST api-tinyUrl with url in body returns 201 and has length 8`() = testApplication {
             // ARRANGE
+            SQLite.setup("test")
+
             application { mainModule() }
             client.post("/api/user/register") {
                 contentType(ContentType.Application.Json)

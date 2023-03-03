@@ -7,12 +7,12 @@ interface UrlRepository {
 
     fun add(tinyUrlAddReq: TinyUrlAddReq): TinyUrl
 
-    fun get(shortUrl: String): TinyUrl?
-
     fun getUrl(shortUrl: String): String?
 
     fun update(shortUrl: String, url: String)
 
     fun delete(shortUrl: String)
+
+    fun exists(shortUrl: String): Boolean
 
 }
