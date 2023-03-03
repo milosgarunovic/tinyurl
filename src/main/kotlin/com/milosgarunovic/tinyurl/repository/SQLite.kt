@@ -1,6 +1,5 @@
 package com.milosgarunovic.tinyurl.repository
 
-import org.intellij.lang.annotations.Language
 import org.sqlite.JDBC
 import java.sql.Connection
 import java.sql.DriverManager
@@ -8,7 +7,7 @@ import java.sql.ResultSet
 
 object SQLite {
 
-    lateinit var connection: Connection
+    private lateinit var connection: Connection
 
     fun setup(dbName: String) {
         Class.forName(JDBC::class.qualifiedName)
@@ -21,7 +20,9 @@ object SQLite {
         for (parameter in parameters) {
             prepareStatement.setObject(parameter.first, parameter.second)
         }
-        return prepareStatement.executeQuery()
+        val executeQuery = prepareStatement.executeQuery()
+        prepareStatement.close()
+        return executeQuery
     }
 
     fun insert(query: String, vararg parameters: Pair<Int, Any>): Int {
@@ -37,7 +38,9 @@ object SQLite {
         for (parameter in parameters) {
             prepareStatement.setObject(parameter.first, parameter.second)
         }
-        return prepareStatement.executeUpdate()
+        val executeUpdate = prepareStatement.executeUpdate()
+        prepareStatement.close()
+        return executeUpdate
     }
 
     fun close() {
@@ -47,18 +50,18 @@ object SQLite {
     }
 
     private fun createDatabase() {
-        val statement = SQLite.connection.createStatement()
+        val statement = connection.createStatement()
 
-        @Language("SQLite")
+        //language=SQLite
         val query = """
         CREATE TABLE IF NOT EXISTS url (
-        id TEXT PRIMARY KEY NOT NULL,
-        shortUrl TEXT NOT NULL,
-        url TEXT NOT NULL,
-        calculatedExpiry INTEGER,
-        dateCreated INTEGER NOT NULL,
-        active INTEGER NOT NULL,
-        dateDeactivated INTEGER)"""
+        id                  TEXT PRIMARY KEY NOT NULL,
+        shortUrl            TEXT NOT NULL UNIQUE,
+        url                 TEXT NOT NULL,
+        calculatedExpiry    INTEGER NOT NULL DEFAULT 0,
+        dateCreated         INTEGER NOT NULL,
+        active              INTEGER NOT NULL DEFAULT 1,
+        dateDeactivated     INTEGER NOT NULL DEFAULT 0)"""
         statement.executeUpdate(query)
         statement.close()
     }
