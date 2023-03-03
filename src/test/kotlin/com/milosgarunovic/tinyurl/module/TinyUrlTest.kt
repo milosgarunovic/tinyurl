@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.time.Instant
 import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
 
@@ -33,7 +32,9 @@ class TinyUrlTest {
         @BeforeAll
         @JvmStatic
         fun beforeAll() {
-            SQLite.setup("test")
+            SQLite.setupInMemory()
+            // used for debugging
+            // SQLite.setup("test")
         }
     }
 
@@ -153,8 +154,7 @@ class TinyUrlTest {
         fun `GET root with expired path returns 404 - created using milliseconds`() {
             testApplication {
                 // ARRANGE
-                val now = Instant.now()
-                InstantUtil.setFixed(now)
+                InstantUtil.setFixed()
                 application { mainModule() }
                 client.post("/api/user/register") {
                     contentType(ContentType.Application.Json)
@@ -184,7 +184,7 @@ class TinyUrlTest {
         @DisplayName("GET /path with expired path returns 404 - created using dateTime")
         fun `GET root with expired path returns 404 - created using dateTime`() = testApplication {
             // ARRANGE
-            InstantUtil.setFixed(Instant.now())
+            InstantUtil.setFixed()
             application { mainModule() }
             client.post("/api/user/register") {
                 contentType(ContentType.Application.Json)

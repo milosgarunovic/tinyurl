@@ -15,13 +15,19 @@ object SQLite {
         createDatabase()
     }
 
+    fun setupInMemory() {
+        Class.forName(JDBC::class.qualifiedName)
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:")
+        createDatabase()
+    }
+
     fun query(query: String, vararg parameters: Pair<Int, Any>): ResultSet {
         val prepareStatement = connection.prepareStatement(query)
         for (parameter in parameters) {
             prepareStatement.setObject(parameter.first, parameter.second)
         }
         val executeQuery = prepareStatement.executeQuery()
-        prepareStatement.close()
+//        prepareStatement.close()
         return executeQuery
     }
 
@@ -39,7 +45,7 @@ object SQLite {
             prepareStatement.setObject(parameter.first, parameter.second)
         }
         val executeUpdate = prepareStatement.executeUpdate()
-        prepareStatement.close()
+//        prepareStatement.close()
         return executeUpdate
     }
 

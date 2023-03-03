@@ -13,7 +13,7 @@ object InstantUtil {
 
     private var instant: Instant? = null
 
-    fun setFixed(instant: Instant) {
+    fun setFixed(instant: Instant = Instant.now()) {
         this.instant = instant
     }
 

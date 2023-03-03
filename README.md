@@ -31,10 +31,10 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
   - [ ] Add JWT instead of basic auth
   - [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
 - [x] Add SQLite as a storage - most basic version with local. This way there's no db maintenance.
+  - [x] in memory SQLite for tests
   - [ ] change from long to string for date formats - or real date
   - [ ] add user
   - [ ] add liquibase
-  - [ ] in memory SQLite for tests
   - [ ] see if queries are blocking and wrap them in runBlocking
 - [ ] Add database as a storage (postgres)
   - [ ] Docker and testcontainers
