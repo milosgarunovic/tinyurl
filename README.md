@@ -28,8 +28,15 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
 - [ ] Add authentication and authorization
   - [x] Add basic auth (partially done, still need to create a store for users, now it's hardcoded)
   - [ ] Add security tests
-- [ ] Add SQLite as a storage - most basic version with local. This way there's no db maintenance.
-- [ ] Add database as a storage
+  - [ ] Add JWT instead of basic auth
+  - [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
+- [x] Add SQLite as a storage - most basic version with local. This way there's no db maintenance.
+  - [ ] change from long to string for date formats - or real date
+  - [ ] add user
+  - [ ] add liquibase
+  - [ ] in memory SQLite for tests
+  - [ ] see if queries are blocking and wrap them in runBlocking
+- [ ] Add database as a storage (postgres)
   - [ ] Docker and testcontainers
 - [ ] Add statistics for how many times a route has been called
   - [ ] Statistics should hold date accessed and number of times. Maybe group by minute/hour?
