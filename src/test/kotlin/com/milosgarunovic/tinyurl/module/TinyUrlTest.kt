@@ -9,6 +9,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -27,6 +28,14 @@ class TinyUrlTest {
      * Creates a http client that doesn't follow redirects.
      */
     private fun ApplicationTestBuilder.httpClient() = createClient { followRedirects = false }
+
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun beforeAll() {
+            SQLite.setup("test")
+        }
+    }
 
     @Nested
     inner class GetRootTests {
@@ -207,7 +216,6 @@ class TinyUrlTest {
         @DisplayName("POST /api/tinyUrl with url in body returns 201 and has length 8")
         fun `POST api-tinyUrl with url in body returns 201 and has length 8`() = testApplication {
             // ARRANGE
-            SQLite.setup("test")
 
             application { mainModule() }
             client.post("/api/user/register") {
@@ -351,10 +359,7 @@ class TinyUrlTest {
     }
 
     private suspend fun post(
-        client: HttpClient,
-        path: String,
-        reqBody: String,
-        basicAuth: Pair<String, String>?
+        client: HttpClient, path: String, reqBody: String, basicAuth: Pair<String, String>?
     ): HttpResponse = client.post(path) {
         contentType(ContentType.Application.Json)
         if (basicAuth != null) {
@@ -364,10 +369,7 @@ class TinyUrlTest {
     }
 
     private suspend fun patch(
-        client: HttpClient,
-        path: String,
-        reqBody: String,
-        basicAuth: Pair<String, String>?
+        client: HttpClient, path: String, reqBody: String, basicAuth: Pair<String, String>?
     ): HttpResponse = client.patch(path) {
         contentType(ContentType.Application.Json)
         if (basicAuth != null) {
@@ -377,9 +379,7 @@ class TinyUrlTest {
     }
 
     private suspend fun delete(
-        client: HttpClient,
-        path: String,
-        basicAuth: Pair<String, String>?
+        client: HttpClient, path: String, basicAuth: Pair<String, String>?
     ): HttpResponse = client.delete(path) {
         if (basicAuth != null) {
             basicAuth(basicAuth.first, basicAuth.second)

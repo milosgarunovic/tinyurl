@@ -3,6 +3,7 @@ package com.milosgarunovic.tinyurl.repository
 import com.milosgarunovic.tinyurl.entity.TinyUrl
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.toTinyUrl
+import com.milosgarunovic.tinyurl.util.InstantUtil
 import com.milosgarunovic.tinyurl.util.random8Chars
 import java.time.Instant
 
@@ -27,24 +28,28 @@ class UrlRepositorySQLite : UrlRepository {
 
     override fun getUrl(shortUrl: String): String? {
         //language=SQLite
-        val query = "SELECT shortUrl, calculatedExpiry FROM url WHERE shortUrl = ? AND active = 1;"
+        val query = "SELECT url, calculatedExpiry FROM url WHERE shortUrl = ? AND active = 1;"
         val resultSet = SQLite.query(query, 1 to shortUrl)
         if (resultSet.next()) {
             val expiry = resultSet.getLong("calculatedExpiry")
-            if (expiry != 0L && expiry < Instant.now().toEpochMilli()) {
+            if (expiry != 0L && expiry < InstantUtil.now().toEpochMilli()) {
                 return null
             }
-            return resultSet.getString("shortUrl")
+            return resultSet.getString("url")
         }
         return null
     }
 
     override fun update(shortUrl: String, url: String) {
-        TODO("Not yet implemented")
+        //language=SQLite
+        val query = "UPDATE url SET url = ? WHERE shortUrl = ?;"
+        SQLite.update(query, 1 to url, 2 to shortUrl)
     }
 
     override fun delete(shortUrl: String) {
-        TODO("Not yet implemented")
+        //language=SQLite
+        val query = "UPDATE url SET active = false, dateDeactivated = ? WHERE shortUrl = ?;"
+        SQLite.update(query, 1 to Instant.now().toEpochMilli(), 2 to shortUrl)
     }
 
     override fun exists(shortUrl: String): Boolean {

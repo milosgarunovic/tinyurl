@@ -8,9 +8,4 @@ abstract class BaseEntity(
     var dateCreated: Instant = Instant.now(),
     var active: Boolean = true,
     private var dateDeactivated: Instant? = null,
-) {
-    fun deactivate() {
-        active = false
-        dateDeactivated = Instant.now()
-    }
-}
+)

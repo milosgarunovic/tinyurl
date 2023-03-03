@@ -25,6 +25,14 @@ object SQLite {
     }
 
     fun insert(query: String, vararg parameters: Pair<Int, Any>): Int {
+        return update(query, *parameters)
+    }
+
+    fun delete(query: String, vararg parameters: Pair<Int, Any>): Int {
+        return update(query, *parameters)
+    }
+
+    fun update(query: String, vararg parameters: Pair<Int, Any>): Int {
         val prepareStatement = connection.prepareStatement(query)
         for (parameter in parameters) {
             prepareStatement.setObject(parameter.first, parameter.second)
@@ -38,7 +46,7 @@ object SQLite {
         }
     }
 
-    fun createDatabase() {
+    private fun createDatabase() {
         val statement = SQLite.connection.createStatement()
 
         @Language("SQLite")
