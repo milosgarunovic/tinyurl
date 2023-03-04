@@ -8,11 +8,8 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
 
@@ -21,7 +18,7 @@ class TinyUrlTest {
     // TODO need tests to pass with /api/tinyurl - lower case, but that fails
     private val basePath = "/api/tinyUrl"
 
-    private var auth = "user" to "password"
+    private var auth = "test@test.com" to "password"
 
     /**
      * Creates a http client that doesn't follow redirects.
@@ -32,9 +29,24 @@ class TinyUrlTest {
         @BeforeAll
         @JvmStatic
         fun beforeAll() {
-            SQLite.setupInMemory()
-            // used for debugging
-            // SQLite.setup("test")
+//            SQLite.setupInMemory()
+            SQLite.setup("test") // used for debugging
+
+            // create a user
+            testApplication {
+                application { mainModule() }
+
+                client.post("/api/user/register") {
+                    contentType(ContentType.Application.Json)
+                    setBody("""{"email": "test@test.com", "password": "password"}""")
+                }
+            }
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun afterAll() {
+            SQLite.close()
         }
     }
 
@@ -60,10 +72,6 @@ class TinyUrlTest {
             application { mainModule() }
             val client = httpClient()
             val expectedUrl = "https://test.com"
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
 
@@ -83,10 +91,6 @@ class TinyUrlTest {
         fun `GET root with deleted path returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
@@ -107,10 +111,6 @@ class TinyUrlTest {
             application { mainModule() }
             val client = httpClient()
             val expectedUrl = "https://test.com"
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
 
@@ -132,10 +132,6 @@ class TinyUrlTest {
             application { mainModule() }
             val client = httpClient()
             val expectedUrl = "https://test.com"
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
 
@@ -156,10 +152,6 @@ class TinyUrlTest {
                 // ARRANGE
                 InstantUtil.setFixed()
                 application { mainModule() }
-                client.post("/api/user/register") {
-                    contentType(ContentType.Application.Json)
-                    setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-                }
 
                 val client = httpClient()
                 val oneDayMillis = 1.days.inWholeMilliseconds
@@ -186,10 +178,6 @@ class TinyUrlTest {
             // ARRANGE
             InstantUtil.setFixed()
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             val client = httpClient()
             val oneDayInFuture = InstantUtil.now().plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
@@ -216,12 +204,7 @@ class TinyUrlTest {
         @DisplayName("POST /api/tinyUrl with url in body returns 201 and has length 8")
         fun `POST api-tinyUrl with url in body returns 201 and has length 8`() = testApplication {
             // ARRANGE
-
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
@@ -237,10 +220,6 @@ class TinyUrlTest {
         fun `POST api-tinyUrl without authorization returns 401`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
@@ -262,10 +241,6 @@ class TinyUrlTest {
             application { mainModule() }
             val client = httpClient()
             val expectedUrl = "https://test2.com"
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
@@ -284,10 +259,6 @@ class TinyUrlTest {
         fun `PATCH api-tinyUrl without authorization returns 401`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
@@ -307,10 +278,6 @@ class TinyUrlTest {
         fun `DELETE api-tinyUrl returns 204`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
@@ -326,10 +293,6 @@ class TinyUrlTest {
         fun `DELETE api-tinyUrl without id returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val response = delete(client, "$basePath/", auth)
@@ -343,10 +306,6 @@ class TinyUrlTest {
         fun `DELETE api-tinyUrl without basic auth returns 401`() = testApplication {
             // ARRANGE
             application { mainModule() }
-            client.post("/api/user/register") {
-                contentType(ContentType.Application.Json)
-                setBody("""{"username": "user", "email": "test@test.com", "password": "password"}""")
-            }
 
             // ACT
             val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()

@@ -5,9 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class UserAddJson(
-    val username: String,
     val email: String,
     val password: String,
 )
 
-fun UserAddJson.toUser() = User(username, email, password)
+fun UserAddJson.toUser() = User(email, password)

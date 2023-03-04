@@ -1,7 +1,7 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
-import com.milosgarunovic.tinyurl.repository.UserInMemoryRepository
+import com.milosgarunovic.tinyurl.repository.UserRepository
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -12,7 +12,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalSerializationApi::class)
-fun Application.config(userRepository: UserInMemoryRepository) {
+fun Application.config(userRepository: UserRepository) {
     install(RequestLogging)
 
     authentication {

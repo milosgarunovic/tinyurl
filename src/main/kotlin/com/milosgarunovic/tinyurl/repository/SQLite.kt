@@ -59,7 +59,7 @@ object SQLite {
         val statement = connection.createStatement()
 
         //language=SQLite
-        val query = """
+        val createUrlTable = """
         CREATE TABLE IF NOT EXISTS url (
         id                  TEXT PRIMARY KEY NOT NULL,
         shortUrl            TEXT NOT NULL UNIQUE,
@@ -68,7 +68,19 @@ object SQLite {
         dateCreated         INTEGER NOT NULL,
         active              INTEGER NOT NULL DEFAULT 1,
         dateDeactivated     INTEGER NOT NULL DEFAULT 0)"""
-        statement.executeUpdate(query)
+        statement.executeUpdate(createUrlTable)
+
+        //language=SQLite
+        val createUserTable = """
+        CREATE TABLE IF NOT EXISTS users(
+        id              TEXT PRIMARY KEY NOT NULL,
+        email           TEXT UNIQUE NOT NULL,
+        password        TEXT NOT NULL,
+        dateCreated     INTEGER NOT NULL,
+        active          INTEGER NOT NULL DEFAULT 1,
+        dateDeactivated INTEGER NOT NULL DEFAULT 0)"""
+        statement.executeUpdate(createUserTable)
+
         statement.close()
     }
 
