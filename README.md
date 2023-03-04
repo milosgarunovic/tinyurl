@@ -6,7 +6,7 @@ The idea is to make a self-hosted version of tiny url.
 
 ### About the project
 
-Project uses Ktor and Kotlin, it has a small api for creating urls.
+Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
 
 ### Intentions of use
 
@@ -30,13 +30,13 @@ Project uses Ktor and Kotlin, it has a small api for creating urls.
   - [ ] Add security tests
   - [ ] Add JWT instead of basic auth
   - [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
-- [x] Add SQLite as a storage - most basic version with local. This way there's no db maintenance.
+- [x] Add SQLite - most basic version with local. This way there's no db maintenance.
   - [x] in memory SQLite for tests
-  - [ ] change from long to string for date formats - or real date
-  - [ ] add user
+  - [x] add user
+  - [ ] change from long to text for date formats - or real date
   - [ ] add liquibase
   - [ ] see if queries are blocking and wrap them in runBlocking
-- [ ] Add database as a storage (postgres)
+- [ ] Add Postgres (as another implementation)
   - [ ] Docker and testcontainers
 - [ ] Add statistics for how many times a route has been called
   - [ ] Statistics should hold date accessed and number of times. Maybe group by minute/hour?
