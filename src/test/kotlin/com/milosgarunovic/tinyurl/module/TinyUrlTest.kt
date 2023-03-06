@@ -29,8 +29,8 @@ class TinyUrlTest {
         @BeforeAll
         @JvmStatic
         fun beforeAll() {
-//            SQLite.setupInMemory()
-            SQLite.setup("test") // used for debugging
+            SQLite.setupInMemory()
+//            SQLite.setup("test") // used for debugging
 
             // create a user
             testApplication {

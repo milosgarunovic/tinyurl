@@ -5,7 +5,7 @@ import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 
 interface UrlRepository {
 
-    fun add(tinyUrlAddReq: TinyUrlAddReq): TinyUrl
+    fun add(tinyUrlAddReq: TinyUrlAddReq, email: String): TinyUrl
 
     fun getUrl(shortUrl: String): String?
 
