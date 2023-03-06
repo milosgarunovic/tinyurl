@@ -11,4 +11,5 @@ data class TinyUrl(
      * In case of [Expires.At] it's that date. Must be ahead of [dateCreated].
      */
     val calculatedExpiry: Instant? = null,
+    val user: User? = null, // column userId
 ) : BaseEntity()

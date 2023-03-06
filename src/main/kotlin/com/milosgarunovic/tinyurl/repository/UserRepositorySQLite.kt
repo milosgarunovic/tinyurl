@@ -5,7 +5,7 @@ import com.milosgarunovic.tinyurl.entity.User
 class UserRepositorySQLite : UserRepository {
     override fun add(user: User) {
         //language=SQLite
-        val query = "INSERT INTO users(id, email, password, dateCreated) VALUES (?, ?, ?, ?);"
+        val query = "INSERT INTO users(id, email, password, date_created) VALUES (?, ?, ?, ?);"
         val dateCreated = user.dateCreated.toEpochMilli()
         SQLite.insert(query, 1 to user.id, 2 to user.email, 3 to user.password, 4 to dateCreated)
     }

@@ -59,27 +59,29 @@ object SQLite {
         val statement = connection.createStatement()
 
         //language=SQLite
-        val createUrlTable = """
-        CREATE TABLE IF NOT EXISTS url (
-        id                  TEXT PRIMARY KEY NOT NULL,
-        shortUrl            TEXT NOT NULL UNIQUE,
-        url                 TEXT NOT NULL,
-        calculatedExpiry    INTEGER NOT NULL DEFAULT 0,
-        dateCreated         INTEGER NOT NULL,
-        active              INTEGER NOT NULL DEFAULT 1,
-        dateDeactivated     INTEGER NOT NULL DEFAULT 0)"""
-        statement.executeUpdate(createUrlTable)
-
-        //language=SQLite
         val createUserTable = """
         CREATE TABLE IF NOT EXISTS users(
         id              TEXT PRIMARY KEY NOT NULL,
         email           TEXT UNIQUE NOT NULL,
         password        TEXT NOT NULL,
-        dateCreated     INTEGER NOT NULL,
+        date_created     INTEGER NOT NULL,
         active          INTEGER NOT NULL DEFAULT 1,
-        dateDeactivated INTEGER NOT NULL DEFAULT 0)"""
+        date_deactivated INTEGER NOT NULL DEFAULT 0)"""
         statement.executeUpdate(createUserTable)
+
+        //language=SQLite
+        val createUrlTable = """
+        CREATE TABLE IF NOT EXISTS url (
+        id                  TEXT PRIMARY KEY NOT NULL,
+        short_url           TEXT NOT NULL UNIQUE,
+        url                 TEXT NOT NULL,
+        calculated_expiry   INTEGER NOT NULL DEFAULT 0,
+        date_created        INTEGER NOT NULL,
+        active              INTEGER NOT NULL DEFAULT 1,
+        date_deactivated    INTEGER NOT NULL DEFAULT 0,
+        user_id             TEXT,
+        FOREIGN KEY (user_id) REFERENCES users(id) )"""
+        statement.executeUpdate(createUrlTable)
 
         statement.close()
     }

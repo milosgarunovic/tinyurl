@@ -35,6 +35,7 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
   - [x] add user
   - [ ] change from long to text for date formats - or real date
   - [ ] add liquibase
+  - [ ] add JPA
   - [ ] see if queries are blocking and wrap them in runBlocking
 - [ ] Add Postgres (as another implementation)
   - [ ] Docker and testcontainers
