@@ -9,21 +9,41 @@ import java.time.Instant
 
 class UrlRepositorySQLite : UrlRepository {
 
-    override fun add(tinyUrlAddReq: TinyUrlAddReq, email: String): TinyUrl {
+    override fun add(tinyUrlAddReq: TinyUrlAddReq, email: String?): TinyUrl {
         var shortUrl: String
         do { // generate new if it already exists
             shortUrl = random8Chars()
         } while (exists(shortUrl))
 
         val url = tinyUrlAddReq.toTinyUrl(shortUrl)
-
-        //language=SQLite
-        val query =
-            """INSERT INTO url (id, short_url, url, calculated_expiry, date_created, active, user_id) 
-                VALUES (?, ?, ?, ?, ?, true, (SELECT id FROM users WHERE email = ?));"""
         val expiry = url.calculatedExpiry?.toEpochMilli() ?: 0
         val dateCreated = url.dateCreated.toEpochMilli()
-        SQLite.insert(query, 1 to url.id, 2 to url.shortUrl, 3 to url.url, 4 to expiry, 5 to dateCreated, 6 to email)
+        if (email != null) {
+            //language=SQLite
+            val query = """INSERT INTO url (id, short_url, url, calculated_expiry, date_created, active, user_id) 
+                VALUES (?, ?, ?, ?, ?, true, (SELECT id FROM users WHERE email = ?));"""
+            SQLite.insert(
+                query,
+                1 to url.id,
+                2 to url.shortUrl,
+                3 to url.url,
+                4 to expiry,
+                5 to dateCreated,
+                6 to email
+            )
+        } else {
+            //language=SQLite
+            val query = """INSERT INTO url (id, short_url, url, calculated_expiry, date_created, active) 
+                VALUES (?, ?, ?, ?, ?, true);"""
+            SQLite.insert(
+                query,
+                1 to url.id,
+                2 to url.shortUrl,
+                3 to url.url,
+                4 to expiry,
+                5 to dateCreated
+            )
+        }
         return url
     }
 

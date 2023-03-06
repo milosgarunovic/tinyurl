@@ -216,8 +216,8 @@ class TinyUrlTest {
         }
 
         @Test
-        @DisplayName("POST /api/tinyUrl withouth authorization returns 401")
-        fun `POST api-tinyUrl without authorization returns 401`() = testApplication {
+        @DisplayName("POST /api/tinyUrl withouth authorization returns 201")
+        fun `POST api-tinyUrl without authorization returns 201`() = testApplication {
             // ARRANGE
             application { mainModule() }
 
@@ -225,9 +225,8 @@ class TinyUrlTest {
             val reqBody = """{"url": "https://test.com"}"""
             val res = post(client, basePath, reqBody, null)
 
-            // TODO check logs see why it doesn't pick up 401 in status code.. must be out of scope
             // ASSERT
-            assertEquals(HttpStatusCode.Unauthorized, res.status)
+            assertEquals(HttpStatusCode.Created, res.status)
         }
     }
 
