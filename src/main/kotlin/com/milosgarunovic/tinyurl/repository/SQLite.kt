@@ -4,6 +4,7 @@ import org.sqlite.JDBC
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
+import java.sql.SQLException
 
 object SQLite {
 
@@ -31,22 +32,25 @@ object SQLite {
         return executeQuery
     }
 
-    fun insert(query: String, vararg parameters: Pair<Int, Any>): Int {
+    fun insert(query: String, vararg parameters: Pair<Int, Any>): Boolean {
         return update(query, *parameters)
     }
 
-    fun delete(query: String, vararg parameters: Pair<Int, Any>): Int {
+    fun delete(query: String, vararg parameters: Pair<Int, Any>): Boolean {
         return update(query, *parameters)
     }
 
-    fun update(query: String, vararg parameters: Pair<Int, Any>): Int {
+    fun update(query: String, vararg parameters: Pair<Int, Any>): Boolean {
         val prepareStatement = connection.prepareStatement(query)
         for (parameter in parameters) {
             prepareStatement.setObject(parameter.first, parameter.second)
         }
-        val executeUpdate = prepareStatement.executeUpdate()
-//        prepareStatement.close()
-        return executeUpdate
+        return try {
+            prepareStatement.executeUpdate()
+            true
+        } catch (ex: SQLException) {
+            false
+        }
     }
 
     fun close() {

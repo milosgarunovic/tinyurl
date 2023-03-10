@@ -3,11 +3,11 @@ package com.milosgarunovic.tinyurl.repository
 import com.milosgarunovic.tinyurl.entity.User
 
 class UserRepositorySQLite : UserRepository {
-    override fun add(user: User) {
+    override fun add(user: User): Boolean {
         //language=SQLite
         val query = "INSERT INTO users(id, email, password, date_created) VALUES (?, ?, ?, ?);"
         val dateCreated = user.dateCreated.toEpochMilli()
-        SQLite.insert(query, 1 to user.id, 2 to user.email, 3 to user.password, 4 to dateCreated)
+        return SQLite.insert(query, 1 to user.id, 2 to user.email, 3 to user.password, 4 to dateCreated)
     }
 
     override fun validate(username: String, password: String): Boolean {
