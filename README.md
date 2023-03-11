@@ -21,7 +21,7 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
 - [x] Add feature that doesn't return 301 but instead 200 and where that link is leading to
 - [x] Add expiry of url
 - [x] Add Dokka for code documentation
-- [ ] Add dependency injection
+- [x] Add dependency injection (Koin)
 - [ ] Tests
   - [ ] Maintain test coverage above 90%
   - [x] Added Kover as code coverage tool
