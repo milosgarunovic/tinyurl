@@ -5,17 +5,17 @@ import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
 import com.milosgarunovic.tinyurl.repository.UrlRepository
-import com.milosgarunovic.tinyurl.repository.UrlRepositorySQLite
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Application.tinyUrl() {
 
-    val repository: UrlRepository = UrlRepositorySQLite()
+    val repository by inject<UrlRepository>()
 
     routing {
 

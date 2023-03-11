@@ -27,6 +27,8 @@ dependencies {
     implementation("io.ktor:ktor-server-request-validation:$ktorVersion")
     implementation("io.ktor:ktor-server-openapi:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
+    implementation("io.insert-koin:koin-ktor:3.3.1")
+    implementation("io.insert-koin:koin-logger-slf4j:3.3.1")
 
     implementation("ch.qos.logback:logback-classic:1.4.5")
     implementation("commons-lang:commons-lang:2.6")

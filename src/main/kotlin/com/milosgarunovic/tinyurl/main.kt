@@ -5,7 +5,6 @@ import com.milosgarunovic.tinyurl.module.openApi
 import com.milosgarunovic.tinyurl.module.tinyUrl
 import com.milosgarunovic.tinyurl.module.user
 import com.milosgarunovic.tinyurl.repository.SQLite
-import com.milosgarunovic.tinyurl.repository.UserRepositorySQLite
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
@@ -23,11 +22,9 @@ fun main() {
 
 fun Application.mainModule() {
 
-    val userRepository = UserRepositorySQLite()
+    config()
 
-    config(userRepository)
-
-    user(userRepository)
+    user()
 
     tinyUrl()
 
