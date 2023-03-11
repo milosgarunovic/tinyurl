@@ -36,10 +36,6 @@ object SQLite {
         return update(query, *parameters)
     }
 
-    fun delete(query: String, vararg parameters: Pair<Int, Any>): Boolean {
-        return update(query, *parameters)
-    }
-
     fun update(query: String, vararg parameters: Pair<Int, Any>): Boolean {
         val prepareStatement = connection.prepareStatement(query)
         for (parameter in parameters) {
