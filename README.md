@@ -26,7 +26,7 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
   - [ ] Maintain test coverage above 90%
   - [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
-  - [x] Add basic auth (partially done, still need to create a store for users, now it's hardcoded)
+  - [x] Add basic auth
   - [ ] Add security tests
   - [ ] Add JWT instead of basic auth
   - [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
