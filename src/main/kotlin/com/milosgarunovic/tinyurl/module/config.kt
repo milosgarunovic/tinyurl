@@ -6,6 +6,7 @@ import com.milosgarunovic.tinyurl.repository.UrlRepositorySQLite
 import com.milosgarunovic.tinyurl.repository.UserRepository
 import com.milosgarunovic.tinyurl.repository.UserRepositorySQLite
 import com.milosgarunovic.tinyurl.service.UrlService
+import com.milosgarunovic.tinyurl.service.UserService
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -32,16 +33,17 @@ fun Application.config() {
                 single<UserRepository> { UserRepositorySQLite() }
 
                 singleOf(::UrlService)
+                singleOf(::UserService)
             }
         )
     }
 
     // order of creating this dependency is important, it needs to be after install(Koin)
-    val userRepository by inject<UserRepository>()
+    val userService by inject<UserService>()
     authentication {
         basic(name = "auth-basic") {
             validate { credentials ->
-                if (userRepository.validate(credentials.name, credentials.password)) {
+                if (userService.validate(credentials.name, credentials.password)) {
                     UserIdPrincipal(credentials.name)
                 } else {
                     null

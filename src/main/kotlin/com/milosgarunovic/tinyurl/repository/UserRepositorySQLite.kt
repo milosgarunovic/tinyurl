@@ -3,6 +3,7 @@ package com.milosgarunovic.tinyurl.repository
 import com.milosgarunovic.tinyurl.entity.User
 
 class UserRepositorySQLite : UserRepository {
+
     override fun add(user: User): Boolean {
         //language=SQLite
         val query = "INSERT INTO users(id, email, password, date_created) VALUES (?, ?, ?, ?);"

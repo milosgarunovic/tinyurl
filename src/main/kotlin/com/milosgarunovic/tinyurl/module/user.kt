@@ -2,8 +2,7 @@ package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.UserAddJson
-import com.milosgarunovic.tinyurl.json.toUser
-import com.milosgarunovic.tinyurl.repository.UserRepository
+import com.milosgarunovic.tinyurl.service.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -13,14 +12,14 @@ import org.koin.ktor.ext.inject
 
 fun Application.user() {
 
-    val userRepository by inject<UserRepository>()
+    val userService by inject<UserService>()
 
     routing {
         route("/api/user/register") {
 
             post {
                 val req = call.receive<UserAddJson>()
-                val isAdded = userRepository.add(req.toUser())
+                val isAdded = userService.add(req)
                 if (isAdded) {
                     call.respondStatusCode(HttpStatusCode.Created)
                 } else {

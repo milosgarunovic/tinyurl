@@ -35,12 +35,9 @@ fun Application.tinyUrl() {
             }
         }
 
-
-
         route("/api/tinyUrl") {
 
             authenticate("auth-basic", strategy = AuthenticationStrategy.Optional) {
-                // TODO post can be even without authentication
                 post {
                     val req = call.receive<TinyUrlAddReq>() // todo must be a valid url
                     val email = call.principal<UserIdPrincipal>()?.name
