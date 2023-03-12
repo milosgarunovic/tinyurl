@@ -5,6 +5,7 @@ import com.milosgarunovic.tinyurl.repository.UrlRepository
 import com.milosgarunovic.tinyurl.repository.UrlRepositorySQLite
 import com.milosgarunovic.tinyurl.repository.UserRepository
 import com.milosgarunovic.tinyurl.repository.UserRepositorySQLite
+import com.milosgarunovic.tinyurl.service.UrlService
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -13,6 +14,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -28,6 +30,8 @@ fun Application.config() {
             module {
                 single<UrlRepository> { UrlRepositorySQLite() }
                 single<UserRepository> { UserRepositorySQLite() }
+
+                singleOf(::UrlService)
             }
         )
     }

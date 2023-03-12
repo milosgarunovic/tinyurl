@@ -1,23 +1,15 @@
 package com.milosgarunovic.tinyurl.repository
 
 import com.milosgarunovic.tinyurl.entity.TinyUrl
-import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
-import com.milosgarunovic.tinyurl.json.toTinyUrl
+import com.milosgarunovic.tinyurl.ext.milli
 import com.milosgarunovic.tinyurl.util.InstantUtil
-import com.milosgarunovic.tinyurl.util.random8Chars
 import java.time.Instant
 
 class UrlRepositorySQLite : UrlRepository {
 
-    override fun add(tinyUrlAddReq: TinyUrlAddReq, email: String?): TinyUrl {
-        var shortUrl: String
-        do { // generate new if it already exists
-            shortUrl = random8Chars()
-        } while (exists(shortUrl))
-
-        val url = tinyUrlAddReq.toTinyUrl(shortUrl)
-        val expiry = url.calculatedExpiry?.toEpochMilli() ?: 0
-        val dateCreated = url.dateCreated.toEpochMilli()
+    override fun add(url: TinyUrl, email: String?): TinyUrl {
+        val expiry = url.calculatedExpiry.milli()
+        val dateCreated = url.dateCreated.milli()
         if (email != null) {
             //language=SQLite
             val query = """INSERT INTO url (id, short_url, url, calculated_expiry, date_created, active, user_id) 

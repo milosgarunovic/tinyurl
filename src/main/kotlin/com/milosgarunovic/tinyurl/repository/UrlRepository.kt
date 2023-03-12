@@ -1,11 +1,10 @@
 package com.milosgarunovic.tinyurl.repository
 
 import com.milosgarunovic.tinyurl.entity.TinyUrl
-import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 
 interface UrlRepository {
 
-    fun add(tinyUrlAddReq: TinyUrlAddReq, email: String?): TinyUrl
+    fun add(tinyUrl: TinyUrl, email: String?): TinyUrl
 
     fun getUrl(shortUrl: String): String?
 

@@ -4,7 +4,7 @@ import com.milosgarunovic.tinyurl.ext.respondRedirect
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
-import com.milosgarunovic.tinyurl.repository.UrlRepository
+import com.milosgarunovic.tinyurl.service.UrlService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -15,7 +15,7 @@ import org.koin.ktor.ext.inject
 
 fun Application.tinyUrl() {
 
-    val repository by inject<UrlRepository>()
+    val urlService by inject<UrlService>()
 
     routing {
 
@@ -23,10 +23,10 @@ fun Application.tinyUrl() {
             val path = call.parameters["path"]!!
             val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
             // TODO add validation, this can be only 8 chars long
-            val url = repository.getUrl(path)
+            val url = urlService.getUrl(path)
             if (url != null) {
                 if (redirect) {
-                    call.respondRedirect(url) // TODO add statistics for that url
+                    call.respondRedirect(url)
                 } else {
                     call.respond(HttpStatusCode.OK, url)
                 }
@@ -44,22 +44,22 @@ fun Application.tinyUrl() {
                 post {
                     val req = call.receive<TinyUrlAddReq>() // todo must be a valid url
                     val email = call.principal<UserIdPrincipal>()?.name
-                    val res = repository.add(req, email)
-                    call.respond(HttpStatusCode.Created, res.shortUrl)
+                    val shortUrl = urlService.add(req, email)
+                    call.respond(HttpStatusCode.Created, shortUrl)
                 }
             }
 
             authenticate("auth-basic") {
                 patch {
                     val req = call.receive<TinyUrlUpdateReq>() // todo must be a valid url
-                    repository.update(req.id, req.url)
+                    urlService.update(req.id, req.url)
                     call.respondStatusCode(HttpStatusCode.OK)
                 }
 
                 delete("/{id}") {
                     val id = call.parameters["id"]!!
 
-                    repository.delete(id)
+                    urlService.delete(id)
                     call.respondStatusCode(HttpStatusCode.NoContent)
                 }
             }
