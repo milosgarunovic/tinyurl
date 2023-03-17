@@ -29,6 +29,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.insert-koin:koin-ktor:3.3.1")
     implementation("io.insert-koin:koin-logger-slf4j:3.3.1")
+    implementation("org.liquibase:liquibase-core:4.20.0")
 
     implementation("ch.qos.logback:logback-classic:1.4.5")
     implementation("commons-lang:commons-lang:2.6")

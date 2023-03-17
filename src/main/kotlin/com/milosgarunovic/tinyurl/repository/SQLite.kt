@@ -1,10 +1,17 @@
 package com.milosgarunovic.tinyurl.repository
 
+import liquibase.Contexts
+import liquibase.LabelExpression
+import liquibase.Liquibase
+import liquibase.database.DatabaseFactory
+import liquibase.database.jvm.JdbcConnection
+import liquibase.resource.ClassLoaderResourceAccessor
 import org.sqlite.JDBC
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+
 
 object SQLite {
 
@@ -13,7 +20,7 @@ object SQLite {
     fun setup(dbName: String) {
         Class.forName(JDBC::class.qualifiedName)
         connection = DriverManager.getConnection("jdbc:sqlite:$dbName.db")
-        createDatabase()
+        liquibaseUpdate()
     }
 
     /**
@@ -22,7 +29,13 @@ object SQLite {
     fun setupInMemory() {
         Class.forName(JDBC::class.qualifiedName)
         connection = DriverManager.getConnection("jdbc:sqlite::memory:")
-        createDatabase()
+        liquibaseUpdate()
+    }
+
+    fun liquibaseUpdate() {
+        val database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
+        val liquibase = Liquibase("db/sqlite/changelog.xml", ClassLoaderResourceAccessor(), database)
+        liquibase.update(Contexts(), LabelExpression())
     }
 
     fun query(query: String, vararg parameters: Pair<Int, Any>): ResultSet {
@@ -57,36 +70,4 @@ object SQLite {
             connection.close()
         }
     }
-
-    private fun createDatabase() {
-        val statement = connection.createStatement()
-
-        //language=SQLite
-        val createUserTable = """
-        CREATE TABLE IF NOT EXISTS users(
-        id              TEXT PRIMARY KEY NOT NULL,
-        email           TEXT UNIQUE NOT NULL,
-        password        TEXT NOT NULL,
-        date_created     INTEGER NOT NULL,
-        active          INTEGER NOT NULL DEFAULT 1,
-        date_deactivated INTEGER NOT NULL DEFAULT 0)"""
-        statement.executeUpdate(createUserTable)
-
-        //language=SQLite
-        val createUrlTable = """
-        CREATE TABLE IF NOT EXISTS url (
-        id                  TEXT PRIMARY KEY NOT NULL,
-        short_url           TEXT NOT NULL UNIQUE,
-        url                 TEXT NOT NULL,
-        calculated_expiry   INTEGER NOT NULL DEFAULT 0,
-        date_created        INTEGER NOT NULL,
-        active              INTEGER NOT NULL DEFAULT 1,
-        date_deactivated    INTEGER NOT NULL DEFAULT 0,
-        user_id             TEXT,
-        FOREIGN KEY (user_id) REFERENCES users(id) )"""
-        statement.executeUpdate(createUrlTable)
-
-        statement.close()
-    }
-
 }
