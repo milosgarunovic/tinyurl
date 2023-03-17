@@ -21,8 +21,12 @@ fun Application.tinyUrl() {
 
         get("/{path}") {
             val path = call.parameters["path"]!!
+            if (path.length != 8) { // 8 is generated in UrlPathGenerator.kt
+                call.respondStatusCode(HttpStatusCode.NotFound)
+                return@get
+            }
+
             val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
-            // TODO add validation, this can be only 8 chars long
             val url = urlService.getUrl(path)
             if (url != null) {
                 if (redirect) {

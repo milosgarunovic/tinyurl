@@ -16,6 +16,9 @@ object SQLite {
         createDatabase()
     }
 
+    /**
+     * This method is used for tests only.
+     */
     fun setupInMemory() {
         Class.forName(JDBC::class.qualifiedName)
         connection = DriverManager.getConnection("jdbc:sqlite::memory:")

@@ -6,7 +6,7 @@ import io.ktor.util.*
 import java.time.Instant
 import java.util.*
 
-val RequestLogging = createApplicationPlugin(name = "CallLogging") {
+val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
     val reqStartTimeKey = AttributeKey<Long>("reqStartTime")
     val reqIdKey = AttributeKey<String>("requestId")
     val usernameKey = AttributeKey<String>("username")

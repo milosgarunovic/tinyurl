@@ -16,7 +16,7 @@ import kotlin.time.Duration.Companion.days
 class TinyUrlTest {
 
     // TODO need tests to pass with /api/tinyurl - lower case, but that fails
-    private val basePath = "/api/tinyUrl"
+    private val apiTinyUrl = "/api/tinyUrl"
 
     private var auth = "test@test.com" to "password"
 
@@ -65,6 +65,22 @@ class TinyUrlTest {
             assertEquals(HttpStatusCode.NotFound, response.status)
         }
 
+        /**
+         * We only generate 8 character paths at this point. When that changes, we will expand to support 9, 10 etc.
+         */
+        @Test
+        @DisplayName("GET /path with 9 chars long path returns 404")
+        fun `GET root with path 9 chars long returns 404`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val response = client.get("/123456789")
+
+            // ASSERT
+            assertEquals(HttpStatusCode.NotFound, response.status)
+        }
+
         @Test
         @DisplayName("GET /path returns 301")
         fun `GET root with path returns 301`() = testApplication {
@@ -76,7 +92,7 @@ class TinyUrlTest {
             // ACT
 
             // create a new url
-            val id = post(client, basePath, """{"url": "$expectedUrl"}""", auth).bodyAsText()
+            val id = post(client, apiTinyUrl, """{"url": "$expectedUrl"}""", auth).bodyAsText()
 
             // get created url
             val response = client.get("/$id")
@@ -93,8 +109,8 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
-            delete(client, "$basePath/$id", auth) // delete created post
+            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", auth).bodyAsText()
+            delete(client, "$apiTinyUrl/$id", auth) // delete created post
             val response = client.get("/$id") // try to get it after deletion
 
             // ASSERT
@@ -115,7 +131,7 @@ class TinyUrlTest {
             // ACT
 
             // create a new post
-            val id = post(client, basePath, """{"url": "$expectedUrl"}""", auth).bodyAsText()
+            val id = post(client, apiTinyUrl, """{"url": "$expectedUrl"}""", auth).bodyAsText()
 
             // get created url
             val response = client.get("/$id?redirect=true")
@@ -136,7 +152,7 @@ class TinyUrlTest {
             // ACT
 
             // create a new post
-            val id = post(client, basePath, """{"url": "$expectedUrl"}""", auth).bodyAsText()
+            val id = post(client, apiTinyUrl, """{"url": "$expectedUrl"}""", auth).bodyAsText()
             // get created url
             val response = client.get("/$id?redirect=false")
 
@@ -158,7 +174,7 @@ class TinyUrlTest {
 
                 // ACT
                 val reqBody = """{"url": "https://test.com", "expires":{"type": "in","milliseconds": $oneDayMillis}}"""
-                val url = post(client, basePath, reqBody, auth).bodyAsText()
+                val url = post(client, apiTinyUrl, reqBody, auth).bodyAsText()
 
                 // ASSERT
                 val get = client.get("/$url")
@@ -184,7 +200,7 @@ class TinyUrlTest {
 
             // ACT
             val reqBody = """{"url": "https://test.com", "expires":{"type": "at","dateTime": "$oneDayInFuture"}}"""
-            val url = post(client, basePath, reqBody, auth).bodyAsText()
+            val url = post(client, apiTinyUrl, reqBody, auth).bodyAsText()
 
             // ASSERT
             val resNow = client.get("/$url")
@@ -208,7 +224,7 @@ class TinyUrlTest {
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
-            val res = post(client, basePath, reqBody, auth)
+            val res = post(client, apiTinyUrl, reqBody, auth)
 
             // ASSERT
             assertEquals(HttpStatusCode.Created, res.status)
@@ -223,7 +239,7 @@ class TinyUrlTest {
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
-            val res = post(client, basePath, reqBody, null)
+            val res = post(client, apiTinyUrl, reqBody, null)
 
             // ASSERT
             assertEquals(HttpStatusCode.Created, res.status)
@@ -242,8 +258,8 @@ class TinyUrlTest {
             val expectedUrl = "https://test2.com"
 
             // ACT
-            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
-            val res = patch(client, basePath, """{"id":"$id", "url":"$expectedUrl"}""", auth)
+            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", auth).bodyAsText()
+            val res = patch(client, apiTinyUrl, """{"id":"$id", "url":"$expectedUrl"}""", auth)
 
             // ASSERT
             assertEquals(HttpStatusCode.OK, res.status)
@@ -260,8 +276,8 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
-            val res = patch(client, basePath, """{"id":"$id", "url":"https://test2.com"}""", null)
+            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", auth).bodyAsText()
+            val res = patch(client, apiTinyUrl, """{"id":"$id", "url":"https://test2.com"}""", null)
 
             // TODO check logs see why it doesn't pick up 401 in status code.. must be out of scope
             // ASSERT
@@ -279,9 +295,9 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
+            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", auth).bodyAsText()
 
-            val response = delete(client, "$basePath/$id", auth)
+            val response = delete(client, "$apiTinyUrl/$id", auth)
 
             // ASSERT
             assertEquals(HttpStatusCode.NoContent, response.status)
@@ -294,7 +310,7 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val response = delete(client, "$basePath/", auth)
+            val response = delete(client, "$apiTinyUrl/", auth)
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, response.status)
@@ -307,9 +323,9 @@ class TinyUrlTest {
             application { mainModule() }
 
             // ACT
-            val id = post(client, basePath, """{"url": "https://test.com"}""", auth).bodyAsText()
+            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", auth).bodyAsText()
 
-            val response = delete(client, "$basePath/$id", null)
+            val response = delete(client, "$apiTinyUrl/$id", null)
 
             // ASSERT
             assertEquals(HttpStatusCode.Unauthorized, response.status)
