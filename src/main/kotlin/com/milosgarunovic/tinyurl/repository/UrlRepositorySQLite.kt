@@ -59,10 +59,13 @@ class UrlRepositorySQLite : UrlRepository {
         SQLite.update(query, 1 to url, 2 to shortUrl)
     }
 
-    override fun delete(shortUrl: String) {
+    override fun delete(shortUrl: String, email: String): Boolean {
         //language=SQLite
-        val query = "UPDATE url SET active = false, date_deactivated = ? WHERE short_url = ?;"
-        SQLite.update(query, 1 to Instant.now().toEpochMilli(), 2 to shortUrl)
+        val query = """UPDATE url SET active = false, date_deactivated = ? 
+            WHERE short_url = ? 
+            AND active 
+            AND user_id = (SELECT id FROM users WHERE email = ?);"""
+        return SQLite.update(query, 1 to Instant.now().toEpochMilli(), 2 to shortUrl, 3 to email)
     }
 
     override fun exists(shortUrl: String): Boolean {

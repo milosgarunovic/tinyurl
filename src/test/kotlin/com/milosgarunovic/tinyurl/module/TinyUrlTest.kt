@@ -10,6 +10,7 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.koin.core.context.stopKoin
 import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
 
@@ -48,6 +49,11 @@ class TinyUrlTest {
         fun afterAll() {
             SQLite.close()
         }
+    }
+
+    @AfterEach
+    fun afterEach() {
+        stopKoin()
     }
 
     @Nested

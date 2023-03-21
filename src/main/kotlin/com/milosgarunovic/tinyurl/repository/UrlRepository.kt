@@ -10,7 +10,7 @@ interface UrlRepository {
 
     fun update(shortUrl: String, url: String)
 
-    fun delete(shortUrl: String)
+    fun delete(shortUrl: String, email: String): Boolean
 
     fun exists(shortUrl: String): Boolean
 

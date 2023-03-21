@@ -31,8 +31,8 @@ class UrlService : KoinComponent {
         urlRepository.update(shortUrl, url)
     }
 
-    fun delete(shortUrl: String) {
-        urlRepository.delete(shortUrl)
+    fun delete(shortUrl: String, email: String): Boolean {
+        return urlRepository.delete(shortUrl, email)
     }
 
 }

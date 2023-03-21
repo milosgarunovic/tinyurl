@@ -58,8 +58,8 @@ object SQLite {
             prepareStatement.setObject(parameter.first, parameter.second)
         }
         return try {
-            prepareStatement.executeUpdate()
-            true
+            val updateExecuted = prepareStatement.executeUpdate() == 1
+            updateExecuted
         } catch (ex: SQLException) {
             false
         }

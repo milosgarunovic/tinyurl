@@ -59,9 +59,12 @@ fun Application.tinyUrl() {
 
                 delete("/{id}") {
                     val id = call.parameters["id"]!!
-
-                    urlService.delete(id)
-                    call.respondStatusCode(HttpStatusCode.NoContent)
+                    val email = call.principal<UserIdPrincipal>()?.name!!
+                    if (urlService.delete(id, email)) {
+                        call.respondStatusCode(HttpStatusCode.NoContent)
+                    } else {
+                        call.respondStatusCode(HttpStatusCode.NotFound)
+                    }
                 }
             }
         }
