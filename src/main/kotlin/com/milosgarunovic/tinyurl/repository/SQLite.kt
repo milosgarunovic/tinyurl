@@ -12,14 +12,13 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
 
-
 object SQLite {
 
     private lateinit var connection: Connection
 
     fun setup(dbName: String) {
         Class.forName(JDBC::class.qualifiedName)
-        connection = DriverManager.getConnection("jdbc:sqlite:$dbName.db")
+        connection = DriverManager.getConnection("jdbc:sqlite:$dbName.sqlite")
         liquibaseUpdate()
     }
 
@@ -32,7 +31,7 @@ object SQLite {
         liquibaseUpdate()
     }
 
-    fun liquibaseUpdate() {
+    private fun liquibaseUpdate() {
         val database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
         val liquibase = Liquibase("db/sqlite/changelog.xml", ClassLoaderResourceAccessor(), database)
         liquibase.update(Contexts(), LabelExpression())
@@ -67,6 +66,7 @@ object SQLite {
 
     fun close() {
         if (!connection.isClosed) {
+            connection.commit()
             connection.close()
         }
     }
