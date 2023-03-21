@@ -8,7 +8,7 @@ interface UrlRepository {
 
     fun getUrl(shortUrl: String): String?
 
-    fun update(shortUrl: String, url: String)
+    fun update(shortUrl: String, url: String, email: String): Boolean
 
     fun delete(shortUrl: String, email: String): Boolean
 

@@ -19,7 +19,6 @@ class TinyUrlTest {
     // TODO need tests to pass with /api/tinyurl - lower case, but that fails
     private val apiTinyUrl = "/api/tinyUrl"
 
-    private var auth = "test@test.com" to "password"
 
     /**
      * Creates a http client that doesn't follow redirects.
@@ -27,11 +26,14 @@ class TinyUrlTest {
     private fun ApplicationTestBuilder.httpClient() = createClient { followRedirects = false }
 
     companion object {
+
+        private var auth = "test@test.com" to "password"
+
         @BeforeAll
         @JvmStatic
         fun beforeAll() {
-//            SQLite.setupInMemory()
-            SQLite.setup("tinyUrl") // used for debugging
+            SQLite.setupInMemory()
+//            SQLite.setup("tinyUrl") // used for debugging
 
             // create a user
             testApplication {
@@ -39,7 +41,7 @@ class TinyUrlTest {
 
                 client.post("/api/user/register") {
                     contentType(ContentType.Application.Json)
-                    setBody("""{"email": "test@test.com", "password": "password"}""")
+                    setBody("""{"email": "${auth.first}", "password": "${auth.second}"}""")
                 }
             }
         }
@@ -276,7 +278,7 @@ class TinyUrlTest {
         }
 
         @Test
-        @DisplayName("PATCH /api/tinyUrl withouth authorization returns 401")
+        @DisplayName("PATCH /api/tinyUrl without authorization returns 401")
         fun `PATCH api-tinyUrl without authorization returns 401`() = testApplication {
             // ARRANGE
             application { mainModule() }

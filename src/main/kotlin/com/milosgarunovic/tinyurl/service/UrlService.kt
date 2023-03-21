@@ -27,8 +27,8 @@ class UrlService : KoinComponent {
         return url.shortUrl
     }
 
-    fun update(shortUrl: String, url: String) {
-        urlRepository.update(shortUrl, url)
+    fun update(shortUrl: String, url: String, email: String): Boolean {
+        return urlRepository.update(shortUrl, url, email)
     }
 
     fun delete(shortUrl: String, email: String): Boolean {

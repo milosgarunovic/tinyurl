@@ -53,7 +53,8 @@ fun Application.tinyUrl() {
             authenticate("auth-basic") {
                 patch {
                     val req = call.receive<TinyUrlUpdateReq>() // todo must be a valid url
-                    urlService.update(req.id, req.url)
+                    val email = call.principal<UserIdPrincipal>()?.name!!
+                    urlService.update(req.id, req.url, email)
                     call.respondStatusCode(HttpStatusCode.OK)
                 }
 
