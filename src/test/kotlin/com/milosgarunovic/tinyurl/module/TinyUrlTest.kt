@@ -360,6 +360,22 @@ class TinyUrlTest {
             // ASSERT
             assertEquals(HttpStatusCode.Unauthorized, response.status)
         }
+
+        @Test
+        @DisplayName("DELETE /api/tinyUrl one user cannot delete another users url returns 404")
+        fun `DELETE api-tinyUrl one user cannot delete another users url returns 404`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+
+            // ACT
+            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Auth).bodyAsText()
+
+            // one user cannot modify another users url
+            val res = delete(client, "$apiTinyUrl/$id", user2Auth)
+
+            // ASSERT
+            assertEquals(HttpStatusCode.NotFound, res.status)
+        }
     }
 
     private suspend fun post(
