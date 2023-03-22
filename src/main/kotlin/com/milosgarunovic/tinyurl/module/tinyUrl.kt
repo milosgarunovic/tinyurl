@@ -53,15 +53,16 @@ fun Application.tinyUrl() {
             authenticate("auth-basic") {
                 patch {
                     val req = call.receive<TinyUrlUpdateReq>() // todo must be a valid url
-                    val email = call.principal<UserIdPrincipal>()?.name!!
-                    urlService.update(req.id, req.url, email)
-                    call.respondStatusCode(HttpStatusCode.OK)
+                    if (urlService.update(req.id, req.url, call.principal<UserIdPrincipal>()?.name!!)) {
+                        call.respondStatusCode(HttpStatusCode.OK)
+                    } else {
+                        call.respondStatusCode(HttpStatusCode.NotFound)
+                    }
                 }
 
                 delete("/{id}") {
                     val id = call.parameters["id"]!!
-                    val email = call.principal<UserIdPrincipal>()?.name!!
-                    if (urlService.delete(id, email)) {
+                    if (urlService.delete(id, call.principal<UserIdPrincipal>()?.name!!)) {
                         call.respondStatusCode(HttpStatusCode.NoContent)
                     } else {
                         call.respondStatusCode(HttpStatusCode.NotFound)

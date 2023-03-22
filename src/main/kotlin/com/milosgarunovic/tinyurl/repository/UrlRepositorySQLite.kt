@@ -55,7 +55,7 @@ class UrlRepositorySQLite : UrlRepository {
 
     override fun update(shortUrl: String, url: String, email: String): Boolean {
         //language=SQLite
-        val query = "UPDATE url SET url = ? WHERE short_url = ? AND  user_id = (SELECT id FROM users WHERE email = ?);"
+        val query = "UPDATE url SET url = ? WHERE short_url = ? AND user_id = (SELECT id FROM users WHERE email = ?);"
         return SQLite.update(query, 1 to url, 2 to shortUrl, 3 to email)
     }
 
