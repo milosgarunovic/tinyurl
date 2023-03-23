@@ -10,21 +10,20 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.koin.core.context.stopKoin
 import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
 
-class TinyUrlTest {
+class TinyUrlTest : AbstractTest() {
 
     // TODO need tests to pass with /api/tinyurl - lower case, but that fails
     private val apiTinyUrl = "/api/tinyUrl"
-
 
     /**
      * Creates a http client that doesn't follow redirects.
      */
     private fun ApplicationTestBuilder.httpClient() = createClient { followRedirects = false }
 
+    // TODO move all methods that we can to super companion object
     companion object {
 
         private var user1Auth = "user1@test.com" to "password"
@@ -39,16 +38,9 @@ class TinyUrlTest {
             // create two users
             testApplication {
                 application { mainModule() }
-
-                client.post("/api/user/register") {
-                    contentType(ContentType.Application.Json)
-                    setBody("""{"email": "${user1Auth.first}", "password": "${user1Auth.second}"}""")
-                }
-
-                client.post("/api/user/register") {
-                    contentType(ContentType.Application.Json)
-                    setBody("""{"email": "${user2Auth.first}", "password": "${user2Auth.second}"}""")
-                }
+                fun req(email: String, password: String) = """{"email": "$email", "password": "$password"}"""
+                post(client, "/api/user/register", req(user1Auth.first, user1Auth.second))
+                post(client, "/api/user/register", req(user2Auth.first, user2Auth.second))
             }
         }
 
@@ -57,11 +49,6 @@ class TinyUrlTest {
         fun afterAll() {
             SQLite.close()
         }
-    }
-
-    @AfterEach
-    fun afterEach() {
-        stopKoin()
     }
 
     @Nested
@@ -253,7 +240,7 @@ class TinyUrlTest {
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
-            val res = post(client, apiTinyUrl, reqBody, null)
+            val res = post(client, apiTinyUrl, reqBody)
 
             // ASSERT
             assertEquals(HttpStatusCode.Created, res.status)
@@ -375,34 +362,6 @@ class TinyUrlTest {
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, res.status)
-        }
-    }
-
-    private suspend fun post(
-        client: HttpClient, path: String, reqBody: String, basicAuth: Pair<String, String>?
-    ): HttpResponse = client.post(path) {
-        contentType(ContentType.Application.Json)
-        if (basicAuth != null) {
-            basicAuth(basicAuth.first, basicAuth.second)
-        }
-        setBody(reqBody)
-    }
-
-    private suspend fun patch(
-        client: HttpClient, path: String, reqBody: String, basicAuth: Pair<String, String>?
-    ): HttpResponse = client.patch(path) {
-        contentType(ContentType.Application.Json)
-        if (basicAuth != null) {
-            basicAuth(basicAuth.first, basicAuth.second)
-        }
-        setBody(reqBody)
-    }
-
-    private suspend fun delete(
-        client: HttpClient, path: String, basicAuth: Pair<String, String>?
-    ): HttpResponse = client.delete(path) {
-        if (basicAuth != null) {
-            basicAuth(basicAuth.first, basicAuth.second)
         }
     }
 }
