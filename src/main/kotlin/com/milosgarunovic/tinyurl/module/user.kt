@@ -30,7 +30,7 @@ fun Application.user() {
             }
 
             authenticate("auth-basic") {
-                post("/api/user/changePassword") {
+                post("/changePassword") {
                     val req = call.receive<ChangePasswordReq>()
                     if (userService.changePassword(call.principal<UserIdPrincipal>()?.name!!, req)) {
                         call.respondStatusCode(HttpStatusCode.OK)
