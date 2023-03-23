@@ -18,12 +18,7 @@ class UserRepositorySQLite : UserRepository {
         return resultSet.next()
     }
 
-    override fun changePassword(
-        email: String,
-        oldPassword: String,
-        newPassword: String,
-        newPasswordRepeated: String
-    ): Boolean {
+    override fun changePassword(email: String, newPassword: String): Boolean {
         //language=SQLite
         val query = "UPDATE users SET password = ? WHERE email = ?"
         return SQLite.update(query, 1 to newPassword, 2 to email)
