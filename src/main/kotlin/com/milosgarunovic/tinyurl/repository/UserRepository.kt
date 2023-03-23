@@ -8,7 +8,7 @@ interface UserRepository {
 
     fun validate(username: String, password: String): Boolean
 
-//    fun updatePassword()
+    fun changePassword(email: String, newPassword: String): Boolean
 
 //    fun deleteAccount()
 }
