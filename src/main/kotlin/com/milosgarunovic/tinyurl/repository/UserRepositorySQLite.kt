@@ -13,11 +13,11 @@ class UserRepositorySQLite : UserRepository {
         return SQLite.insert(query, 1 to user.id, 2 to user.email, 3 to user.password, 4 to dateCreated)
     }
 
-    override fun validate(username: String, password: String): Boolean {
+    override fun getPassword(email: String): String? {
         //language=SQLite
-        val query = "SELECT 1 FROM users WHERE email = ? AND password = ? AND active = 1;"
-        val resultSet = SQLite.query(query, 1 to username, 2 to password)
-        return resultSet.next()
+        val query = "SELECT password FROM users WHERE email = ? AND active = 1;"
+        val resultSet = SQLite.query(query, 1 to email)
+        return resultSet.getString(1)
     }
 
     override fun changePassword(email: String, newPassword: String): Boolean {

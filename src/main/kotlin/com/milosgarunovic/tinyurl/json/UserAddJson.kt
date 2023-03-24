@@ -9,4 +9,4 @@ class UserAddJson(
     val password: String,
 )
 
-fun UserAddJson.toUser() = User(email, password)
+fun UserAddJson.toUser(encodedPassword: String) = User(email, encodedPassword)

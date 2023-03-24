@@ -5,6 +5,7 @@ import com.milosgarunovic.tinyurl.repository.UrlRepository
 import com.milosgarunovic.tinyurl.repository.UrlRepositorySQLite
 import com.milosgarunovic.tinyurl.repository.UserRepository
 import com.milosgarunovic.tinyurl.repository.UserRepositorySQLite
+import com.milosgarunovic.tinyurl.service.PasswordService
 import com.milosgarunovic.tinyurl.service.UrlService
 import com.milosgarunovic.tinyurl.service.UserService
 import io.ktor.serialization.kotlinx.json.*
@@ -34,6 +35,7 @@ fun Application.config() {
 
                 singleOf(::UrlService)
                 singleOf(::UserService)
+                singleOf(::PasswordService)
             }
         )
     }

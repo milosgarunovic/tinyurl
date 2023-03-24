@@ -6,7 +6,7 @@ interface UserRepository {
 
     fun add(user: User): Boolean
 
-    fun validate(username: String, password: String): Boolean
+    fun getPassword(email: String): String?
 
     fun changePassword(email: String, newPassword: String): Boolean
 

@@ -30,6 +30,7 @@ dependencies {
     implementation("io.insert-koin:koin-ktor:3.3.1")
     implementation("io.insert-koin:koin-logger-slf4j:3.3.1")
     implementation("org.liquibase:liquibase-core:4.20.0")
+    implementation("com.password4j:password4j:1.7.0")
 
     implementation("ch.qos.logback:logback-classic:1.4.6")
     implementation("commons-lang:commons-lang:2.6")
