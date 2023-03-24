@@ -38,6 +38,15 @@ fun Application.user() {
                         call.respondStatusCode(HttpStatusCode.BadRequest) // TODO change to something more meaningful
                     }
                 }
+
+                delete("/deleteAccount") {
+                    val isAccountDeleted = userService.deleteAccount(call.principal<UserIdPrincipal>()?.name!!)
+                    if (isAccountDeleted) {
+                        call.respondStatusCode(HttpStatusCode.NoContent)
+                    } else {
+                        call.respondStatusCode(HttpStatusCode.InternalServerError)
+                    }
+                }
             }
         }
     }

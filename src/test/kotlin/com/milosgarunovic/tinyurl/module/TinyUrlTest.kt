@@ -18,11 +18,6 @@ class TinyUrlTest : AbstractTest() {
     // TODO need tests to pass with /api/tinyurl - lower case, but that fails
     private val apiTinyUrl = "/api/tinyUrl"
 
-    /**
-     * Creates a http client that doesn't follow redirects.
-     */
-    private fun ApplicationTestBuilder.httpClient() = createClient { followRedirects = false }
-
     // TODO move all methods that we can to super companion object
     companion object {
 

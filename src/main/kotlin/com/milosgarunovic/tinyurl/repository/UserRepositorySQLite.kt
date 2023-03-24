@@ -1,6 +1,8 @@
 package com.milosgarunovic.tinyurl.repository
 
 import com.milosgarunovic.tinyurl.entity.User
+import com.milosgarunovic.tinyurl.ext.milli
+import java.time.Instant
 
 class UserRepositorySQLite : UserRepository {
 
@@ -22,6 +24,12 @@ class UserRepositorySQLite : UserRepository {
         //language=SQLite
         val query = "UPDATE users SET password = ? WHERE email = ?"
         return SQLite.update(query, 1 to newPassword, 2 to email)
+    }
+
+    override fun deleteAccount(email: String): Boolean {
+        //language=SQLite
+        val query = "UPDATE users SET active = 0, date_deactivated = ? WHERE email = ?"
+        return SQLite.update(query, 1 to Instant.now().milli(), 2 to email)
     }
 
 }

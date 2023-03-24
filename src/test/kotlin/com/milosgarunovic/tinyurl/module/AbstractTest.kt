@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.server.testing.*
 import org.junit.jupiter.api.AfterEach
 import org.koin.core.context.stopKoin
 
@@ -13,6 +14,11 @@ abstract class AbstractTest {
     fun afterEach() {
         stopKoin()
     }
+
+    /**
+     * Creates a http client that doesn't follow redirects.
+     */
+    protected fun ApplicationTestBuilder.httpClient() = createClient { followRedirects = false }
 
     companion object {
 

@@ -130,4 +130,37 @@ class UserTest : AbstractTest() {
             Assertions.assertEquals(HttpStatusCode.BadRequest, changePasswordRes2.status)
         }
     }
+
+    @Nested
+    inner class DeleteAccountTest {
+        @Test
+        @DisplayName("DELETE /api/user/deleteAccount")
+        fun `DELETE deleteAccount`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+            val email = "accountToBeDeleted@test.com"
+            val password = "Password123!"
+            val basicAuth = email to password
+
+            // create a user
+            post(client, "/api/user/register", """{"email": "$email", "password": "$password"}""")
+
+            // create an url that we'll test
+            val id = post(client, "/api/tinyUrl", """{"url": "https://test.com"}""", basicAuth).bodyAsText()
+
+            // ACT
+            val deleteRes = delete(client, "/api/user/deleteAccount", basicAuth)
+
+            // Assert
+            Assertions.assertEquals(HttpStatusCode.NoContent, deleteRes.status)
+
+            // urls are still accessible
+            val getResponse = httpClient().get("/$id")
+            Assertions.assertEquals(HttpStatusCode.MovedPermanently, getResponse.status)
+
+            // change of url isn't accessible, this account no longer exists so there's no modifying it
+            val deleteUrlRes = delete(client, "/api/tinyUrl/$id", basicAuth)
+            Assertions.assertEquals(HttpStatusCode.Unauthorized, deleteUrlRes.status)
+        }
+    }
 }

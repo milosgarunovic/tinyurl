@@ -10,5 +10,5 @@ interface UserRepository {
 
     fun changePassword(email: String, newPassword: String): Boolean
 
-//    fun deleteAccount()
+    fun deleteAccount(email: String): Boolean
 }
