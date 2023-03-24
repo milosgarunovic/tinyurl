@@ -15,7 +15,6 @@ import kotlin.time.Duration.Companion.days
 
 class TinyUrlTest : AbstractTest() {
 
-    // TODO need tests to pass with /api/tinyurl - lower case, but that fails
     private val apiTinyUrl = "/api/tinyUrl"
 
     // TODO move all methods that we can to super companion object
