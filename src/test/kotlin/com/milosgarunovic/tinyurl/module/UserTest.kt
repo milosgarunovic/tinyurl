@@ -102,7 +102,7 @@ class UserTest : AbstractTest() {
         }
 
         @Test
-        @DisplayName("POST /api/user/changePassword 2")
+        @DisplayName("POST /api/user/changePassword validation tests")
         fun `POST changePassword validation tests`() = testApplication {
             // ARRANGE
             application { mainModule() }
