@@ -278,7 +278,7 @@ class TinyUrlTest : AbstractTest() {
 
             // ACT
             val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Auth).bodyAsText()
-            val res = patch(client, apiTinyUrl, """{"id":"$id", "url":"https://test2.com"}""", null)
+            val res = patch(client, apiTinyUrl, """{"id":"$id", "url":"https://test2.com"}""")
 
             // TODO check logs see why it doesn't pick up 401 in status code.. must be out of scope
             // ASSERT
@@ -342,7 +342,7 @@ class TinyUrlTest : AbstractTest() {
             // ACT
             val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Auth).bodyAsText()
 
-            val response = delete(client, "$apiTinyUrl/$id", null)
+            val response = delete(client, "$apiTinyUrl/$id")
 
             // ASSERT
             assertEquals(HttpStatusCode.Unauthorized, response.status)

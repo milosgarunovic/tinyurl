@@ -27,7 +27,7 @@ abstract class AbstractTest {
         }
 
         suspend fun patch(
-            client: HttpClient, path: String, reqBody: String, basicAuth: Pair<String, String>?
+            client: HttpClient, path: String, reqBody: String, basicAuth: Pair<String, String>? = null
         ): HttpResponse = client.patch(path) {
             contentType(ContentType.Application.Json)
             if (basicAuth != null) {
@@ -36,7 +36,7 @@ abstract class AbstractTest {
             setBody(reqBody)
         }
 
-        suspend fun delete(client: HttpClient, path: String, basicAuth: Pair<String, String>?): HttpResponse {
+        suspend fun delete(client: HttpClient, path: String, basicAuth: Pair<String, String>? = null): HttpResponse {
             return client.delete(path) {
                 if (basicAuth != null) {
                     basicAuth(basicAuth.first, basicAuth.second)
