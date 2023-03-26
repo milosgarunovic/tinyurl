@@ -36,8 +36,11 @@ class UserService : KoinComponent {
         return false
     }
 
-    fun deleteAccount(email: String): Boolean {
-        return userRepository.deleteAccount(email)
+    fun deleteAccount(email: String, confirmPassword: String): Boolean {
+        if (validate(email, confirmPassword)) {
+            return userRepository.deleteAccount(email)
+        }
+        return false
     }
 
     // TODO fun forgotPassword() - this will have dependency on some kind of email service

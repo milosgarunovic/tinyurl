@@ -149,7 +149,8 @@ class UserTest : AbstractTest() {
             val id = post(client, "/api/tinyUrl", """{"url": "https://test.com"}""", basicAuth).bodyAsText()
 
             // ACT
-            val deleteRes = delete(client, "/api/user/deleteAccount", basicAuth)
+            val deleteReqBody = """{"confirmPassword": "$password"}"""
+            val deleteRes = post(client, "/api/user/deleteAccount", deleteReqBody, basicAuth)
 
             // Assert
             Assertions.assertEquals(HttpStatusCode.NoContent, deleteRes.status)

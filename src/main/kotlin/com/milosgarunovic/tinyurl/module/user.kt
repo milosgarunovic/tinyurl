@@ -2,6 +2,7 @@ package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.ChangePasswordReq
+import com.milosgarunovic.tinyurl.json.DeleteAccountReq
 import com.milosgarunovic.tinyurl.json.UserAddJson
 import com.milosgarunovic.tinyurl.service.UserService
 import io.ktor.http.*
@@ -39,8 +40,10 @@ fun Application.user() {
                     }
                 }
 
-                delete("/deleteAccount") {
-                    val isAccountDeleted = userService.deleteAccount(call.principal<UserIdPrincipal>()?.name!!)
+                post("/deleteAccount") {
+                    val req = call.receive<DeleteAccountReq>()
+                    val email = call.principal<UserIdPrincipal>()?.name!!
+                    val isAccountDeleted = userService.deleteAccount(email, req.confirmPassword)
                     if (isAccountDeleted) {
                         call.respondStatusCode(HttpStatusCode.NoContent)
                     } else {
