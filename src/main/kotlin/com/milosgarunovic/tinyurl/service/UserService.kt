@@ -4,6 +4,7 @@ import com.milosgarunovic.tinyurl.json.ChangePasswordReq
 import com.milosgarunovic.tinyurl.json.UserAddJson
 import com.milosgarunovic.tinyurl.json.toUser
 import com.milosgarunovic.tinyurl.repository.UserRepository
+import io.ktor.server.plugins.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -40,7 +41,7 @@ class UserService : KoinComponent {
         if (validate(email, confirmPassword)) {
             return userRepository.deleteAccount(email)
         }
-        return false
+        throw BadRequestException("confirmPassword field is not correct.")
     }
 
     // TODO fun forgotPassword() - this will have dependency on some kind of email service

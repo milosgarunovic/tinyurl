@@ -27,12 +27,17 @@ dependencies {
     implementation("io.ktor:ktor-server-request-validation:$ktorVersion")
     implementation("io.ktor:ktor-server-openapi:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+
     implementation("io.insert-koin:koin-ktor:3.3.1")
     implementation("io.insert-koin:koin-logger-slf4j:3.3.1")
+
     implementation("org.liquibase:liquibase-core:4.20.0")
+
     implementation("com.password4j:password4j:1.7.0")
 
     implementation("ch.qos.logback:logback-classic:1.4.6")
+
     implementation("commons-lang:commons-lang:2.6")
 
     implementation("org.xerial:sqlite-jdbc:3.41.0.0")

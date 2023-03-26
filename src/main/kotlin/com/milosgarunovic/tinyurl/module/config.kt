@@ -1,5 +1,6 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
 import com.milosgarunovic.tinyurl.repository.UrlRepository
 import com.milosgarunovic.tinyurl.repository.UrlRepositorySQLite
@@ -8,12 +9,16 @@ import com.milosgarunovic.tinyurl.repository.UserRepositorySQLite
 import com.milosgarunovic.tinyurl.service.PasswordService
 import com.milosgarunovic.tinyurl.service.UrlService
 import com.milosgarunovic.tinyurl.service.UserService
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.plugins.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.logging.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
@@ -25,6 +30,15 @@ import org.koin.logger.slf4jLogger
 @OptIn(ExperimentalSerializationApi::class)
 fun Application.config() {
     install(RequestLogging)
+
+    install(StatusPages) {
+        exception<Throwable> { call, cause ->
+            call.application.log.error(cause)
+            call.respondStatusCode(HttpStatusCode.InternalServerError)
+        }
+        exception<NotFoundException> { call, _ -> call.respondStatusCode(HttpStatusCode.NotFound) }
+        exception<BadRequestException> { call, cause -> call.respond(HttpStatusCode.BadRequest, cause.message!!) }
+    }
 
     install(Koin) {
         slf4jLogger()

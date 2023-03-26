@@ -135,7 +135,7 @@ class UserTest : AbstractTest() {
     inner class DeleteAccountTest {
         @Test
         @DisplayName("DELETE /api/user/deleteAccount")
-        fun `DELETE deleteAccount`() = testApplication {
+        fun `POST deleteAccount`() = testApplication {
             // ARRANGE
             application { mainModule() }
             val email = "accountToBeDeleted@test.com"
@@ -162,6 +162,27 @@ class UserTest : AbstractTest() {
             // change of url isn't accessible, this account no longer exists so there's no modifying it
             val deleteUrlRes = delete(client, "/api/tinyUrl/$id", basicAuth)
             Assertions.assertEquals(HttpStatusCode.Unauthorized, deleteUrlRes.status)
+        }
+
+        @Test
+        @DisplayName("POST deleteAccount with wrong confirmPassword")
+        fun `POST deleteAccount with wrong confirmPassword`() = testApplication {
+            // ARRANGE
+            application { mainModule() }
+            val email = "accountToBeDeleted2@test.com"
+            val password = "Password123!"
+            val basicAuth = email to password
+
+            // create a user
+            post(client, "/api/user/register", """{"email": "$email", "password": "$password"}""")
+
+            // ACT
+            val deleteReqBody = """{"confirmPassword": "wrongPassword"}"""
+            val deleteRes = post(client, "/api/user/deleteAccount", deleteReqBody, basicAuth)
+
+            // Assert
+            Assertions.assertEquals(HttpStatusCode.BadRequest, deleteRes.status)
+            Assertions.assertEquals("confirmPassword field is not correct.", deleteRes.bodyAsText())
         }
     }
 }
