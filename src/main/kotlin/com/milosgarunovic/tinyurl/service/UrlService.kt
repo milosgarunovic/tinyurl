@@ -1,7 +1,6 @@
 package com.milosgarunovic.tinyurl.service
 
 import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
-import com.milosgarunovic.tinyurl.json.toTinyUrl
 import com.milosgarunovic.tinyurl.repository.UrlRepository
 import com.milosgarunovic.tinyurl.util.random8Chars
 import org.koin.core.component.KoinComponent
