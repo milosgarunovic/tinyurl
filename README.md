@@ -40,6 +40,8 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
   - [ ] Docker and testcontainers
 - [ ] Add statistics for how many times a route has been called
   - [ ] Statistics should hold date accessed and number of times. Maybe group by minute/hour?
+  - [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
+    alternative for this
 - [ ] Add ability to limit creation of account to only one user
 - [ ] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
   to create a tiny url

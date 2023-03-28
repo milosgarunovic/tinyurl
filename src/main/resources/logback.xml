@@ -5,6 +5,8 @@
         </encoder>
     </appender>
     <root level="info">
+        <!-- for logging -->
+        <!-- <root level="trace">-->
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
