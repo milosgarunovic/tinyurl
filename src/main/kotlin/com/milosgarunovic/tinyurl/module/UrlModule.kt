@@ -39,7 +39,7 @@ fun Application.tinyUrl() {
             }
         }
 
-        route("/api/tinyUrl") {
+        route("/api/url") {
 
             authenticate("auth-basic", strategy = AuthenticationStrategy.Optional) {
                 post {

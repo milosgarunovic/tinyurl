@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import java.time.ZoneId
 import kotlin.time.Duration.Companion.days
 
-class TinyUrlTest : AbstractTest() {
+class UrlTest : AbstractTest() {
 
-    private val apiTinyUrl = "/api/tinyUrl"
+    private val apiTinyUrl = "/api/url"
 
     // TODO move all methods that we can to super companion object
     companion object {
@@ -26,8 +26,8 @@ class TinyUrlTest : AbstractTest() {
         @BeforeAll
         @JvmStatic
         fun beforeAll() {
-            SQLite.setupInMemory()
-//            SQLite.setup("test") // used for debugging
+//            SQLite.setupInMemory()
+            SQLite.setup("tinyUrl") // used for debugging
 
             // create two users
             testApplication {
@@ -209,7 +209,7 @@ class TinyUrlTest : AbstractTest() {
     }
 
     @Nested
-    inner class PostApiTinyUrlTests {
+    inner class PostApiUrlTests {
 
         @Test
         @DisplayName("POST /api/tinyUrl with url in body returns 201 and has length 8")
@@ -242,7 +242,7 @@ class TinyUrlTest : AbstractTest() {
     }
 
     @Nested
-    inner class PatchApiTinyUrlTests {
+    inner class PatchApiUrlTests {
 
         @Test
         @DisplayName("PATCH /api/tinyUrl with body returns 200")
@@ -297,7 +297,7 @@ class TinyUrlTest : AbstractTest() {
     }
 
     @Nested
-    inner class DeleteApiTinyUrlTest {
+    inner class DeleteApiUrlTest {
 
         @Test
         @DisplayName("DELETE /api/tinyUrl returns 204")

@@ -2,7 +2,7 @@ package com.milosgarunovic.tinyurl.entity
 
 import java.time.Instant
 
-data class TinyUrl(
+data class Url(
     val shortUrl: String,
     val url: String,
     val calculatedExpiry: Instant? = null,

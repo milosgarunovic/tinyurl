@@ -1,6 +1,6 @@
 package com.milosgarunovic.tinyurl.json
 
-import com.milosgarunovic.tinyurl.entity.TinyUrl
+import com.milosgarunovic.tinyurl.entity.Url
 import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.ZoneId
@@ -12,7 +12,7 @@ data class TinyUrlAddReq(
 ) {
 
     // TODO add unit tests for this
-    fun toTinyUrl(shortUrl: String): TinyUrl {
+    fun toTinyUrl(shortUrl: String): Url {
         val now = Instant.now()
         val calculatedExpiry: Instant? = when (expires) {
             // TODO maybe save this in a date format and check on get if it's valid. This would be for saving future dates
@@ -30,7 +30,7 @@ data class TinyUrlAddReq(
             else -> null
         }
 
-        return TinyUrl(shortUrl, this.url, calculatedExpiry)
+        return Url(shortUrl, this.url, calculatedExpiry)
     }
 }
 

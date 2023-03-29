@@ -81,7 +81,7 @@ class UserTest : AbstractTest() {
             post(client, "/api/user/register", """{"email": "$email", "password": "$oldPassword"}""")
 
             // 2. create a resource (that we'll try to change)
-            val id = post(client, "/api/tinyUrl", """{"url": "https://test.com"}""", oldBasicAuth).bodyAsText()
+            val id = post(client, "/api/url", """{"url": "https://test.com"}""", oldBasicAuth).bodyAsText()
 
             // ACT
             // 3. change password
@@ -93,11 +93,11 @@ class UserTest : AbstractTest() {
             Assertions.assertEquals(HttpStatusCode.OK, changePasswordRes.status)
 
             // 4. user can't access a resource with old password
-            val deleteRes = delete(client, "/api/tinyUrl/$id", oldBasicAuth)
+            val deleteRes = delete(client, "/api/url/$id", oldBasicAuth)
             Assertions.assertEquals(HttpStatusCode.Unauthorized, deleteRes.status)
 
             // 5. user can access a resource with new password
-            val deleteResWithNewPassword = delete(client, "/api/tinyUrl/$id", newBasicAuth)
+            val deleteResWithNewPassword = delete(client, "/api/url/$id", newBasicAuth)
             Assertions.assertEquals(HttpStatusCode.NoContent, deleteResWithNewPassword.status)
         }
 
@@ -146,7 +146,7 @@ class UserTest : AbstractTest() {
             post(client, "/api/user/register", """{"email": "$email", "password": "$password"}""")
 
             // create an url that we'll test
-            val id = post(client, "/api/tinyUrl", """{"url": "https://test.com"}""", basicAuth).bodyAsText()
+            val id = post(client, "/api/url", """{"url": "https://test.com"}""", basicAuth).bodyAsText()
 
             // ACT
             val deleteReqBody = """{"confirmPassword": "$password"}"""
@@ -160,7 +160,7 @@ class UserTest : AbstractTest() {
             Assertions.assertEquals(HttpStatusCode.MovedPermanently, getResponse.status)
 
             // change of url isn't accessible, this account no longer exists so there's no modifying it
-            val deleteUrlRes = delete(client, "/api/tinyUrl/$id", basicAuth)
+            val deleteUrlRes = delete(client, "/api/url/$id", basicAuth)
             Assertions.assertEquals(HttpStatusCode.Unauthorized, deleteUrlRes.status)
         }
 
