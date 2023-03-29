@@ -2,10 +2,7 @@ package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
-import com.milosgarunovic.tinyurl.repository.UrlRepository
-import com.milosgarunovic.tinyurl.repository.UrlRepositorySQLite
-import com.milosgarunovic.tinyurl.repository.UserRepository
-import com.milosgarunovic.tinyurl.repository.UserRepositorySQLite
+import com.milosgarunovic.tinyurl.repository.*
 import com.milosgarunovic.tinyurl.service.PasswordService
 import com.milosgarunovic.tinyurl.service.UrlService
 import com.milosgarunovic.tinyurl.service.UserService
@@ -17,7 +14,6 @@ import io.ktor.server.plugins.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import io.ktor.server.routing.*
 import io.ktor.util.logging.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -46,6 +42,7 @@ fun Application.config() {
             module {
                 single<UrlRepository> { UrlRepositorySQLite() }
                 single<UserRepository> { UserRepositorySQLite() }
+                single<UrlStatisticsRepository> { UrlStatisticsRepositorySQLIte() }
 
                 singleOf(::UrlService)
                 singleOf(::UserService)

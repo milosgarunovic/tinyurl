@@ -6,7 +6,7 @@ import java.time.Instant
 import java.time.ZoneId
 
 @Serializable
-data class TinyUrlAddReq(
+data class UrlAddReq(
     val url: String,
     val expires: Expires?,
 ) {

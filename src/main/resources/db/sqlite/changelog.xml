@@ -6,4 +6,5 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
     <include file="createUsers.sql" relativeToChangelogFile="true"/>
     <include file="createUrls.sql" relativeToChangelogFile="true"/>
+    <include file="createUrlStatistics.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

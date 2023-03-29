@@ -39,16 +39,24 @@ class UrlRepositorySQLite : UrlRepository {
         return url
     }
 
-    override fun getUrl(shortUrl: String): String? {
+    /**
+     * @return triple of url, shortUrl and userId
+     */
+    override fun getUrl(shortUrl: String): Triple<String, String, String?>? {
         //language=SQLite
-        val query = "SELECT url, calculated_expiry FROM urls WHERE short_url = ? AND active = 1;"
+        val query = "SELECT url, short_url, calculated_expiry, user_id FROM urls WHERE short_url = ? AND active = 1;"
         val resultSet = SQLite.query(query, 1 to shortUrl)
         if (resultSet.next()) {
             val expiry = resultSet.getLong("calculated_expiry")
             if (expiry != 0L && expiry < InstantUtil.now().toEpochMilli()) {
+                // TODO deactivate when link expired and mark field expired maybe?
                 return null
             }
-            return resultSet.getString("url")
+            return Triple(
+                resultSet.getString("url"),
+                resultSet.getString("short_url"),
+                resultSet.getString("user_id")
+            )
         }
         return null
     }

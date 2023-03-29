@@ -26,6 +26,7 @@ fun Application.user() {
                 if (isAdded) {
                     call.respondStatusCode(HttpStatusCode.Created)
                 } else {
+                    // TODO instead of this, throw an exception
                     call.respond(HttpStatusCode.Conflict, """{"message": "email already exists"}""")
                 }
             }
@@ -36,6 +37,7 @@ fun Application.user() {
                     if (userService.changePassword(call.principal<UserIdPrincipal>()?.name!!, req)) {
                         call.respondStatusCode(HttpStatusCode.OK)
                     } else {
+                        // TODO instead of this, throw an exception
                         call.respondStatusCode(HttpStatusCode.BadRequest) // TODO change to something more meaningful
                     }
                 }

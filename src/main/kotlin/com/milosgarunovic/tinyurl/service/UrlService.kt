@@ -1,7 +1,8 @@
 package com.milosgarunovic.tinyurl.service
 
-import com.milosgarunovic.tinyurl.json.TinyUrlAddReq
+import com.milosgarunovic.tinyurl.json.UrlAddReq
 import com.milosgarunovic.tinyurl.repository.UrlRepository
+import com.milosgarunovic.tinyurl.repository.UrlStatisticsRepository
 import com.milosgarunovic.tinyurl.util.random8Chars
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -10,18 +11,24 @@ class UrlService : KoinComponent {
 
     private val urlRepository by inject<UrlRepository>()
 
+    private val statisticsRepository by inject<UrlStatisticsRepository>()
+
     fun getUrl(shortUrl: String): String? {
-        // TODO add statistics for that url if it's not null
-        return urlRepository.getUrl(shortUrl)
+        val url = urlRepository.getUrl(shortUrl)
+        if (url?.third != null) {
+            // TODO maybe save url as well because url can be updated
+            statisticsRepository.add(url.second, url.third!!)
+        }
+        return url?.first
     }
 
-    fun add(tinyUrlAddReq: TinyUrlAddReq, email: String?): String {
+    fun add(urlAddReq: UrlAddReq, email: String?): String {
         var shortUrl: String
         do { // generate new if it already exists
             shortUrl = random8Chars()
         } while (urlRepository.exists(shortUrl))
 
-        val url = tinyUrlAddReq.toTinyUrl(shortUrl)
+        val url = urlAddReq.toTinyUrl(shortUrl)
         urlRepository.add(url, email)
         return url.shortUrl
     }
