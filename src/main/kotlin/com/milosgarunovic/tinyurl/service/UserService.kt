@@ -31,14 +31,17 @@ class UserService : KoinComponent {
         return false
     }
 
-    fun changePassword(email: String, changePasswordReq: ChangePasswordReq): Boolean {
-        if (validate(email, changePasswordReq.oldPassword) &&
-            changePasswordReq.newPassword == changePasswordReq.newPasswordRepeated
-        ) {
-            val encodedPassword = passwordService.encode(changePasswordReq.newPassword)
-            return userRepository.changePassword(email, encodedPassword)
+    fun changePassword(email: String, cpr: ChangePasswordReq) {
+        if (!validate(email, cpr.oldPassword)) {
+            throw BadRequestException("Old password doesn't match existing password.")
         }
-        return false
+        if (cpr.newPassword != cpr.newPasswordRepeated) {
+            throw BadRequestException("New and repeated passwords don't match.")
+        }
+
+        val encodedPassword = passwordService.encode(cpr.newPassword)
+        userRepository.changePassword(email, encodedPassword)
+
     }
 
     fun deleteAccount(email: String, confirmPassword: String): Boolean {

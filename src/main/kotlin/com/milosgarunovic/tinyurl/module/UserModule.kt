@@ -28,12 +28,8 @@ fun Application.userModule() {
             authenticate("auth-basic") {
                 post("/changePassword") {
                     val req = call.receive<ChangePasswordReq>()
-                    if (userService.changePassword(call.principal<UserIdPrincipal>()?.name!!, req)) {
-                        call.respondStatusCode(HttpStatusCode.OK)
-                    } else {
-                        // TODO instead of this, throw an exception
-                        call.respondStatusCode(HttpStatusCode.BadRequest) // TODO change to something more meaningful
-                    }
+                    userService.changePassword(call.principal<UserIdPrincipal>()?.name!!, req)
+                    call.respondStatusCode(HttpStatusCode.OK)
                 }
 
                 post("/deleteAccount") {
