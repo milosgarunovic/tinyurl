@@ -1,5 +1,6 @@
 package com.milosgarunovic.tinyurl.service
 
+import com.milosgarunovic.tinyurl.exception.NotFoundException
 import com.milosgarunovic.tinyurl.json.UrlAddReq
 import com.milosgarunovic.tinyurl.repository.UrlRepository
 import com.milosgarunovic.tinyurl.repository.UrlStatisticsRepository
@@ -13,13 +14,14 @@ class UrlService : KoinComponent {
 
     private val statisticsRepository by inject<UrlStatisticsRepository>()
 
-    fun getUrl(shortUrl: String): String? {
-        val url = urlRepository.getUrl(shortUrl)
-        if (url?.third != null) {
+    fun getUrl(shortUrl: String): String {
+        val url = urlRepository.getUrl(shortUrl) ?: throw NotFoundException()
+
+        if (url.third != null) {
             // TODO maybe save url as well because url can be updated
             statisticsRepository.add(url.second, url.third!!)
         }
-        return url?.first
+        return url.first
     }
 
     fun add(urlAddReq: UrlAddReq, email: String?): String {

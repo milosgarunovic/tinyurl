@@ -30,14 +30,10 @@ fun Application.urlModule() {
             // TODO queryParameter origin or source or something like that so we can group from which website this url
             //   was called
             val url = urlService.getUrl(path)
-            if (url != null) {
-                if (redirect) {
-                    call.respondRedirect(url)
-                } else {
-                    call.respond(HttpStatusCode.OK, url)
-                }
+            if (redirect) {
+                call.respondRedirect(url)
             } else {
-                call.respondStatusCode(HttpStatusCode.NotFound)
+                call.respond(HttpStatusCode.OK, url)
             }
         }
 
