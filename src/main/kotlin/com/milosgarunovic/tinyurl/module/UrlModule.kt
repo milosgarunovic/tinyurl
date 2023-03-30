@@ -51,20 +51,14 @@ fun Application.urlModule() {
             authenticate("auth-basic") {
                 patch {
                     val req = call.receive<TinyUrlUpdateReq>() // todo must be a valid url
-                    if (urlService.update(req.id, req.url, call.principal<UserIdPrincipal>()?.name!!)) {
-                        call.respondStatusCode(HttpStatusCode.OK)
-                    } else {
-                        call.respondStatusCode(HttpStatusCode.NotFound)
-                    }
+                    urlService.update(req.id, req.url, call.principal<UserIdPrincipal>()?.name!!)
+                    call.respondStatusCode(HttpStatusCode.OK)
                 }
 
                 delete("/{id}") {
                     val id = call.parameters["id"]!!
-                    if (urlService.delete(id, call.principal<UserIdPrincipal>()?.name!!)) {
-                        call.respondStatusCode(HttpStatusCode.NoContent)
-                    } else {
-                        call.respondStatusCode(HttpStatusCode.NotFound)
-                    }
+                    urlService.delete(id, call.principal<UserIdPrincipal>()?.name!!)
+                    call.respondStatusCode(HttpStatusCode.NoContent)
                 }
             }
         }
