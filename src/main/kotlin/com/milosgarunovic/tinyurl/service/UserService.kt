@@ -23,7 +23,7 @@ class UserService : KoinComponent {
         }
     }
 
-    fun validate(email: String, password: String): Boolean {
+    fun isUserValid(email: String, password: String): Boolean {
         val encodedPassword = userRepository.getPassword(email)
         if (encodedPassword != null) {
             return passwordService.validate(password, encodedPassword)
@@ -32,7 +32,7 @@ class UserService : KoinComponent {
     }
 
     fun changePassword(email: String, cpr: ChangePasswordReq) {
-        if (!validate(email, cpr.oldPassword)) {
+        if (!isUserValid(email, cpr.oldPassword)) {
             throw BadRequestException("Old password doesn't match existing password.")
         }
         if (cpr.newPassword != cpr.newPasswordRepeated) {
@@ -45,7 +45,7 @@ class UserService : KoinComponent {
     }
 
     fun deleteAccount(email: String, confirmPassword: String): Boolean {
-        if (validate(email, confirmPassword)) {
+        if (isUserValid(email, confirmPassword)) {
             return userRepository.deleteAccount(email)
         }
         throw BadRequestException("confirmPassword field is not correct.")

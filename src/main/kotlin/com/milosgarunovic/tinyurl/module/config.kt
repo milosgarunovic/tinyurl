@@ -3,6 +3,7 @@ package com.milosgarunovic.tinyurl.module
 import com.milosgarunovic.tinyurl.exception.BadRequestException
 import com.milosgarunovic.tinyurl.exception.ConflictException
 import com.milosgarunovic.tinyurl.exception.NotFoundException
+import com.milosgarunovic.tinyurl.exception.UnauthorizedException
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
 import com.milosgarunovic.tinyurl.repository.*
@@ -38,6 +39,7 @@ fun Application.config() {
         exception<NotFoundException> { call, cause -> call.respond(cause.statusCode, cause.message) }
         exception<BadRequestException> { call, cause -> call.respond(cause.statusCode, cause.message) }
         exception<ConflictException> { call, cause -> call.respond(cause.statusCode, cause.message) }
+        exception<UnauthorizedException> { call, cause -> call.respond(cause.statusCode, cause.message) }
     }
 
     install(Koin) {
@@ -60,10 +62,10 @@ fun Application.config() {
     authentication {
         basic(name = "auth-basic") {
             validate { credentials ->
-                if (userService.validate(credentials.name, credentials.password)) {
+                if (userService.isUserValid(credentials.name, credentials.password)) {
                     UserIdPrincipal(credentials.name)
                 } else {
-                    null
+                    throw UnauthorizedException()
                 }
             }
         }

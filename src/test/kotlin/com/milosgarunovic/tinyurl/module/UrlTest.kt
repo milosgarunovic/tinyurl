@@ -212,7 +212,7 @@ class UrlTest : AbstractTest() {
     inner class PostApiUrlTests {
 
         @Test
-        @DisplayName("POST /api/tinyUrl with url in body returns 201 and has length 8")
+        @DisplayName("POST /api/url with url in body returns 201 and has length 8")
         fun `POST api-tinyUrl with url in body returns 201 and has length 8`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -227,7 +227,7 @@ class UrlTest : AbstractTest() {
         }
 
         @Test
-        @DisplayName("POST /api/tinyUrl withouth authorization returns 201")
+        @DisplayName("POST /api/url withouth authorization returns 201")
         fun `POST api-tinyUrl without authorization returns 201`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -245,7 +245,7 @@ class UrlTest : AbstractTest() {
     inner class PatchApiUrlTests {
 
         @Test
-        @DisplayName("PATCH /api/tinyUrl with body returns 200")
+        @DisplayName("PATCH /api/url with body returns 200")
         fun `PATCH api-tinyUrl with body returns 200`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -265,7 +265,7 @@ class UrlTest : AbstractTest() {
         }
 
         @Test
-        @DisplayName("PATCH /api/tinyUrl without authorization returns 401")
+        @DisplayName("PATCH /api/url without authorization returns 401")
         fun `PATCH api-tinyUrl without authorization returns 401`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -280,7 +280,7 @@ class UrlTest : AbstractTest() {
         }
 
         @Test
-        @DisplayName("PATCH /api/tinyUrl one user cannot modify another users url returns 404")
+        @DisplayName("PATCH /api/url one user cannot modify another users url returns 404")
         fun `PATCH api-tinyUrl one user cannot modify another users url returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -300,7 +300,7 @@ class UrlTest : AbstractTest() {
     inner class DeleteApiUrlTest {
 
         @Test
-        @DisplayName("DELETE /api/tinyUrl returns 204")
+        @DisplayName("DELETE /api/url returns 204")
         fun `DELETE api-tinyUrl returns 204`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -315,7 +315,7 @@ class UrlTest : AbstractTest() {
         }
 
         @Test
-        @DisplayName("DELETE /api/tinyUrl without id returns 404")
+        @DisplayName("DELETE /api/url without id returns 404")
         fun `DELETE api-tinyUrl without id returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -328,7 +328,7 @@ class UrlTest : AbstractTest() {
         }
 
         @Test
-        @DisplayName("DELETE /api/tinyUrl without basic auth returns 401")
+        @DisplayName("DELETE /api/url without basic auth returns 401")
         fun `DELETE api-tinyUrl without basic auth returns 401`() = testApplication {
             // ARRANGE
             application { mainModule() }
@@ -343,7 +343,7 @@ class UrlTest : AbstractTest() {
         }
 
         @Test
-        @DisplayName("DELETE /api/tinyUrl one user cannot delete another users url returns 404")
+        @DisplayName("DELETE /api/url one user cannot delete another users url returns 404")
         fun `DELETE api-tinyUrl one user cannot delete another users url returns 404`() = testApplication {
             // ARRANGE
             application { mainModule() }
