@@ -13,7 +13,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-fun Application.tinyUrl() {
+fun Application.urlModule() {
 
     val urlService by inject<UrlService>()
 

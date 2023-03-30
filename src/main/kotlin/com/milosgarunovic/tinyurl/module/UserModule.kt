@@ -9,11 +9,10 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
-fun Application.user() {
+fun Application.userModule() {
 
     val userService by inject<UserService>()
 
@@ -22,13 +21,8 @@ fun Application.user() {
 
             post("/register") {
                 val req = call.receive<UserAddJson>()
-                val isAdded = userService.add(req)
-                if (isAdded) {
-                    call.respondStatusCode(HttpStatusCode.Created)
-                } else {
-                    // TODO instead of this, throw an exception
-                    call.respond(HttpStatusCode.Conflict, """{"message": "email already exists"}""")
-                }
+                userService.add(req)
+                call.respondStatusCode(HttpStatusCode.Created)
             }
 
             authenticate("auth-basic") {

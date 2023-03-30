@@ -1,5 +1,8 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.exception.BadRequestException
+import com.milosgarunovic.tinyurl.exception.ConflictException
+import com.milosgarunovic.tinyurl.exception.NotFoundException
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
 import com.milosgarunovic.tinyurl.repository.*
@@ -10,7 +13,6 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.plugins.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
@@ -32,8 +34,10 @@ fun Application.config() {
             call.application.log.error(cause)
             call.respondStatusCode(HttpStatusCode.InternalServerError)
         }
-        exception<NotFoundException> { call, _ -> call.respondStatusCode(HttpStatusCode.NotFound) }
-        exception<BadRequestException> { call, cause -> call.respond(HttpStatusCode.BadRequest, cause.message!!) }
+
+        exception<NotFoundException> { call, cause -> call.respond(cause.statusCode, cause.message) }
+        exception<BadRequestException> { call, cause -> call.respond(cause.statusCode, cause.message) }
+        exception<ConflictException> { call, cause -> call.respond(cause.statusCode, cause.message) }
     }
 
     install(Koin) {

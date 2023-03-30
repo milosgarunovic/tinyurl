@@ -37,8 +37,9 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
   - [ ] add JPA
   - [ ] see if queries are blocking and wrap them in runBlocking
 - [ ] Add Postgres (as another implementation)
-  - [ ] Docker and testcontainers
-- [ ] Add statistics for how many times a route has been called
+  - [ ] Docker and testcontainers (docker should be added anyway so people can deploy in their local env in minutes and
+    test stuff out)
+- [x] Add statistics for how many times a route has been called
   - [ ] Statistics should hold date accessed and number of times. Maybe group by minute/hour?
   - [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
     alternative for this

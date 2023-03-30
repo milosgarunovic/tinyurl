@@ -1,10 +1,11 @@
 package com.milosgarunovic.tinyurl.service
 
+import com.milosgarunovic.tinyurl.exception.BadRequestException
+import com.milosgarunovic.tinyurl.exception.ConflictException
 import com.milosgarunovic.tinyurl.json.ChangePasswordReq
 import com.milosgarunovic.tinyurl.json.UserAddJson
 import com.milosgarunovic.tinyurl.json.toUser
 import com.milosgarunovic.tinyurl.repository.UserRepository
-import io.ktor.server.plugins.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -14,9 +15,12 @@ class UserService : KoinComponent {
 
     private val passwordService by inject<PasswordService>()
 
-    fun add(user: UserAddJson): Boolean {
+    fun add(user: UserAddJson) {
         val encodedPassword = passwordService.encode(user.password)
-        return userRepository.add(user.toUser(encodedPassword))
+        val isUserAdded = userRepository.add(user.toUser(encodedPassword))
+        if (!isUserAdded) {
+            throw ConflictException("""{"message": "email already exists"}""")
+        }
     }
 
     fun validate(email: String, password: String): Boolean {
