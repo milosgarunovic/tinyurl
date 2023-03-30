@@ -134,7 +134,7 @@ class UserTest : AbstractTest() {
     @Nested
     inner class DeleteAccountTest {
         @Test
-        @DisplayName("DELETE /api/user/deleteAccount")
+        @DisplayName("POST /api/user/deleteAccount")
         fun `POST deleteAccount`() = testApplication {
             // ARRANGE
             application { mainModule() }

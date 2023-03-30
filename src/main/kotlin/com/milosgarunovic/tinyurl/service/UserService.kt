@@ -41,14 +41,13 @@ class UserService : KoinComponent {
 
         val encodedPassword = passwordService.encode(cpr.newPassword)
         userRepository.changePassword(email, encodedPassword)
-
     }
 
-    fun deleteAccount(email: String, confirmPassword: String): Boolean {
-        if (isUserValid(email, confirmPassword)) {
-            return userRepository.deleteAccount(email)
+    fun deleteAccount(email: String, confirmPassword: String) {
+        if (!isUserValid(email, confirmPassword)) {
+            throw BadRequestException("confirmPassword field is not correct.")
         }
-        throw BadRequestException("confirmPassword field is not correct.")
+        userRepository.deleteAccount(email)
     }
 
     // TODO fun forgotPassword() - this will have dependency on some kind of email service
