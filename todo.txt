@@ -3,15 +3,6 @@ maybe?
 
 should have ability to connect with frontend (requires CORS) or with any http client
 
-should have ability to log in, create a new user, and also a feature to block creating new accounts
-
 backend source code in one module
 integration tests in one module + testcontainers
 frontend kotlin/react in one module
-
-***What data structure would work as a map and how to map it in database?
-    Or just use regular database with index on shortUrl, see if it's valid point to use shortUrl as id
----
-create a user, TinyUrl should be related to a user if one exists
-can continue developing this way and then migrate or allow multiple options to users (basic, jwt, oauth...)
-need to make a create user path

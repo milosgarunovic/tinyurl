@@ -16,8 +16,6 @@ repositories {
 }
 
 val ktorVersion = "2.2.3"
-val kotlinVersion = "1.8.10"
-val mockkVersion = "1.13.4"
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")
