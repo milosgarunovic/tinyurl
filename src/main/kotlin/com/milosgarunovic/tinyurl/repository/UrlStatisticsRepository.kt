@@ -2,5 +2,5 @@ package com.milosgarunovic.tinyurl.repository
 
 interface UrlStatisticsRepository {
 
-    fun add(shortUrl: String, userId: String)
+    fun add(url: String, shortUrl: String, userId: String)
 }

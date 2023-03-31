@@ -18,8 +18,7 @@ class UrlService : KoinComponent {
         val url = urlRepository.getUrl(shortUrl) ?: throw NotFoundException()
 
         if (url.third != null) {
-            // TODO maybe save url as well because url can be updated
-            statisticsRepository.add(url.second, url.third!!)
+            statisticsRepository.add(url.first, url.second, url.third!!)
         }
         return url.first
     }

@@ -5,15 +5,16 @@ import java.util.*
 
 class UrlStatisticsRepositorySQLIte : UrlStatisticsRepository {
 
-    override fun add(shortUrl: String, userId: String) {
+    override fun add(url: String, shortUrl: String, userId: String) {
         //language=SQLite
-        val query = "INSERT INTO url_statistics (id, date_created, short_url, user_id) VALUES (?, ?, ?, ?);"
+        val query = "INSERT INTO url_statistics (id, date_created, url, short_url, user_id) VALUES (?, ?, ?, ?, ?);"
         SQLite.insert(
             query,
             1 to UUID.randomUUID().toString(),
             2 to Instant.now().toEpochMilli(),
-            3 to shortUrl,
-            4 to userId,
+            3 to url,
+            4 to shortUrl,
+            5 to userId,
         )
     }
 }
