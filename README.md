@@ -40,7 +40,6 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
   - [ ] Docker and testcontainers (docker should be added anyway so people can deploy in their local env in minutes and
     test stuff out)
 - [x] Add statistics for how many times a route has been called
-  - [ ] Statistics should hold date accessed and number of times. Maybe group by minute/hour?
   - [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
     alternative for this
 - [ ] Add ability to limit creation of account to only one user
@@ -61,3 +60,10 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
 but you can look it up manually. It should be found in `build/dokka/index.html`
 
 `./gradlew koverHtmlReport` generates html code coverage. This tasks will give you link to html.
+
+### Plan for release of first stable version (without Frontend)
+
+In order to provide a challenge, it's good to have a due date which we need to strive for. I'll give it my best to
+launch first stable version on **June 1. 2023**
+
+This is two months from the date I'm writing this.
