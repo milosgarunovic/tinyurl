@@ -6,7 +6,8 @@ The idea is to make a self-hosted version of tiny url.
 
 ### About the project
 
-Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
+Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls, users and has statistics for logged-in
+users.
 
 ### Intentions of use
 
@@ -26,9 +27,8 @@ Project uses Kotlin, Ktor, SQLite, and it has a small api for creating urls.
   - [ ] Maintain test coverage above 90%
   - [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
-  - [x] Add basic auth
+  - [x] Add JWT instead of basic auth
   - [ ] Add security tests
-  - [ ] Add JWT instead of basic auth
   - [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
 - [x] Add SQLite - most basic version with local. This way there's no db maintenance.
   - [x] in memory SQLite for tests
