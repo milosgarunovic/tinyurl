@@ -17,6 +17,7 @@ class UrlService : KoinComponent {
     fun getUrl(shortUrl: String): String {
         val url = urlRepository.getUrl(shortUrl) ?: throw NotFoundException()
 
+        // statistics are written only if an active user created that URL
         if (url.third != null) {
             statisticsRepository.add(url.first, url.second, url.third!!)
         }
