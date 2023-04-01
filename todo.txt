@@ -10,3 +10,5 @@ frontend kotlin/react in one module
 Recursive adding shouldn't be allowed, like if it's from the same origin, you can't create a URL.
 For example, we're hosting this on test.com, we create some url and get test.com/dwUcNQ20. Now if we want to add that
 url to get another one, we should block this because it doesn't make sense to do something like this.
+
+Run a profiler (and learn about it as well) to check for slower requests and see where the bottlenecks are.

@@ -2,6 +2,7 @@ package com.milosgarunovic.tinyurl.plugin
 
 import com.auth0.jwt.JWT
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.util.*
 import java.time.Instant
@@ -17,7 +18,7 @@ val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
         val request = call.request
         val reqId = UUID.randomUUID().toString()
         val email = getEmail(request)
-        val ipAddress = call.request.host() // TODO check if maybe we need to use something else
+        val ipAddress = call.request.origin.remoteAddress
 
         call.attributes.put(reqStartTimeKey, Instant.now().toEpochMilli())
         call.attributes.put(reqIdKey, reqId)
