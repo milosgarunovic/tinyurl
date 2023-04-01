@@ -17,4 +17,10 @@ class UrlStatisticsRepositorySQLIte : UrlStatisticsRepository {
             5 to userId,
         )
     }
+
+    override fun deleteByShortUrl(shortUrl: String) {
+        //language=SQLite
+        val query = "UPDATE url_statistics SET active = 0, date_deactivated = ? WHERE short_url = ?;"
+        SQLite.update(query, 1 to shortUrl, 2 to Instant.now().toEpochMilli())
+    }
 }

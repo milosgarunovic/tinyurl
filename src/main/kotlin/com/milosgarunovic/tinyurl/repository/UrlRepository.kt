@@ -6,6 +6,9 @@ interface UrlRepository {
 
     fun add(url: Url, email: String?): Url
 
+    /**
+     * @return triple of url, shortUrl and userId
+     */
     fun getUrl(shortUrl: String): Triple<String, String, String?>?
 
     fun update(shortUrl: String, url: String, email: String): Boolean

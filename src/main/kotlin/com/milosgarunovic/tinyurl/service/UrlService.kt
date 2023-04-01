@@ -35,6 +35,11 @@ class UrlService : KoinComponent {
         return url.shortUrl
     }
 
+    /**
+     * The point of updating a URL is for example if a user uses short URL on some of his websites to redirect to his
+     * website, and then he changes how URLs look like or something like that, he still wants to leave the short URL
+     * as is, but just update the url that user is being redirected to.
+     */
     fun update(shortUrl: String, url: String, email: String) {
         val isUpdated = urlRepository.update(shortUrl, url, email)
         if (!isUpdated) {
@@ -42,8 +47,12 @@ class UrlService : KoinComponent {
         }
     }
 
+    /**
+     * When user deletes a URL, statistics are also deleted.
+     */
     fun delete(shortUrl: String, email: String) {
         val isDeleted = urlRepository.delete(shortUrl, email)
+        statisticsRepository.deleteByShortUrl(shortUrl)
         if (!isDeleted) {
             throw NotFoundException()
         }
