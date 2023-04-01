@@ -1,5 +1,6 @@
 package com.milosgarunovic.tinyurl.plugin
 
+import com.auth0.jwt.JWT
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.util.*
@@ -15,17 +16,17 @@ val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
     onCall { call ->
         val request = call.request
         val reqId = UUID.randomUUID().toString()
-        val username = getUsername(request)
-        val ipAddress = call.request.host()
+        val email = getEmail(request)
+        val ipAddress = call.request.host() // TODO check if maybe we need to use something else
 
         call.attributes.put(reqStartTimeKey, Instant.now().toEpochMilli())
         call.attributes.put(reqIdKey, reqId)
-        call.attributes.put(usernameKey, username)
+        call.attributes.put(usernameKey, email)
         call.attributes.put(ipAddressKey, ipAddress)
         val httpMethod = request.httpMethod.value
         val url = request.uri
 
-        call.application.environment.log.info(commonMessage(reqId, username, ipAddress, httpMethod, url))
+        call.application.environment.log.info(commonMessage(reqId, email, ipAddress, httpMethod, url))
     }
 
     onCallRespond { call, _ ->
@@ -46,13 +47,16 @@ val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
     }
 }
 
-private fun getUsername(request: ApplicationRequest): String {
+private fun getEmail(request: ApplicationRequest): String {
 //  val username = call.principal<UserIdPrincipal>("auth-basic")?.name ?: "" // doesn't work
     // workaround is to parse basic auth myself
-    val username = request.authorization()?.removePrefix("Basic ")?.decodeBase64String()?.split(":")?.get(0)
-    return if (username != null) "$username@" else ""
+    if (request.authorization()?.removePrefix("Bearer ") != null) {
+        return JWT.decode(request.authorization()?.removePrefix("Bearer ")).getClaim("email").toString()
+            .removeSurrounding("\"") + "@"
+    }
+    return ""
 }
 
-fun commonMessage(reqId: String, username: String, ipAddress: String, httpMethod: String, url: String): String {
-    return "Res id=[ $reqId ]; user=[ $username$ipAddress ]; url=[ $httpMethod $url ];"
+fun commonMessage(reqId: String, email: String, ipAddress: String, httpMethod: String, url: String): String {
+    return "Res id=[ $reqId ]; user=[ $email$ipAddress ]; url=[ $httpMethod $url ];"
 }

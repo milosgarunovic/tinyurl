@@ -1,9 +1,6 @@
 package com.milosgarunovic.tinyurl
 
-import com.milosgarunovic.tinyurl.module.config
-import com.milosgarunovic.tinyurl.module.openApi
-import com.milosgarunovic.tinyurl.module.urlModule
-import com.milosgarunovic.tinyurl.module.userModule
+import com.milosgarunovic.tinyurl.module.*
 import com.milosgarunovic.tinyurl.repository.SQLite
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
@@ -15,7 +12,7 @@ fun main() {
 
     embeddedServer(
         CIO,
-        port = 8080,
+        port = 8080, // TODO move to config
         module = Application::mainModule,
     ).start(wait = true)
 }
@@ -23,6 +20,8 @@ fun main() {
 fun Application.mainModule() {
 
     config()
+
+    loginModule()
 
     userModule()
 

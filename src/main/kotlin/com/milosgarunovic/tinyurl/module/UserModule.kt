@@ -8,6 +8,7 @@ import com.milosgarunovic.tinyurl.service.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -25,16 +26,16 @@ fun Application.userModule() {
                 call.respondStatusCode(HttpStatusCode.Created)
             }
 
-            authenticate("auth-basic") {
+            authenticate("jwt") {
                 post("/changePassword") {
                     val req = call.receive<ChangePasswordReq>()
-                    userService.changePassword(call.principal<UserIdPrincipal>()?.name!!, req)
+                    userService.changePassword(call.principal<JWTPrincipal>()?.get("email")!!, req)
                     call.respondStatusCode(HttpStatusCode.OK)
                 }
 
                 post("/deleteAccount") {
                     val req = call.receive<DeleteAccountReq>()
-                    val email = call.principal<UserIdPrincipal>()?.name!!
+                    val email = call.principal<JWTPrincipal>()?.get("email")!!
                     userService.deleteAccount(email, req.confirmPassword)
                     call.respondStatusCode(HttpStatusCode.NoContent)
                 }

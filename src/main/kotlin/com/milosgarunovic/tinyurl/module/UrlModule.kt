@@ -8,6 +8,7 @@ import com.milosgarunovic.tinyurl.service.UrlService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -39,25 +40,29 @@ fun Application.urlModule() {
 
         route("/api/url") {
 
-            authenticate("auth-basic", strategy = AuthenticationStrategy.Optional) {
+            /**
+             * Authentication strategy here is optional because anyone can create a short url, even if people don't have
+             * an account, the only difference is that they won't have all the functionalities related to links.
+             */
+            authenticate("jwt", strategy = AuthenticationStrategy.Optional) {
                 post {
                     val req = call.receive<UrlAddReq>() // todo must be a valid url
-                    val email = call.principal<UserIdPrincipal>()?.name
+                    val email = call.principal<JWTPrincipal>()?.get("email")
                     val shortUrl = urlService.add(req, email)
                     call.respond(HttpStatusCode.Created, shortUrl)
                 }
             }
 
-            authenticate("auth-basic") {
+            authenticate("jwt") {
                 patch {
                     val req = call.receive<TinyUrlUpdateReq>() // todo must be a valid url
-                    urlService.update(req.id, req.url, call.principal<UserIdPrincipal>()?.name!!)
+                    urlService.update(req.id, req.url, call.principal<JWTPrincipal>()?.get("email")!!)
                     call.respondStatusCode(HttpStatusCode.OK)
                 }
 
                 delete("/{id}") {
                     val id = call.parameters["id"]!!
-                    urlService.delete(id, call.principal<UserIdPrincipal>()?.name!!)
+                    urlService.delete(id, call.principal<JWTPrincipal>()?.get("email")!!)
                     call.respondStatusCode(HttpStatusCode.NoContent)
                 }
             }

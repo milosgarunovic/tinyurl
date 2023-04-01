@@ -25,6 +25,7 @@ dependencies {
     implementation("io.ktor:ktor-server-request-validation:$ktorVersion")
     implementation("io.ktor:ktor-server-openapi:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
 
     implementation("io.insert-koin:koin-ktor:3.3.1")
@@ -41,6 +42,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.41.0.0")
 
     testImplementation(kotlin("test"))
+    testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
 }
 
