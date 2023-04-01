@@ -26,7 +26,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import java.time.Instant
@@ -63,23 +62,11 @@ fun Application.config() {
         )
     }
 
-    // order of creating this dependency is important, it needs to be after install(Koin)
-    val userService by inject<UserService>()
     authentication {
-        basic(name = "auth-basic") {
-            validate { credentials ->
-                if (userService.isUserValid(credentials.name, credentials.password)) {
-                    UserIdPrincipal(credentials.name)
-                } else {
-                    throw UnauthorizedException()
-                }
-            }
-        }
         jwt(name = "jwt") {
             // defines a function
             verifier(
-                JWT
-                    .require(Algorithm.HMAC256("483f1296-30d0-41df-8376-120fc793d9eb"))
+                JWT.require(Algorithm.HMAC256("483f1296-30d0-41df-8376-120fc793d9eb"))
 //                .withAudience(audience)
 //                .withIssuer(issuer)
                     .build()
