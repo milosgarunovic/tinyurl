@@ -13,6 +13,7 @@ import com.milosgarunovic.tinyurl.service.LoginService
 import com.milosgarunovic.tinyurl.service.PasswordService
 import com.milosgarunovic.tinyurl.service.UrlService
 import com.milosgarunovic.tinyurl.service.UserService
+import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -28,7 +29,6 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
-import java.time.Instant
 
 @OptIn(ExperimentalSerializationApi::class)
 fun Application.config() {
@@ -74,7 +74,7 @@ fun Application.config() {
 
             // validate fields in payload if necessary and create JWTPrincipal
             validate { credentials ->
-                if (credentials.payload.getClaim("exp").asLong() < Instant.now().toEpochMilli()) {
+                if (credentials.payload.getClaim("exp").asLong() < InstantUtil.now().toEpochMilli()) {
                     JWTPrincipal(credentials.payload)
                 } else {
                     throw UnauthorizedException()
