@@ -3,5 +3,4 @@ package com.milosgarunovic.tinyurl.json
 import kotlinx.serialization.Serializable
 
 @Serializable
-class LoginRes(val token: String) {
-}
+data class LoginRes(val accessToken: String, val refreshToken: String)
