@@ -9,7 +9,7 @@ import com.milosgarunovic.tinyurl.exception.UnauthorizedException
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
 import com.milosgarunovic.tinyurl.repository.*
-import com.milosgarunovic.tinyurl.service.LoginService
+import com.milosgarunovic.tinyurl.service.AuthService
 import com.milosgarunovic.tinyurl.service.PasswordService
 import com.milosgarunovic.tinyurl.service.UrlService
 import com.milosgarunovic.tinyurl.service.UserService
@@ -57,7 +57,7 @@ fun Application.config() {
                 singleOf(::UrlService)
                 singleOf(::UserService)
                 singleOf(::PasswordService)
-                singleOf(::LoginService)
+                singleOf(::AuthService)
             }
         )
     }

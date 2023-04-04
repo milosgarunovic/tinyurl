@@ -21,7 +21,7 @@ fun Application.mainModule() {
 
     config()
 
-    loginModule()
+    authModule()
 
     userModule()
 
