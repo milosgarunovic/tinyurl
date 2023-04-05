@@ -14,15 +14,12 @@ fun Application.authModule() {
 
     val authService by inject<AuthService>()
 
-    val accessTokenSecret = environment.config.property("jwt.accessTokenSecret").getString()
-    val refreshTokenSecret = environment.config.property("jwt.refreshTokenSecret").getString()
-
     routing {
 
         post("/login") {
             val loginReq = call.receive<LoginReq>()
 
-            val res = authService.login(loginReq, accessTokenSecret, refreshTokenSecret)
+            val res = authService.login(loginReq)
 
             call.respond(res)
         }
@@ -34,7 +31,7 @@ fun Application.authModule() {
                 return@get
             }
 
-            val loginRes = authService.refreshToken(authorization.drop("Bearer ".length), accessTokenSecret)
+            val loginRes = authService.refreshToken(authorization.drop("Bearer ".length))
             call.respond(HttpStatusCode.OK, loginRes)
         }
     }

@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.milosgarunovic.tinyurl.exception.UnauthorizedException
 import com.milosgarunovic.tinyurl.json.LoginReq
 import com.milosgarunovic.tinyurl.json.LoginRes
+import io.ktor.server.config.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.Duration
@@ -14,10 +15,15 @@ class AuthService : KoinComponent {
 
     private val userService by inject<UserService>()
 
-    fun login(loginReq: LoginReq, accessTokenSecret: String, refreshTokenSecret: String): LoginRes {
+    private val applicationConfig by inject<ApplicationConfig>()
+
+    fun login(loginReq: LoginReq): LoginRes {
         if (!userService.isUserValid(loginReq.email, loginReq.password)) {
             throw UnauthorizedException()
         }
+
+        val accessTokenSecret = applicationConfig.property("jwt.accessTokenSecret").getString()
+        val refreshTokenSecret = applicationConfig.property("jwt.refreshTokenSecret").getString()
 
         val accessToken = jwt(loginReq.email, accessTokenSecret, Duration.ofMinutes(3))
         val refreshToken = jwt(loginReq.email, refreshTokenSecret, Duration.ofHours(24))
@@ -32,12 +38,14 @@ class AuthService : KoinComponent {
      * path. It works that way so users can't use refreshToken instead of access token. This is done by using two
      * different secrets to distinguish access token and refresh token.
      */
-    fun refreshToken(refreshToken: String, accessTokenSecret: String): LoginRes {
+    fun refreshToken(refreshToken: String): LoginRes {
         val jwt = JWT.decode(refreshToken)
         val expiration = jwt.getClaim("exp").asLong()
         if (Instant.now().toEpochMilli() < expiration) {
             throw UnauthorizedException("Refresh token expired, please login again.")
         }
+
+        val accessTokenSecret = applicationConfig.property("jwt.accessTokenSecret").getString()
 
         val email = jwt.getClaim("email").asString()
         val accessToken = jwt(email, accessTokenSecret, Duration.ofMinutes(3))

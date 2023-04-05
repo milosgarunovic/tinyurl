@@ -19,6 +19,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.config.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
@@ -53,6 +54,10 @@ fun Application.config() {
                 single<UrlRepository> { UrlRepositorySQLite() }
                 single<UserRepository> { UserRepositorySQLite() }
                 single<UrlStatisticsRepository> { UrlStatisticsRepositorySQLIte() }
+
+                // helper singletons to have access in KoinComponent tagged classes and not just in ktor modules
+                single<ApplicationConfig> { environment.config }
+                single<Logger> { environment.log }
 
                 singleOf(::UrlService)
                 singleOf(::UserService)
