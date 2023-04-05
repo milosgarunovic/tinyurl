@@ -1,0 +1,3 @@
+jwt:
+  accessTokenSecret: "483f1296-30d0-41df-8376-120fc793d9eb"
+  refreshTokenSecret: "483f1296-30d0-41df-8376-120fc793d9ec"

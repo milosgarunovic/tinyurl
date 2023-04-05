@@ -62,11 +62,13 @@ fun Application.config() {
         )
     }
 
+    val accessTokenSecret = environment.config.property("jwt.accessTokenSecret").getString()
     authentication {
         jwt(name = "jwt") {
             // defines a function
+
             verifier(
-                JWT.require(Algorithm.HMAC256("483f1296-30d0-41df-8376-120fc793d9eb"))
+                JWT.require(Algorithm.HMAC256(accessTokenSecret))
 //                .withAudience(audience)
 //                .withIssuer(issuer)
                     .build()
@@ -74,7 +76,7 @@ fun Application.config() {
 
             // validate fields in payload if necessary and create JWTPrincipal
             validate { credentials ->
-                if (credentials.payload.getClaim("exp").asLong() < InstantUtil.now().toEpochMilli()) {
+                if (InstantUtil.now().toEpochMilli() < credentials.payload.getClaim("exp").asLong()) {
                     JWTPrincipal(credentials.payload)
                 } else {
                     throw UnauthorizedException()
