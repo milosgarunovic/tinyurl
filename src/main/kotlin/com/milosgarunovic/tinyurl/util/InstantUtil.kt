@@ -30,6 +30,24 @@ object InstantUtil {
         }
     }
 
+    fun plusHours(hours: Long) {
+        if (instant != null) {
+            instant = instant!!.plus(hours, ChronoUnit.HOURS)
+        }
+    }
+
+    fun plusMinutes(minutes: Long) {
+        if (instant != null) {
+            instant = instant!!.plus(minutes, ChronoUnit.MINUTES)
+        }
+    }
+
+    fun plusSeconds(seconds: Long) {
+        if (instant != null) {
+            instant = instant!!.plus(seconds, ChronoUnit.SECONDS)
+        }
+    }
+
     fun now(): Instant {
         if (instant != null) {
             return instant!!

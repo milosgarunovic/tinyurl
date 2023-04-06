@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.days
 
 class UrlTest : AbstractTest() {
 
-    private val apiTinyUrl = "/api/url"
+    private val apiUrl = "/api/url"
 
     private var user1Token: String = "empty user 1 token"
     private var user2Token: String = "empty user 2 token"
@@ -106,7 +106,7 @@ class UrlTest : AbstractTest() {
             // ACT
 
             // create a new url
-            val id = post(client, apiTinyUrl, """{"url": "$expectedUrl"}""", user1Token).bodyAsText()
+            val id = post(client, apiUrl, """{"url": "$expectedUrl"}""", user1Token).bodyAsText()
 
             // get created url
             val response = client.get("/$id")
@@ -124,8 +124,8 @@ class UrlTest : AbstractTest() {
             val client = httpClient()
 
             // ACT
-            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
-            delete(client, "$apiTinyUrl/$id", user1Token) // delete created post
+            val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
+            delete(client, "$apiUrl/$id", user1Token) // delete created post
             val response = client.get("/$id") // try to get it after deletion
 
             // ASSERT
@@ -146,7 +146,7 @@ class UrlTest : AbstractTest() {
             // ACT
 
             // create a new post
-            val id = post(client, apiTinyUrl, """{"url": "$expectedUrl"}""", user1Token).bodyAsText()
+            val id = post(client, apiUrl, """{"url": "$expectedUrl"}""", user1Token).bodyAsText()
 
             // get created url
             val response = client.get("/$id?redirect=true")
@@ -167,7 +167,7 @@ class UrlTest : AbstractTest() {
             // ACT
 
             // create a new post
-            val id = post(client, apiTinyUrl, """{"url": "$expectedUrl"}""", user1Token).bodyAsText()
+            val id = post(client, apiUrl, """{"url": "$expectedUrl"}""", user1Token).bodyAsText()
             // get created url
             val response = client.get("/$id?redirect=false")
 
@@ -189,7 +189,7 @@ class UrlTest : AbstractTest() {
 
                 // ACT
                 val reqBody = """{"url": "https://test.com", "expires":{"type": "in","milliseconds": $oneDayMillis}}"""
-                val url = post(client, apiTinyUrl, reqBody, user1Token).bodyAsText()
+                val url = post(client, apiUrl, reqBody, user1Token).bodyAsText()
 
                 // ASSERT
                 val get = client.get("/$url")
@@ -215,7 +215,7 @@ class UrlTest : AbstractTest() {
 
             // ACT
             val reqBody = """{"url": "https://test.com", "expires":{"type": "at","dateTime": "$oneDayInFuture"}}"""
-            val url = post(client, apiTinyUrl, reqBody, user1Token).bodyAsText()
+            val url = post(client, apiUrl, reqBody, user1Token).bodyAsText()
 
             // ASSERT
             val resNow = client.get("/$url")
@@ -239,7 +239,7 @@ class UrlTest : AbstractTest() {
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
-            val res = post(client, apiTinyUrl, reqBody, user1Token)
+            val res = post(client, apiUrl, reqBody, user1Token)
 
             // ASSERT
             assertEquals(HttpStatusCode.Created, res.status)
@@ -254,7 +254,7 @@ class UrlTest : AbstractTest() {
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
-            val res = post(client, apiTinyUrl, reqBody, token = null)
+            val res = post(client, apiUrl, reqBody, token = null)
 
             // ASSERT
             assertEquals(HttpStatusCode.Created, res.status)
@@ -273,8 +273,8 @@ class UrlTest : AbstractTest() {
             val expectedUrl = "https://test2.com"
 
             // ACT
-            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
-            val res = patch(client, apiTinyUrl, """{"id":"$id", "url":"$expectedUrl"}""", user1Token)
+            val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
+            val res = patch(client, apiUrl, """{"id":"$id", "url":"$expectedUrl"}""", user1Token)
 
             // ASSERT
             assertEquals(HttpStatusCode.OK, res.status)
@@ -291,8 +291,8 @@ class UrlTest : AbstractTest() {
             application { mainModule() }
 
             // ACT
-            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
-            val res = patch(client, apiTinyUrl, """{"id":"$id", "url":"https://test2.com"}""", token = null)
+            val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
+            val res = patch(client, apiUrl, """{"id":"$id", "url":"https://test2.com"}""", token = null)
 
             // TODO check logs see why it doesn't pick up 401 in status code.. must be out of scope
             // ASSERT
@@ -306,10 +306,10 @@ class UrlTest : AbstractTest() {
             application { mainModule() }
 
             // ACT
-            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
+            val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
 
             // one user cannot modify another users url
-            val res = patch(client, apiTinyUrl, """{"id":"$id", "url":"https://test2.com"}""", user2Token)
+            val res = patch(client, apiUrl, """{"id":"$id", "url":"https://test2.com"}""", user2Token)
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, res.status)
@@ -326,9 +326,9 @@ class UrlTest : AbstractTest() {
             application { mainModule() }
 
             // ACT
-            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
+            val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
 
-            val response = delete(client, "$apiTinyUrl/$id", user1Token)
+            val response = delete(client, "$apiUrl/$id", user1Token)
 
             // ASSERT
             assertEquals(HttpStatusCode.NoContent, response.status)
@@ -341,7 +341,7 @@ class UrlTest : AbstractTest() {
             application { mainModule() }
 
             // ACT
-            val response = delete(client, "$apiTinyUrl/", user1Token)
+            val response = delete(client, "$apiUrl/", user1Token)
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, response.status)
@@ -354,9 +354,9 @@ class UrlTest : AbstractTest() {
             application { mainModule() }
 
             // ACT
-            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
+            val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
 
-            val response = delete(client, "$apiTinyUrl/$id", token = null)
+            val response = delete(client, "$apiUrl/$id", token = null)
 
             // ASSERT
             assertEquals(HttpStatusCode.Unauthorized, response.status)
@@ -369,10 +369,10 @@ class UrlTest : AbstractTest() {
             application { mainModule() }
 
             // ACT
-            val id = post(client, apiTinyUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
+            val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
 
             // one user cannot modify another users url
-            val res = delete(client, "$apiTinyUrl/$id", user2Token)
+            val res = delete(client, "$apiUrl/$id", user2Token)
 
             // ASSERT
             assertEquals(HttpStatusCode.NotFound, res.status)
