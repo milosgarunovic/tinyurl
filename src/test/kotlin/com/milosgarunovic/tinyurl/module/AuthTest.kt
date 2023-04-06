@@ -58,6 +58,7 @@ class AuthTest : AbstractTest() {
         InstantUtil.plusSeconds(3)
         val patchAgain = patch(client, "/api/url", """{"id":"$shortUrl", "url":"https://test2.com"}""", token)
         assertEquals(HttpStatusCode.Unauthorized, patchAgain.status)
+        InstantUtil.clear()
     }
 
 }

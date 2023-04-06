@@ -10,6 +10,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.Duration
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 class AuthService : KoinComponent {
 
@@ -18,15 +19,21 @@ class AuthService : KoinComponent {
     private val applicationConfig by inject<ApplicationConfig>()
 
     fun login(loginReq: LoginReq): LoginRes {
-        if (!userService.isUserValid(loginReq.email, loginReq.password)) {
+        val email = loginReq.email
+        if (!userService.isUserValid(email, loginReq.password)) {
             throw UnauthorizedException()
         }
 
-        val accessTokenSecret = applicationConfig.property("jwt.accessTokenSecret").getString()
-        val refreshTokenSecret = applicationConfig.property("jwt.refreshTokenSecret").getString()
+        val accessSecret = applicationConfig.property("jwt.accessTokenSecret").getString()
+        val atExpiry = applicationConfig.property("jwt.accessTokenExpiry").getString().toLong()
+        val atExpiryUnit = applicationConfig.property("jwt.accessTokenExpiryUnit").getString()
 
-        val accessToken = jwt(loginReq.email, accessTokenSecret, Duration.ofMinutes(3))
-        val refreshToken = jwt(loginReq.email, refreshTokenSecret, Duration.ofHours(24))
+        val refreshSecret = applicationConfig.property("jwt.refreshTokenSecret").getString()
+        val rtExpiry = applicationConfig.property("jwt.refreshTokenExpiry").getString().toLong()
+        val rtExpiryUnit = applicationConfig.property("jwt.refreshTokenExpiryUnit").getString()
+
+        val accessToken = jwt(email, accessSecret, Duration.of(atExpiry, ChronoUnit.valueOf(atExpiryUnit)))
+        val refreshToken = jwt(email, refreshSecret, Duration.of(rtExpiry, ChronoUnit.valueOf(rtExpiryUnit)))
         return LoginRes(accessToken, refreshToken)
     }
 
@@ -45,10 +52,12 @@ class AuthService : KoinComponent {
             throw UnauthorizedException("Refresh token expired, please login again.")
         }
 
-        val accessTokenSecret = applicationConfig.property("jwt.accessTokenSecret").getString()
+        val accessSecret = applicationConfig.property("jwt.accessTokenSecret").getString()
+        val atExpiry = applicationConfig.property("jwt.accessTokenExpiry").getString().toLong()
+        val atExpiryUnit = applicationConfig.property("jwt.accessTokenExpiryUnit").getString()
 
         val email = jwt.getClaim("email").asString()
-        val accessToken = jwt(email, accessTokenSecret, Duration.ofMinutes(3))
+        val accessToken = jwt(email, accessSecret, Duration.of(atExpiry, ChronoUnit.valueOf(atExpiryUnit)))
         return LoginRes(accessToken)
     }
 
