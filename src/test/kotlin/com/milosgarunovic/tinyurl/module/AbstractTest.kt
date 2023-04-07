@@ -1,6 +1,7 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.json.LoginRes
+import com.milosgarunovic.tinyurl.repository.SQLite
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -9,7 +10,9 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.koin.core.context.stopKoin
 
 abstract class AbstractTest {
@@ -17,6 +20,17 @@ abstract class AbstractTest {
     @AfterEach
     fun afterEach() {
         stopKoin()
+    }
+
+    @BeforeAll
+    open fun beforeAll() {
+        SQLite.setupInMemory()
+//      SQLite.setup("tinyUrl") // used for debugging
+    }
+
+    @AfterAll
+    open fun afterAll() {
+        SQLite.close()
     }
 
     /**

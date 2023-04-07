@@ -1,38 +1,25 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
-import com.milosgarunovic.tinyurl.repository.SQLite
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class AuthTest : AbstractTest() {
 
-    companion object {
+    private var userAuth = """{"email": "auth.test@test.com", "password": "password123"}"""
 
-        private var userAuth = """{"email": "auth.test@test.com", "password": "password123"}"""
+    @BeforeAll
+    override fun beforeAll() {
+        super.beforeAll()
 
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll() {
-            SQLite.setupInMemory()
-//            SQLite.setup("tinyUrl") // used for debugging
-
-            testApplication {
-                application { mainModule() }
-                post(client, "/api/user/register", userAuth, token = null)
-            }
-        }
-
-        @AfterAll
-        @JvmStatic
-        fun afterAll() {
-            SQLite.close()
+        testApplication {
+            application { mainModule() }
+            post(client, "/api/user/register", userAuth, token = null)
         }
     }
 

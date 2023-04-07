@@ -1,7 +1,6 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
-import com.milosgarunovic.tinyurl.repository.SQLite
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -27,32 +26,20 @@ class UrlTest : AbstractTest() {
     private var user1Token: String = "empty user 1 token"
     private var user2Token: String = "empty user 2 token"
 
-    // TODO move all methods that we can to super companion object
-    companion object {
+    private var user1Auth = "user1@test.com" to "password"
+    private var user2Auth = "user2@test.com" to "password"
 
-        private var user1Auth = "user1@test.com" to "password"
-        private var user2Auth = "user2@test.com" to "password"
+    private fun req(pair: Pair<String, String>) = """{"email": "${pair.first}", "password": "${pair.second}"}"""
 
-        fun req(pair: Pair<String, String>) = """{"email": "${pair.first}", "password": "${pair.second}"}"""
+    @BeforeAll
+    override fun beforeAll() {
+        super.beforeAll()
 
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll() {
-            SQLite.setupInMemory()
-//            SQLite.setup("tinyUrl") // used for debugging
-
-            // create two users
-            testApplication {
-                application { mainModule() }
-                post(client, "/api/user/register", req(user1Auth), token = null)
-                post(client, "/api/user/register", req(user2Auth), token = null)
-            }
-        }
-
-        @AfterAll
-        @JvmStatic
-        fun afterAll() {
-            SQLite.close()
+        // create two users
+        testApplication {
+            application { mainModule() }
+            post(client, "/api/user/register", req(user1Auth), token = null)
+            post(client, "/api/user/register", req(user2Auth), token = null)
         }
     }
 

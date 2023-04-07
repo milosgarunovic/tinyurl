@@ -1,7 +1,6 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
-import com.milosgarunovic.tinyurl.repository.SQLite
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -11,21 +10,6 @@ import io.ktor.server.testing.*
 import org.junit.jupiter.api.*
 
 class UserTest : AbstractTest() {
-
-    companion object {
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll() {
-            SQLite.setupInMemory()
-//            SQLite.setup("test") // used for debugging
-        }
-
-        @AfterAll
-        @JvmStatic
-        fun afterAll() {
-            SQLite.close()
-        }
-    }
 
     @Nested
     inner class UserRegisterTest {
