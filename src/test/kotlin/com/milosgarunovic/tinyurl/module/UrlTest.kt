@@ -26,10 +26,8 @@ class UrlTest : AbstractTest() {
     private var user1Token: String = "empty user 1 token"
     private var user2Token: String = "empty user 2 token"
 
-    private var user1Auth = "user1@test.com" to "password"
-    private var user2Auth = "user2@test.com" to "password"
-
-    private fun req(pair: Pair<String, String>) = """{"email": "${pair.first}", "password": "${pair.second}"}"""
+    private var user1Auth = """{"email": "user1@test.com", "password": "password"}"""
+    private var user2Auth = """{"email": "user2@test.com", "password": "password"}"""
 
     @BeforeAll
     override fun beforeAll() {
@@ -38,8 +36,8 @@ class UrlTest : AbstractTest() {
         // create two users
         testApplication {
             application { mainModule() }
-            post(client, "/api/user/register", req(user1Auth), token = null)
-            post(client, "/api/user/register", req(user2Auth), token = null)
+            post(client, "/api/user/register", user1Auth)
+            post(client, "/api/user/register", user2Auth)
         }
     }
 
@@ -47,8 +45,8 @@ class UrlTest : AbstractTest() {
     fun beforeEach() = testApplication {
         application { mainModule() }
         val client = httpClient()
-        user1Token = login(client, req(user1Auth))
-        user2Token = login(client, req(user2Auth))
+        user1Token = login(client, user1Auth)
+        user2Token = login(client, user2Auth)
     }
 
     @Nested
