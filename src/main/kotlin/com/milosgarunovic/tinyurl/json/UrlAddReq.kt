@@ -1,6 +1,7 @@
 package com.milosgarunovic.tinyurl.json
 
 import com.milosgarunovic.tinyurl.entity.Url
+import com.milosgarunovic.tinyurl.exception.BadRequestException
 import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.ZoneId
@@ -21,12 +22,18 @@ data class UrlAddReq(
                 if (expires.dateTime.isAfter(now.atZone(ZoneId.of("UTC")))) {
                     expires.dateTime.toInstant()
                 } else {
-                    // TODO throw exception because it's not in future, or check this in the request validator
-                    null
+                    throw BadRequestException("expired.dateTime can't be in past")
                 }
             }
 
-            is Expires.In -> now.plusMillis(expires.milliseconds)
+            is Expires.In -> {
+                if (expires.milliseconds > 0) {
+                    now.plusMillis(expires.milliseconds)
+                } else {
+                    throw BadRequestException("expired.milliseconds can't be of negative value")
+                }
+            }
+
             else -> null
         }
 
