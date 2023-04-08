@@ -18,11 +18,12 @@ class UserTest : AbstractTest() {
         fun `POST api user register returns 201`() = testApplication {
             // ARRANGE
             application { mainModule() }
+            val client = httpClient()
 
             // ACT
-            val reqBody = """{"email": "test3@test.com", "password": "password123"}"""
+            val reqBody = """{"email": "test3@test.com", "password": "Password123!"}"""
             val response = post(client, "/api/user/register", reqBody)
-
+            println(response.bodyAsText())
             // ASSERT
             Assertions.assertEquals(HttpStatusCode.Created, response.status)
         }
@@ -33,7 +34,7 @@ class UserTest : AbstractTest() {
             // ARRANGE
             application { mainModule() }
             val registerUrl = "/api/user/register"
-            val reqBody = """{"email": "test2@test.com", "password": "password123"}"""
+            val reqBody = """{"email": "test2@test.com", "password": "Password123!"}"""
 
             // ACT
             // create a user once
@@ -58,8 +59,8 @@ class UserTest : AbstractTest() {
             application { mainModule() }
             val client = httpClient()
             val email = "test@test.com"
-            val oldPassword = "password123"
-            val newPassword = "newPassword123"
+            val oldPassword = "Password123!"
+            val newPassword = "NewPassword123!"
 
             // 1. create user
             val registerAndLogin = """{"email": "$email", "password": "$oldPassword"}"""
@@ -99,8 +100,8 @@ class UserTest : AbstractTest() {
             application { mainModule() }
             val client = httpClient()
             val email = "test4@test.com"
-            val oldPassword = "password123"
-            val newPassword = "newPassword123"
+            val oldPassword = "Password123!"
+            val newPassword = "NewPassword123!"
 
             val reqBody1 = """{"email": "$email", "password": "$oldPassword"}"""
             post(client, "/api/user/register", reqBody1, token = null)

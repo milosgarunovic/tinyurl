@@ -4,7 +4,6 @@ import com.milosgarunovic.tinyurl.exception.BadRequestException
 import com.milosgarunovic.tinyurl.exception.ConflictException
 import com.milosgarunovic.tinyurl.json.ChangePasswordReq
 import com.milosgarunovic.tinyurl.json.UserAddJson
-import com.milosgarunovic.tinyurl.json.toUser
 import com.milosgarunovic.tinyurl.repository.UserRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

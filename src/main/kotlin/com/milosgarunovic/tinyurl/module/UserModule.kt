@@ -22,6 +22,7 @@ fun Application.userModule() {
 
             post("/register") {
                 val req = call.receive<UserAddJson>()
+                req.validate()
                 userService.add(req)
                 call.respondStatusCode(HttpStatusCode.Created)
             }
