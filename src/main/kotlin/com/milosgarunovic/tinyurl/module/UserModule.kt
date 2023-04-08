@@ -30,6 +30,8 @@ fun Application.userModule() {
             authenticate("jwt") {
                 post("/changePassword") {
                     val req = call.receive<ChangePasswordReq>()
+                    req.validate()
+
                     userService.changePassword(call.principal<JWTPrincipal>()?.get("email")!!, req)
                     call.respondStatusCode(HttpStatusCode.OK)
                 }
