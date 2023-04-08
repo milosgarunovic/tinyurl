@@ -43,26 +43,8 @@ abstract class AbstractTest {
         followRedirects = false
     }
 
-    companion object {
-
-        suspend fun post(client: HttpClient, path: String, reqBody: String, token: String? = null): HttpResponse {
-            return client.post(path) {
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-                if (token != null) {
-                    bearerAuth(token)
-                }
-                setBody(reqBody)
-            }
-        }
-
-        suspend fun login(client: HttpClient, reqBody: String): String {
-            return post(client, "/login", reqBody).body<LoginRes>().accessToken
-        }
-
-        suspend fun patch(
-            client: HttpClient, path: String, reqBody: String, token: String? = null
-        ): HttpResponse = client.patch(path) {
+    suspend fun post(client: HttpClient, path: String, reqBody: String, token: String? = null): HttpResponse {
+        return client.post(path) {
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)
             if (token != null) {
@@ -70,12 +52,27 @@ abstract class AbstractTest {
             }
             setBody(reqBody)
         }
+    }
 
-        suspend fun delete(client: HttpClient, path: String, token: String? = null): HttpResponse {
-            return client.delete(path) {
-                if (token != null) {
-                    bearerAuth(token)
-                }
+    suspend fun login(client: HttpClient, reqBody: String): String {
+        return post(client, "/login", reqBody).body<LoginRes>().accessToken
+    }
+
+    suspend fun patch(
+        client: HttpClient, path: String, reqBody: String, token: String? = null
+    ): HttpResponse = client.patch(path) {
+        contentType(ContentType.Application.Json)
+        accept(ContentType.Application.Json)
+        if (token != null) {
+            bearerAuth(token)
+        }
+        setBody(reqBody)
+    }
+
+    suspend fun delete(client: HttpClient, path: String, token: String? = null): HttpResponse {
+        return client.delete(path) {
+            if (token != null) {
+                bearerAuth(token)
             }
         }
     }

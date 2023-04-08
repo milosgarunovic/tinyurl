@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 
 class AuthTest : AbstractTest() {
 
-    private var userAuth = """{"email": "auth.test@test.com", "password": "password123"}"""
+    private var userAuth = """{"email": "auth.test@test.com", "password": "Password123!"}"""
 
     @BeforeAll
     override fun beforeAll() {

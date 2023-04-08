@@ -23,7 +23,7 @@ class UserTest : AbstractTest() {
             // ACT
             val reqBody = """{"email": "test3@test.com", "password": "Password123!"}"""
             val response = post(client, "/api/user/register", reqBody)
-            println(response.bodyAsText())
+
             // ASSERT
             Assertions.assertEquals(HttpStatusCode.Created, response.status)
         }

@@ -26,8 +26,8 @@ class UrlTest : AbstractTest() {
     private var user1Token: String = "empty user 1 token"
     private var user2Token: String = "empty user 2 token"
 
-    private var user1Auth = """{"email": "user1@test.com", "password": "password"}"""
-    private var user2Auth = """{"email": "user2@test.com", "password": "password"}"""
+    private var user1Auth = """{"email": "user1@test.com", "password": "Password123!"}"""
+    private var user2Auth = """{"email": "user2@test.com", "password": "Password123!"}"""
 
     @BeforeAll
     override fun beforeAll() {
