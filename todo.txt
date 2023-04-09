@@ -12,3 +12,9 @@ For example, we're hosting this on test.com, we create some url and get test.com
 url to get another one, we should block this because it doesn't make sense to do something like this.
 
 Run a profiler (and learn about it as well) to check for slower requests and see where the bottlenecks are.
+
+URL validator should accept only http/https pages that are publicly available. If URL belongs to a company behind VPN
+it might be ok to accept it but validity of it won't be checked. If there comes a time to write a feature to check for
+URLs if they're valid, this will delete that URL. That feature would work by checking if we get 200 from the server, and
+if it's something else, like 404, 500 etc, we should try to target that URL a couple of times for a day or so, and if
+it's unavailable then, delete it.
