@@ -54,8 +54,8 @@ abstract class AbstractTest {
         }
     }
 
-    suspend fun login(client: HttpClient, reqBody: String): String {
-        return post(client, "/login", reqBody).body<LoginRes>().accessToken
+    suspend fun login(client: HttpClient, reqBody: String): LoginRes {
+        return post(client, "/login", reqBody).body<LoginRes>()
     }
 
     suspend fun patch(

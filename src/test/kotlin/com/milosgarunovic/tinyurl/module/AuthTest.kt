@@ -2,6 +2,7 @@ package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.mainModule
 import com.milosgarunovic.tinyurl.util.InstantUtil
+import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
@@ -24,14 +25,14 @@ class AuthTest : AbstractTest() {
     }
 
     @Test
-    fun `JWT token expires after 3 minutes`() = testApplication {
+    fun `JWT access token expires after 3 minutes`() = testApplication {
         // ARRANGE
         application { mainModule() }
         val client = httpClient()
         InstantUtil.setFixed()
 
         // ACT
-        val token = login(client, userAuth)
+        val token = login(client, userAuth).accessToken
 
         val shortUrl = post(client, "/api/url", """{"url": "https://test.com"}""", token).bodyAsText()
         val patch = patch(client, "/api/url", """{"id":"$shortUrl", "url":"https://test2.com"}""", token)
@@ -45,6 +46,36 @@ class AuthTest : AbstractTest() {
         InstantUtil.plusSeconds(3)
         val patchAgain = patch(client, "/api/url", """{"id":"$shortUrl", "url":"https://test2.com"}""", token)
         assertEquals(HttpStatusCode.Unauthorized, patchAgain.status)
+        InstantUtil.clear()
+    }
+
+    @Test
+    fun `JWT refresh token expires after 1 day minutes`() = testApplication {
+        // ARRANGE
+        application { mainModule() }
+        val client = httpClient()
+        InstantUtil.setFixed()
+
+        // ACT
+        val token = login(client, userAuth).refreshToken!!
+
+        val get = client.get("/refreshToken") {
+            bearerAuth(token)
+        }
+
+        // ASSERT
+        assertEquals(HttpStatusCode.OK, get.status)
+
+        InstantUtil.plusDays(1)
+        InstantUtil.plusSeconds(3)
+
+        val getAfterADay = client.get("/refreshToken") {
+            bearerAuth(token)
+        }
+
+        // ASSERT
+        assertEquals(HttpStatusCode.Unauthorized, getAfterADay.status)
+
         InstantUtil.clear()
     }
 

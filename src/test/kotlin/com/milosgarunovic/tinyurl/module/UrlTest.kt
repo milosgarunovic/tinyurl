@@ -45,8 +45,8 @@ class UrlTest : AbstractTest() {
     fun beforeEach() = testApplication {
         application { mainModule() }
         val client = httpClient()
-        user1Token = login(client, user1Auth)
-        user2Token = login(client, user2Auth)
+        user1Token = login(client, user1Auth).accessToken
+        user2Token = login(client, user2Auth).accessToken
     }
 
     @Nested

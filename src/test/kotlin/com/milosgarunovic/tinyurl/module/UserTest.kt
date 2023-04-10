@@ -66,7 +66,7 @@ class UserTest : AbstractTest() {
             val registerAndLogin = """{"email": "$email", "password": "$oldPassword"}"""
             post(client, "/api/user/register", registerAndLogin)
             // login
-            val token = login(client, registerAndLogin)
+            val token = login(client, registerAndLogin).accessToken
 
             // 2. create a resource (that we'll try to change)
             val id = post(client, "/api/url", """{"url": "https://test.com"}""", token).bodyAsText()
@@ -82,7 +82,7 @@ class UserTest : AbstractTest() {
 
             // TODO user can't log in with old password
 
-            val newToken = login(client, """{"email": "$email", "password": "$newPassword"}""")
+            val newToken = login(client, """{"email": "$email", "password": "$newPassword"}""").accessToken
             // TODO same as in POST /api/user/deleteAccount, I need to solve JWT issue to make this work.
             // 4. user can't access a resource with old password
 //            val deleteRes = delete(client, "/api/url/$id", newToken)
@@ -105,7 +105,7 @@ class UserTest : AbstractTest() {
 
             val reqBody1 = """{"email": "$email", "password": "$oldPassword"}"""
             post(client, "/api/user/register", reqBody1, token = null)
-            val token = login(client, reqBody1)
+            val token = login(client, reqBody1).accessToken
 
             // ACT
             val reqBody =
@@ -139,7 +139,7 @@ class UserTest : AbstractTest() {
             // create a user
             val reqBody = """{"email": "$email", "password": "$password"}"""
             post(client, "/api/user/register", reqBody, token = null)
-            val token = login(client, reqBody)
+            val token = login(client, reqBody).accessToken
 
             // create an url that we'll test
             val id = post(client, "/api/url", """{"url": "https://test.com"}""", token).bodyAsText()
@@ -174,7 +174,7 @@ class UserTest : AbstractTest() {
             // create a user
             val reqBody = """{"email": "$email", "password": "$password"}"""
             post(client, "/api/user/register", reqBody, token = null)
-            val token = login(client, reqBody)
+            val token = login(client, reqBody).accessToken
 
             // ACT
             val deleteReqBody = """{"confirmPassword": "wrongPassword"}"""

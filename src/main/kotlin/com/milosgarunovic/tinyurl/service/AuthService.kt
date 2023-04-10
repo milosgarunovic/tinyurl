@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.milosgarunovic.tinyurl.exception.UnauthorizedException
 import com.milosgarunovic.tinyurl.json.LoginReq
 import com.milosgarunovic.tinyurl.json.LoginRes
+import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.server.config.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -48,7 +49,7 @@ class AuthService : KoinComponent {
     fun refreshToken(refreshToken: String): LoginRes {
         val jwt = JWT.decode(refreshToken)
         val expiration = jwt.getClaim("exp").asLong()
-        if (Instant.now().toEpochMilli() < expiration) {
+        if (InstantUtil.now().toEpochMilli() < expiration) {
             throw UnauthorizedException("Refresh token expired, please login again.")
         }
 
