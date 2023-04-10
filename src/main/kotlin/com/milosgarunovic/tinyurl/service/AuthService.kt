@@ -10,7 +10,6 @@ import io.ktor.server.config.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.Duration
-import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 class AuthService : KoinComponent {
@@ -49,7 +48,8 @@ class AuthService : KoinComponent {
     fun refreshToken(refreshToken: String): LoginRes {
         val jwt = JWT.decode(refreshToken)
         val expiration = jwt.getClaim("exp").asLong()
-        if (InstantUtil.now().toEpochMilli() < expiration) {
+        // if expiration is in the past
+        if (expiration < InstantUtil.now().toEpochMilli()) {
             throw UnauthorizedException("Refresh token expired, please login again.")
         }
 
@@ -67,7 +67,7 @@ class AuthService : KoinComponent {
 //                .withAudience(audience)
 //                .withIssuer(issuer)
             .withClaim("email", email)
-            .withClaim("exp", Instant.now().plusMillis(expiry.toMillis()).toEpochMilli())
+            .withClaim("exp", InstantUtil.now().plusMillis(expiry.toMillis()).toEpochMilli())
             .sign(Algorithm.HMAC256(secret))
     }
 }

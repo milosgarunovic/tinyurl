@@ -50,7 +50,7 @@ class AuthTest : AbstractTest() {
     }
 
     @Test
-    fun `JWT refresh token expires after 1 day minutes`() = testApplication {
+    fun `JWT refresh token expires after 1 day`() = testApplication {
         // ARRANGE
         application { mainModule() }
         val client = httpClient()

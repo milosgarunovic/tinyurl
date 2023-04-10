@@ -81,10 +81,11 @@ fun Application.config() {
 
             // validate fields in payload if necessary and create JWTPrincipal
             validate { credentials ->
-                if (InstantUtil.now().toEpochMilli() < credentials.payload.getClaim("exp").asLong()) {
-                    JWTPrincipal(credentials.payload)
-                } else {
+                // if expiration is in the past
+                if (credentials.payload.getClaim("exp").asLong() < InstantUtil.now().toEpochMilli()) {
                     throw UnauthorizedException()
+                } else {
+                    JWTPrincipal(credentials.payload)
                 }
             }
 

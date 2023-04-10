@@ -3,5 +3,5 @@ jwt:
   accessTokenExpiry: 3
   accessTokenExpiryUnit: MINUTES
   refreshTokenSecret: "483f1296-30d0-41df-8376-120fc793d9ec"
-  refreshTokenExpiry: 24 # hours
+  refreshTokenExpiry: 24
   refreshTokenExpiryUnit: HOURS
