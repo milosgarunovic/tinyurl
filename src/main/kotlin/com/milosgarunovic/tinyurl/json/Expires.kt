@@ -1,6 +1,6 @@
 package com.milosgarunovic.tinyurl.json
 
-import com.milosgarunovic.tinyurl.serializer.ZonedDateTimeSerializer
+import com.milosgarunovic.tinyurl.json.serializer.ZonedDateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime

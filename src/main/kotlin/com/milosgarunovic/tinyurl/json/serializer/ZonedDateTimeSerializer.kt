@@ -1,4 +1,4 @@
-package com.milosgarunovic.tinyurl.serializer
+package com.milosgarunovic.tinyurl.json.serializer
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
