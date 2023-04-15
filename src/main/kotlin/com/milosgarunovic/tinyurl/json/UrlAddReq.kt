@@ -12,7 +12,6 @@ data class UrlAddReq(
     val expires: Expires?,
 ) {
 
-    // TODO add unit tests for this
     fun toTinyUrl(shortUrl: String): Url {
         val now = Instant.now()
         val zonedDateTime = when (expires) {

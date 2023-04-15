@@ -11,32 +11,18 @@ class UrlRepositorySQLite : UrlRepository {
     override fun add(url: Url, email: String?): Url {
         val expiry = url.expiry
         val dateCreated = url.dateCreated
-        if (email != null) {
-            //language=SQLite
-            val query = """INSERT INTO urls (id, short_url, url, expiry, date_created, active, user_id) 
+        //language=SQLite
+        val query = """INSERT INTO urls (id, short_url, url, expiry, date_created, active, user_id) 
                 VALUES (?, ?, ?, ?, ?, true, (SELECT id FROM users WHERE email = ?));"""
-            SQLite.insert(
-                query,
-                1 to url.id,
-                2 to url.shortUrl,
-                3 to url.url,
-                4 to expiry,
-                5 to dateCreated,
-                6 to email
-            )
-        } else {
-            //language=SQLite
-            val query = """INSERT INTO urls (id, short_url, url, expiry, date_created, active) 
-                VALUES (?, ?, ?, ?, ?, true);"""
-            SQLite.insert(
-                query,
-                1 to url.id,
-                2 to url.shortUrl,
-                3 to url.url,
-                4 to expiry,
-                5 to dateCreated
-            )
-        }
+        SQLite.insert(
+            query,
+            1 to url.id,
+            2 to url.shortUrl,
+            3 to url.url,
+            4 to expiry,
+            5 to dateCreated,
+            6 to email
+        )
         return url
     }
 
