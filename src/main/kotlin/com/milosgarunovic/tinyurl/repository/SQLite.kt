@@ -47,11 +47,11 @@ object SQLite {
         return executeQuery
     }
 
-    fun insert(query: String, vararg parameters: Pair<Int, Any>): Boolean {
+    fun insert(query: String, vararg parameters: Pair<Int, Any?>): Boolean {
         return update(query, *parameters)
     }
 
-    fun update(query: String, vararg parameters: Pair<Int, Any>): Boolean {
+    fun update(query: String, vararg parameters: Pair<Int, Any?>): Boolean {
         val prepareStatement = connection.prepareStatement(query)
         for (parameter in parameters) {
             prepareStatement.setObject(parameter.first, parameter.second)

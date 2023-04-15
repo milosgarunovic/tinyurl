@@ -15,12 +15,10 @@ data class UrlAddReq(
     // TODO add unit tests for this
     fun toTinyUrl(shortUrl: String): Url {
         val now = Instant.now()
-        val calculatedExpiry: Instant? = when (expires) {
-            // TODO maybe save this in a date format and check on get if it's valid. This would be for saving future dates
-            //   as text/timestamp and would be more correct if anything changes in the future.
+        val zonedDateTime = when (expires) {
             is Expires.At -> {
                 if (expires.dateTime.isAfter(now.atZone(ZoneId.of("UTC")))) {
-                    expires.dateTime.toInstant()
+                    expires.dateTime
                 } else {
                     throw BadRequestException("expired.dateTime can't be in past")
                 }
@@ -28,7 +26,7 @@ data class UrlAddReq(
 
             is Expires.In -> {
                 if (expires.milliseconds > 0) {
-                    now.plusMillis(expires.milliseconds)
+                    now.plusMillis(expires.milliseconds).atZone(ZoneId.of("UTC"))
                 } else {
                     throw BadRequestException("expired.milliseconds can't be of negative value")
                 }
@@ -37,7 +35,7 @@ data class UrlAddReq(
             else -> null
         }
 
-        return Url(shortUrl, this.url, calculatedExpiry)
+        return Url(shortUrl, this.url, zonedDateTime)
     }
 }
 

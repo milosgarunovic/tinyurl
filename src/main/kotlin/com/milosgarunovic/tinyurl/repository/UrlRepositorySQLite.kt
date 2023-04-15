@@ -4,15 +4,17 @@ import com.milosgarunovic.tinyurl.entity.Url
 import com.milosgarunovic.tinyurl.ext.milli
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class UrlRepositorySQLite : UrlRepository {
 
     override fun add(url: Url, email: String?): Url {
-        val expiry = url.calculatedExpiry.milli()
+        val expiry = url.expiry
         val dateCreated = url.dateCreated.milli()
         if (email != null) {
             //language=SQLite
-            val query = """INSERT INTO urls (id, short_url, url, calculated_expiry, date_created, active, user_id) 
+            val query = """INSERT INTO urls (id, short_url, url, expiry, date_created, active, user_id) 
                 VALUES (?, ?, ?, ?, ?, true, (SELECT id FROM users WHERE email = ?));"""
             SQLite.insert(
                 query,
@@ -25,7 +27,7 @@ class UrlRepositorySQLite : UrlRepository {
             )
         } else {
             //language=SQLite
-            val query = """INSERT INTO urls (id, short_url, url, calculated_expiry, date_created, active) 
+            val query = """INSERT INTO urls (id, short_url, url, expiry, date_created, active) 
                 VALUES (?, ?, ?, ?, ?, true);"""
             SQLite.insert(
                 query,
@@ -44,18 +46,22 @@ class UrlRepositorySQLite : UrlRepository {
      */
     override fun getUrl(shortUrl: String): Triple<String, String, String?>? {
         //language=SQLite
-        val query = """SELECT url, short_url, calculated_expiry, user_id
+        val query = """SELECT url, short_url, expiry, user_id
             | FROM urls u 
             | WHERE short_url = ? 
             | AND active = 1
             | AND (SELECT active FROM users WHERE user_id = u.user_id) = 1;""".trimMargin()
         val resultSet = SQLite.query(query, 1 to shortUrl)
         if (resultSet.next()) {
-            val expiry = resultSet.getLong("calculated_expiry")
-            if (expiry != 0L && expiry < InstantUtil.now().toEpochMilli()) {
-                // TODO deactivate when link expired and mark field expired maybe?
-                return null
+            val expiryAsString = resultSet.getString("expiry")
+            if (expiryAsString != null) {
+                val expiry = ZonedDateTime.parse(expiryAsString)
+                if (expiry.isBefore(InstantUtil.now().atZone(ZoneId.of("UTC")))) {
+                    // TODO deactivate when link expired and mark field expired maybe?
+                    return null
+                }
             }
+
             return Triple(
                 resultSet.getString("url"),
                 resultSet.getString("short_url"),
