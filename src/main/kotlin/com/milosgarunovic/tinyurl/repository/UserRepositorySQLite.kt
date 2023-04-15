@@ -1,7 +1,6 @@
 package com.milosgarunovic.tinyurl.repository
 
 import com.milosgarunovic.tinyurl.entity.User
-import com.milosgarunovic.tinyurl.ext.milli
 import java.time.Instant
 
 class UserRepositorySQLite : UserRepository {
@@ -9,8 +8,7 @@ class UserRepositorySQLite : UserRepository {
     override fun add(user: User): Boolean {
         //language=SQLite
         val query = "INSERT INTO users(id, email, password, date_created) VALUES (?, ?, ?, ?);"
-        val dateCreated = user.dateCreated.toEpochMilli()
-        return SQLite.insert(query, 1 to user.id, 2 to user.email, 3 to user.password, 4 to dateCreated)
+        return SQLite.insert(query, 1 to user.id, 2 to user.email, 3 to user.password, 4 to user.dateCreated)
     }
 
     override fun getPassword(email: String): String? {
@@ -33,7 +31,7 @@ class UserRepositorySQLite : UserRepository {
         //  deprecated.
         //language=SQLite
         val query = "UPDATE users SET active = 0, date_deactivated = ? WHERE email = ?"
-        return SQLite.update(query, 1 to Instant.now().milli(), 2 to email)
+        return SQLite.update(query, 1 to Instant.now(), 2 to email)
     }
 
 }

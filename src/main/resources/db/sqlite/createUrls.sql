@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS urls
     short_url        TEXT             NOT NULL UNIQUE,
     url              TEXT             NOT NULL,
     expiry           TEXT,
-    date_created     INTEGER          NOT NULL,
+    date_created     TEXT             NOT NULL,
     active           INTEGER          NOT NULL DEFAULT 1,
-    date_deactivated INTEGER          NOT NULL DEFAULT 0,
+    date_deactivated TEXT,
     user_id          TEXT,
     FOREIGN KEY (user_id) REFERENCES users (id)
 )

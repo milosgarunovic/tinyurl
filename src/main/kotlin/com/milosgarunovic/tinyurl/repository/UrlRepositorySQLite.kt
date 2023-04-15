@@ -1,7 +1,6 @@
 package com.milosgarunovic.tinyurl.repository
 
 import com.milosgarunovic.tinyurl.entity.Url
-import com.milosgarunovic.tinyurl.ext.milli
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import java.time.Instant
 import java.time.ZoneId
@@ -11,7 +10,7 @@ class UrlRepositorySQLite : UrlRepository {
 
     override fun add(url: Url, email: String?): Url {
         val expiry = url.expiry
-        val dateCreated = url.dateCreated.milli()
+        val dateCreated = url.dateCreated
         if (email != null) {
             //language=SQLite
             val query = """INSERT INTO urls (id, short_url, url, expiry, date_created, active, user_id) 
@@ -83,7 +82,7 @@ class UrlRepositorySQLite : UrlRepository {
             WHERE short_url = ? 
             AND active 
             AND user_id = (SELECT id FROM users WHERE email = ?);"""
-        return SQLite.update(query, 1 to Instant.now().toEpochMilli(), 2 to shortUrl, 3 to email)
+        return SQLite.update(query, 1 to Instant.now(), 2 to shortUrl, 3 to email)
     }
 
     override fun exists(shortUrl: String): Boolean {
