@@ -18,6 +18,7 @@ users.
 
 ### Roadmap (incomplete)
 
+For v1.0.0:
 - [x] Create the most basic version covered in tests without any users
 - [x] Add feature that doesn't return 301 but instead 200 and where that link is leading to
 - [x] Add expiry of url
@@ -27,30 +28,33 @@ users.
   - [ ] Maintain test coverage above 90%
   - [x] Added Kover as code coverage tool
 - [ ] Add authentication and authorization
-  - [x] Add JWT instead of basic auth
+  - [x] Add JWT
   - [ ] Add security tests
-  - [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
 - [x] Add SQLite - most basic version with local. This way there's no db maintenance.
   - [x] in memory SQLite for tests
   - [x] add user
   - [x] add liquibase
   - [ ] add JPA
   - [ ] see if queries are blocking and wrap them in runBlocking
-- [ ] Add Postgres (as another implementation)
-  - [ ] Docker and testcontainers (docker should be added anyway so people can deploy in their local env in minutes and
-    test stuff out)
 - [x] Add statistics for how many times a route has been called
   - [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
     alternative for this
 - [ ] Add ability to limit creation of account to only one user
 - [ ] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
   to create a tiny url
-- [ ] Add a job to check links periodically to see if there are any broken links, and then check with user what to do
-  about those links - delete them, replace them or whatever.
 - [ ] Add frontend (maybe with Kotlin/React)
 - [ ] Add openApi/swagger
 - [ ] Add GraalVM for smaller footprint (cpu, memory..)
 - [ ] Add auditing
+
+Add later:
+
+- [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
+- [ ] Add Postgres (as another implementation)
+  - [ ] Docker and testcontainers (docker should be added anyway so people can deploy in their local env in minutes and
+    test stuff out)
+- [ ] Add a job to check links periodically to see if there are any broken links, and then check with user what to do
+  about those links - delete them, replace them or whatever.
 
 ---
 

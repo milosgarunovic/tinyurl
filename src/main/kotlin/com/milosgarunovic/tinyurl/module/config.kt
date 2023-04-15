@@ -70,8 +70,8 @@ fun Application.config() {
     val accessTokenSecret = environment.config.property("jwt.accessTokenSecret").getString()
     authentication {
         jwt(name = "jwt") {
-            // defines a function
 
+        // defines a function
             verifier(
                 JWT.require(Algorithm.HMAC256(accessTokenSecret))
 //                .withAudience(audience)

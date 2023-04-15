@@ -42,7 +42,8 @@ class UrlRepositorySQLite : UrlRepository {
             if (expiryAsString != null) {
                 val expiry = ZonedDateTime.parse(expiryAsString)
                 if (expiry.isBefore(InstantUtil.now().atZone(ZoneId.of("UTC")))) {
-                    // TODO deactivate when link expired and mark field expired maybe?
+                    // deletes the url if it's expired so query the if block with expiryAsString doesn't even execute
+                    delete(shortUrl)
                     return null
                 }
             }
@@ -62,13 +63,24 @@ class UrlRepositorySQLite : UrlRepository {
         return SQLite.update(query, 1 to url, 2 to shortUrl, 3 to email)
     }
 
+    /**
+     * @param shortUrl - shortUrl that will be deleted
+     * @param email - optional, used so that one user can't delete other users url. It's optional in case when link
+     * expires, so it will be deleted by the system not taking the account into the consideration.
+     */
     override fun delete(shortUrl: String, email: String): Boolean {
         //language=SQLite
         val query = """UPDATE urls SET active = false, date_deactivated = ? 
             WHERE short_url = ? 
-            AND active 
+            AND active = 1
             AND user_id = (SELECT id FROM users WHERE email = ?);"""
         return SQLite.update(query, 1 to Instant.now(), 2 to shortUrl, 3 to email)
+    }
+
+    override fun delete(shortUrl: String): Boolean {
+        //language=SQLite
+        val query = "UPDATE urls SET active = false, date_deactivated = ? WHERE short_url = ? AND active = 1"
+        return SQLite.update(query, 1 to Instant.now(), 2 to shortUrl)
     }
 
     override fun exists(shortUrl: String): Boolean {

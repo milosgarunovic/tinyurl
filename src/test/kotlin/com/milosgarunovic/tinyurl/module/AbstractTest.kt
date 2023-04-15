@@ -24,8 +24,8 @@ abstract class AbstractTest {
 
     @BeforeAll
     open fun beforeAll() {
-        SQLite.setupInMemory()
-//      SQLite.setup("tinyUrl") // used for debugging
+//        SQLite.setupInMemory()
+        SQLite.setup("tinyUrl") // used for debugging
     }
 
     @AfterAll

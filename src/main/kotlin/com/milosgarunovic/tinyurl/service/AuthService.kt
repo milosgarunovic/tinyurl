@@ -21,7 +21,7 @@ class AuthService : KoinComponent {
     fun login(loginReq: LoginReq): LoginRes {
         val email = loginReq.email
         if (!userService.isUserValid(email, loginReq.password)) {
-            throw UnauthorizedException()
+            throw UnauthorizedException("Username or password do not match.")
         }
 
         val accessSecret = applicationConfig.property("jwt.accessTokenSecret").getString()

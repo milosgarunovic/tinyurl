@@ -15,6 +15,8 @@ interface UrlRepository {
 
     fun delete(shortUrl: String, email: String): Boolean
 
+    fun delete(shortUrl: String): Boolean
+
     fun exists(shortUrl: String): Boolean
 
 }
