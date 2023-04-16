@@ -3,7 +3,6 @@ package com.milosgarunovic.tinyurl.repository
 import com.milosgarunovic.tinyurl.entity.Url
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import java.time.Instant
-import java.time.ZoneId
 import java.time.ZonedDateTime
 
 class UrlRepositorySQLite : UrlRepository {
@@ -41,7 +40,7 @@ class UrlRepositorySQLite : UrlRepository {
             val expiryAsString = resultSet.getString("expiry")
             if (expiryAsString != null) {
                 val expiry = ZonedDateTime.parse(expiryAsString)
-                if (expiry.isBefore(InstantUtil.now().atZone(ZoneId.of("UTC")))) {
+                if (expiry.toInstant().isBefore(InstantUtil.now())) {
                     // deletes the url if it's expired so query the if block with expiryAsString doesn't even execute
                     delete(shortUrl)
                     return null
@@ -79,7 +78,7 @@ class UrlRepositorySQLite : UrlRepository {
 
     override fun delete(shortUrl: String): Boolean {
         //language=SQLite
-        val query = "UPDATE urls SET active = false, date_deactivated = ? WHERE short_url = ? AND active = 1"
+        val query = "UPDATE urls SET active = 0, date_deactivated = ? WHERE short_url = ? AND active = 1;"
         return SQLite.update(query, 1 to Instant.now(), 2 to shortUrl)
     }
 

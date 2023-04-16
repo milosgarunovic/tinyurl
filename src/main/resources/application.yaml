@@ -5,3 +5,9 @@ jwt:
   refreshTokenSecret: "483f1296-30d0-41df-8376-120fc793d9ec"
   refreshTokenExpiry: 24
   refreshTokenExpiryUnit: HOURS
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - com.milosgarunovic.tinyurl.MainKt.mainModule

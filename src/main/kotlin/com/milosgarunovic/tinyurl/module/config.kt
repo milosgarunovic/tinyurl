@@ -33,6 +33,7 @@ import org.koin.logger.slf4jLogger
 
 @OptIn(ExperimentalSerializationApi::class)
 fun Application.config() {
+
     install(RequestLogging)
 
     install(StatusPages) {
