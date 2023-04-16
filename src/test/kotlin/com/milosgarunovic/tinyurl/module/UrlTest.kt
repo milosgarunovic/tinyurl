@@ -1,6 +1,5 @@
 package com.milosgarunovic.tinyurl.module
 
-import com.milosgarunovic.tinyurl.mainModule
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -35,7 +34,6 @@ class UrlTest : AbstractTest() {
 
         // create two users
         testApplication {
-            application { mainModule() }
             post(client, "/api/user/register", user1Auth)
             post(client, "/api/user/register", user2Auth)
         }
@@ -43,7 +41,7 @@ class UrlTest : AbstractTest() {
 
     @BeforeEach
     fun beforeEach() = testApplication {
-        application { mainModule() }
+
         val client = httpClient()
         user1Token = login(client, user1Auth).accessToken
         user2Token = login(client, user2Auth).accessToken
@@ -54,9 +52,6 @@ class UrlTest : AbstractTest() {
         @Test
         @DisplayName("GET / returns 404")
         fun `GET root returns 404`() = testApplication {
-            // ARRANGE
-            application { mainModule() }
-
             // ACT
             val response = client.get("/")
 
@@ -70,9 +65,6 @@ class UrlTest : AbstractTest() {
         @Test
         @DisplayName("GET /path with 9 chars long path returns 404")
         fun `GET root with path 9 chars long returns 404`() = testApplication {
-            // ARRANGE
-            application { mainModule() }
-
             // ACT
             val response = client.get("/123456789")
 
@@ -84,7 +76,6 @@ class UrlTest : AbstractTest() {
         @DisplayName("GET /path returns 301")
         fun `GET root with path returns 301`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
             val expectedUrl = "https://test.com"
 
@@ -105,7 +96,6 @@ class UrlTest : AbstractTest() {
         @DisplayName("GET /path with deleted path returns 404")
         fun `GET root with deleted path returns 404`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
 
             // ACT
@@ -124,7 +114,6 @@ class UrlTest : AbstractTest() {
         @DisplayName("GET /path?redirect=true returns 301")
         fun `GET root with redirect=true returns 301`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
             val expectedUrl = "https://test.com"
 
@@ -145,7 +134,6 @@ class UrlTest : AbstractTest() {
         @DisplayName("GET /path?redirect=false returns 200 with body as url")
         fun `GET root with redirect=false returns 200 with body as url`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
             val expectedUrl = "https://test.com"
 
@@ -167,8 +155,6 @@ class UrlTest : AbstractTest() {
             testApplication {
                 // ARRANGE
                 InstantUtil.setFixed()
-                application { mainModule() }
-
                 val client = httpClient()
                 val oneDayMillis = 1.days.inWholeMilliseconds
 
@@ -193,8 +179,6 @@ class UrlTest : AbstractTest() {
         fun `GET root with expired path returns 404 - created using dateTime`() = testApplication {
             // ARRANGE
             InstantUtil.setFixed()
-            application { mainModule() }
-
             val client = httpClient()
             val oneDayInFuture = InstantUtil.now().plusMillis(1.days.inWholeMilliseconds).atZone(ZoneId.of("UTC"))
 
@@ -220,7 +204,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("POST /api/url with url in body returns 201 and has length 8")
         fun `POST api-tinyUrl with url in body returns 201 and has length 8`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
@@ -235,7 +219,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("POST /api/url without authorization returns 201")
         fun `POST api-tinyUrl without authorization returns 201`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
@@ -253,7 +237,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("PATCH /api/url with body returns 200")
         fun `PATCH api-tinyUrl with body returns 200`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
             val client = httpClient()
             val expectedUrl = "https://test2.com"
 
@@ -273,7 +257,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("PATCH /api/url without authorization returns 401")
         fun `PATCH api-tinyUrl without authorization returns 401`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
@@ -288,7 +272,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("PATCH /api/url one user cannot modify another users url returns 404")
         fun `PATCH api-tinyUrl one user cannot modify another users url returns 404`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
@@ -308,7 +292,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("DELETE /api/url returns 204")
         fun `DELETE api-tinyUrl returns 204`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
@@ -323,7 +307,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("DELETE /api/url without id returns 404")
         fun `DELETE api-tinyUrl without id returns 404`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val response = delete(client, "$apiUrl/", user1Token)
@@ -336,7 +320,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("DELETE /api/url without basic auth returns 401")
         fun `DELETE api-tinyUrl without basic auth returns 401`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
@@ -351,7 +335,7 @@ class UrlTest : AbstractTest() {
         @DisplayName("DELETE /api/url one user cannot delete another users url returns 404")
         fun `DELETE api-tinyUrl one user cannot delete another users url returns 404`() = testApplication {
             // ARRANGE
-            application { mainModule() }
+
 
             // ACT
             val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()

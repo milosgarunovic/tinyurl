@@ -1,6 +1,5 @@
 package com.milosgarunovic.tinyurl.module
 
-import com.milosgarunovic.tinyurl.mainModule
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -17,7 +16,6 @@ class UserTest : AbstractTest() {
         @DisplayName("POST /api/user/register returns 201")
         fun `POST api user register returns 201`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
 
             // ACT
@@ -32,7 +30,6 @@ class UserTest : AbstractTest() {
         @DisplayName("POST /api/user/register that already exists returns 409")
         fun `POST api user register that already exists returns 409`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val registerUrl = "/api/user/register"
             val reqBody = """{"email": "test2@test.com", "password": "Password123!"}"""
 
@@ -56,7 +53,6 @@ class UserTest : AbstractTest() {
         @DisplayName("POST /api/user/changePassword")
         fun `POST changePassword`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
             val email = "test@test.com"
             val oldPassword = "Password123!"
@@ -97,7 +93,6 @@ class UserTest : AbstractTest() {
         @DisplayName("POST /api/user/changePassword validation tests")
         fun `POST changePassword validation tests`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
             val email = "test4@test.com"
             val oldPassword = "Password123!"
@@ -131,7 +126,6 @@ class UserTest : AbstractTest() {
         @DisplayName("POST /api/user/deleteAccount")
         fun `POST deleteAccount`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val client = httpClient()
             val email = "accountToBeDeleted@test.com"
             val password = "Password123!"
@@ -166,7 +160,6 @@ class UserTest : AbstractTest() {
         @DisplayName("POST deleteAccount with wrong confirmPassword")
         fun `POST deleteAccount with wrong confirmPassword`() = testApplication {
             // ARRANGE
-            application { mainModule() }
             val email = "accountToBeDeleted2@test.com"
             val password = "Password123!"
             val client = httpClient()

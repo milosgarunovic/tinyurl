@@ -1,6 +1,5 @@
 package com.milosgarunovic.tinyurl.module
 
-import com.milosgarunovic.tinyurl.mainModule
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -19,7 +18,6 @@ class AuthTest : AbstractTest() {
         super.beforeAll()
 
         testApplication {
-            application { mainModule() }
             post(client, "/api/user/register", userAuth, token = null)
         }
     }
@@ -27,7 +25,6 @@ class AuthTest : AbstractTest() {
     @Test
     fun `JWT access token expires after 3 minutes`() = testApplication {
         // ARRANGE
-        application { mainModule() }
         val client = httpClient()
         InstantUtil.setFixed()
 
@@ -52,7 +49,6 @@ class AuthTest : AbstractTest() {
     @Test
     fun `JWT refresh token expires after 1 day`() = testApplication {
         // ARRANGE
-        application { mainModule() }
         val client = httpClient()
         InstantUtil.setFixed()
 
