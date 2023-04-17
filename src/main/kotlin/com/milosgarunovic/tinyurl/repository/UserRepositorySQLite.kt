@@ -14,8 +14,9 @@ class UserRepositorySQLite : UserRepository {
     override fun getPassword(email: String): String? {
         //language=SQLite
         val query = "SELECT password FROM users WHERE email = ? AND active = 1;"
-        val resultSet = SQLite.query(query, 1 to email)
-        return resultSet.getString(1)
+        return SQLite.query(query, 1 to email) {
+            return@query getString(1)
+        }
     }
 
     override fun changePassword(email: String, newPassword: String): Boolean {

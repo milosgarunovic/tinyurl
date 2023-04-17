@@ -35,25 +35,22 @@ class UrlRepositorySQLite : UrlRepository {
             | WHERE short_url = ? 
             | AND active = 1
             | AND (SELECT active FROM users WHERE user_id = u.user_id) = 1;""".trimMargin()
-        val resultSet = SQLite.query(query, 1 to shortUrl)
-        if (resultSet.next()) {
-            val expiryAsString = resultSet.getString("expiry")
-            if (expiryAsString != null) {
-                val expiry = ZonedDateTime.parse(expiryAsString)
-                if (expiry.toInstant().isBefore(InstantUtil.now())) {
-                    // deletes the url if it's expired so query the if block with expiryAsString doesn't even execute
-                    delete(shortUrl)
-                    return null
+        return SQLite.query(query, 1 to shortUrl) {
+            if (next()) {
+                val expiryAsString = getString("expiry")
+                if (expiryAsString != null) {
+                    val expiry = ZonedDateTime.parse(expiryAsString)
+                    if (expiry.toInstant().isBefore(InstantUtil.now())) {
+                        // deletes the url if it's expired so query the if block with expiryAsString doesn't even execute
+                        delete(shortUrl)
+                        return@query null
+                    }
                 }
-            }
 
-            return Triple(
-                resultSet.getString("url"),
-                resultSet.getString("short_url"),
-                resultSet.getString("user_id")
-            )
+                return@query Triple(getString("url"), getString("short_url"), getString("user_id"))
+            }
+            return@query null
         }
-        return null
     }
 
     override fun update(shortUrl: String, url: String, email: String): Boolean {
@@ -85,7 +82,8 @@ class UrlRepositorySQLite : UrlRepository {
     override fun exists(shortUrl: String): Boolean {
         //language=SQLite
         val query = "SELECT 1 FROM urls WHERE short_url = ? AND active = 1;"
-        val resultSet = SQLite.query(query, 1 to shortUrl)
-        return resultSet.next()
+        return SQLite.query(query, 1 to shortUrl) {
+            return@query next()
+        }
     }
 }

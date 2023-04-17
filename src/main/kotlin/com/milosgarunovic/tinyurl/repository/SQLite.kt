@@ -37,14 +37,19 @@ object SQLite {
         liquibase.update(Contexts(), LabelExpression())
     }
 
-    fun query(query: String, vararg parameters: Pair<Int, Any>): ResultSet {
+    fun <T> query(query: String, vararg parameters: Pair<Int, Any>, block: ResultSet.() -> T): T {
         val prepareStatement = connection.prepareStatement(query)
         for (parameter in parameters) {
             prepareStatement.setObject(parameter.first, parameter.second)
         }
         val executeQuery = prepareStatement.executeQuery()
-//        prepareStatement.close()
-        return executeQuery
+
+        val result = block(executeQuery)
+
+        prepareStatement.close()
+        executeQuery.close()
+
+        return result
     }
 
     fun insert(query: String, vararg parameters: Pair<Int, Any?>): Boolean {
@@ -61,6 +66,8 @@ object SQLite {
             updateExecuted
         } catch (ex: SQLException) {
             false
+        } finally {
+            prepareStatement.close()
         }
     }
 
