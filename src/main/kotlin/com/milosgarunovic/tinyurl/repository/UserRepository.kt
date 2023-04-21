@@ -11,4 +11,6 @@ interface UserRepository {
     fun changePassword(email: String, newPassword: String): Boolean
 
     fun deleteAccount(email: String): Boolean
+
+    fun isAdmin(email: String): Boolean
 }

@@ -49,6 +49,10 @@ class UserService : KoinComponent {
         userRepository.deleteAccount(email)
     }
 
+    fun isAdmin(email: String): Boolean {
+        return userRepository.isAdmin(email)
+    }
+
     // TODO fun forgotPassword() - this will have dependency on some kind of email service
 
     // TODO fun changeEmail() - user might want to change email so we should implement this as well

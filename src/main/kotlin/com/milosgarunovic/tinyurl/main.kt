@@ -23,5 +23,7 @@ fun Application.mainModule() {
 
     urlModule()
 
+    propertiesModule()
+
     openApi()
 }

@@ -35,4 +35,12 @@ class UserRepositorySQLite : UserRepository {
         return SQLite.update(query, 1 to Instant.now(), 2 to email)
     }
 
+    override fun isAdmin(email: String): Boolean {
+        //language=SQLite
+        val query = "SELECT is_admin FROM users WHERE email = ?;"
+        return SQLite.query(query, 1 to email) {
+            return@query getBoolean("is_admin")
+        }
+    }
+
 }
