@@ -9,10 +9,7 @@ import com.milosgarunovic.tinyurl.exception.UnauthorizedException
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
 import com.milosgarunovic.tinyurl.repository.*
-import com.milosgarunovic.tinyurl.service.AuthService
-import com.milosgarunovic.tinyurl.service.PasswordService
-import com.milosgarunovic.tinyurl.service.UrlService
-import com.milosgarunovic.tinyurl.service.UserService
+import com.milosgarunovic.tinyurl.service.*
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -32,7 +29,7 @@ import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
 @OptIn(ExperimentalSerializationApi::class)
-fun Application.config() {
+fun Application.configModule() {
 
     install(RequestLogging)
 
@@ -55,6 +52,7 @@ fun Application.config() {
                 single<UrlRepository> { UrlRepositorySQLite() }
                 single<UserRepository> { UserRepositorySQLite() }
                 single<UrlStatisticsRepository> { UrlStatisticsRepositorySQLIte() }
+                single<PropertiesRepository> { PropertiesRepositorySQLite() }
 
                 // helper singletons to have access in KoinComponent tagged classes and not just in ktor modules
                 single<ApplicationConfig> { environment.config }
@@ -64,6 +62,7 @@ fun Application.config() {
                 singleOf(::UserService)
                 singleOf(::PasswordService)
                 singleOf(::AuthService)
+                singleOf(::PropertiesService)
             }
         )
     }

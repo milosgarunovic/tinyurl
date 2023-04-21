@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset milos.garunovic:createUrlStatisticsTable
-CREATE TABLE IF NOT EXISTS url_statistics
+CREATE TABLE url_statistics
 (
     id               TEXT PRIMARY KEY NOT NULL,
     date_created     TEXT             NOT NULL,

@@ -7,4 +7,5 @@
     <include file="createUsers.sql" relativeToChangelogFile="true"/>
     <include file="createUrls.sql" relativeToChangelogFile="true"/>
     <include file="createUrlStatistics.sql" relativeToChangelogFile="true"/>
+    <include file="createProperties.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

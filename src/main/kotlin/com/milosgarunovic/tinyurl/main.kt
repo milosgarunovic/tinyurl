@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
 
 fun Application.mainModule() {
 
-    config()
+    configModule()
 
     authModule()
 

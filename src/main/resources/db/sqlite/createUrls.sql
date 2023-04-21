@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset milos.garunovic:createUrlsTable
-CREATE TABLE IF NOT EXISTS urls
+CREATE TABLE urls
 (
     id               TEXT PRIMARY KEY NOT NULL,
     short_url        TEXT             NOT NULL UNIQUE,
