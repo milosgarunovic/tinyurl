@@ -38,18 +38,14 @@ object SQLite {
     }
 
     fun <T> query(query: String, vararg parameters: Pair<Int, Any>, block: ResultSet.() -> T): T {
-        val prepareStatement = connection.prepareStatement(query)
-        for (parameter in parameters) {
-            prepareStatement.setObject(parameter.first, parameter.second)
+        connection.prepareStatement(query).use { prepareStatement ->
+            for (parameter in parameters) {
+                prepareStatement.setObject(parameter.first, parameter.second)
+            }
+            prepareStatement.executeQuery().use { executeQuery ->
+                return block(executeQuery)
+            }
         }
-        val executeQuery = prepareStatement.executeQuery()
-
-        val result = block(executeQuery)
-
-        prepareStatement.close()
-        executeQuery.close()
-
-        return result
     }
 
     fun insert(query: String, vararg parameters: Pair<Int, Any?>): Boolean {
@@ -57,17 +53,16 @@ object SQLite {
     }
 
     fun update(query: String, vararg parameters: Pair<Int, Any?>): Boolean {
-        val prepareStatement = connection.prepareStatement(query)
-        for (parameter in parameters) {
-            prepareStatement.setObject(parameter.first, parameter.second)
-        }
-        return try {
-            val updateExecuted = prepareStatement.executeUpdate() == 1
-            updateExecuted
-        } catch (ex: SQLException) {
-            false
-        } finally {
-            prepareStatement.close()
+        return connection.prepareStatement(query).use { prepareStatement ->
+            for (parameter in parameters) {
+                prepareStatement.setObject(parameter.first, parameter.second)
+            }
+            try {
+                val updateExecuted = prepareStatement.executeUpdate() == 1
+                updateExecuted
+            } catch (ex: SQLException) {
+                false
+            }
         }
     }
 

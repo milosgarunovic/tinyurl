@@ -39,8 +39,8 @@ For v1.0.0:
 - [x] Add statistics for how many times a route has been called
   - [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
     alternative for this
-- [ ] Add ability to limit creation of account to only one user
-- [ ] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
+- [x] Add ability to limit creation of account to only one user
+- [x] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
   to create a tiny url
 - [ ] Add frontend (maybe with Kotlin/React)
 - [ ] Add openApi/swagger

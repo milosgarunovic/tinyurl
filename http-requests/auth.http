@@ -1,0 +1,30 @@
+### Register a user
+POST http://localhost:8080/api/user/register
+Content-Type: application/json
+
+{
+  "email": "test1@test.com",
+  "password": "ValidPassword1!"
+}
+
+### Successful login request
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "test1@test.com",
+  "password": "ValidPassword1!"
+}
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+    client.global.set("refreshToken", response.body.refreshToken);
+%}
+
+### Refresh token
+GET http://localhost:8080/refreshToken
+Authorization: Bearer {{refreshToken}}
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+%}

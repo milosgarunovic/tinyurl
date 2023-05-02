@@ -18,3 +18,6 @@ it might be ok to accept it but validity of it won't be checked. If there comes 
 URLs if they're valid, this will delete that URL. That feature would work by checking if we get 200 from the server, and
 if it's something else, like 404, 500 etc, we should try to target that URL a couple of times for a day or so, and if
 it's unavailable then, delete it.
+
+Do I need a "domain" field where we can have all short urls for 1 domain and if we change it migration would be easy..?
+Or just handle that with "get domain name" method + path and that's it.
