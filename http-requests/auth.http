@@ -1,5 +1,5 @@
 ### Register a user
-POST http://localhost:8080/api/user/register
+POST http://{{hostname}}/api/user/register
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Successful login request
-POST http://localhost:8080/login
+POST http://{{hostname}}/login
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ Content-Type: application/json
 %}
 
 ### Refresh token
-GET http://localhost:8080/refreshToken
+GET http://{{hostname}}/refreshToken
 Authorization: Bearer {{refreshToken}}
 
 > {%
