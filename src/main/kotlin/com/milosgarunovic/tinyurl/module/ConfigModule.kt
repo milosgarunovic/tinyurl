@@ -90,7 +90,7 @@ fun Application.configModule() {
             }
 
             // if authentication fails, this would be the response
-            challenge { defaultScheme, realm ->
+            challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
             }
         }
