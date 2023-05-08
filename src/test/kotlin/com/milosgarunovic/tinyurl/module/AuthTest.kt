@@ -1,6 +1,8 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.json.ErrorWrapper
 import com.milosgarunovic.tinyurl.util.InstantUtil
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -73,6 +75,19 @@ class AuthTest : AbstractTest() {
         assertEquals(HttpStatusCode.Unauthorized, getAfterADay.status)
 
         InstantUtil.clear()
+    }
+
+    @Test
+    fun `empty Authorization header in refreshToken`() = testApplication {
+        // ARRANGE
+        val client = httpClient()
+
+        // ACT
+        val get = client.get("/refreshToken")
+
+        // ASSERT
+        assertEquals(HttpStatusCode.BadRequest, get.status)
+        assertEquals(ErrorWrapper("Expected refresh token in Authorization header."), get.body<ErrorWrapper>())
     }
 
 }
