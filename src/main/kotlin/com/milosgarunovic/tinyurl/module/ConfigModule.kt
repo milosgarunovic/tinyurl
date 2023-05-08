@@ -25,6 +25,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
@@ -68,30 +69,48 @@ fun Application.configModule() {
     }
 
     val accessTokenSecret = environment.config.property("jwt.accessTokenSecret").getString()
+    val userService by inject<UserService>()
     authentication {
         jwt(name = "jwt") {
 
-        // defines a function
             verifier(
-                JWT.require(Algorithm.HMAC256(accessTokenSecret))
-//                .withAudience(audience)
-//                .withIssuer(issuer)
-                    .build()
+                JWT.require(Algorithm.HMAC256(accessTokenSecret)).build()
             )
 
             // validate fields in payload if necessary and create JWTPrincipal
             validate { credentials ->
                 // if expiration is in the past
-                if (credentials.payload.getClaim("exp").asLong() < InstantUtil.now().toEpochMilli()) {
-                    throw UnauthorizedException()
-                } else {
+                if (credentials.payload.getClaim("exp").asLong() > InstantUtil.now().toEpochMilli()) {
                     JWTPrincipal(credentials.payload)
+                } else {
+                    null
                 }
             }
 
             // if authentication fails, this would be the response
             challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+            }
+        }
+
+        jwt(name = "jwt-admin") {
+            verifier(
+                JWT.require(Algorithm.HMAC256(accessTokenSecret)).build()
+            )
+
+            validate { credentials ->
+                if (credentials.payload.getClaim("exp").asLong() > InstantUtil.now().toEpochMilli()
+                    && userService.isAdmin(credentials.payload.getClaim("email").toString().removeSurrounding("\""))
+                ) {
+                    JWTPrincipal(credentials.payload)
+                } else {
+                    null
+                }
+            }
+
+            // if authentication fails, this would be the response
+            challenge { _, _ ->
+                call.respondStatusCode(HttpStatusCode.NotFound)
             }
         }
     }

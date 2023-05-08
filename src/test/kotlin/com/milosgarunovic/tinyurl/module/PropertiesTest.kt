@@ -11,8 +11,8 @@ import kotlin.test.assertEquals
 class PropertiesTest : AbstractTest() {
 
     private val adminEmail = "admin@test.com"
-    private var adminAuth = """{"email": "$adminEmail", "password": "Password123!"}"""
-    private var userAuth = """{"email": "auth.test@test.com", "password": "Password123!"}"""
+    private val adminAuth = """{"email": "$adminEmail", "password": "Password123!"}"""
+    private val userAuth = """{"email": "auth.test@test.com", "password": "Password123!"}"""
 
     @BeforeAll
     override fun beforeAll() {
