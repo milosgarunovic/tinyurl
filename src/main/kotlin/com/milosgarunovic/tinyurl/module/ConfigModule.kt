@@ -110,7 +110,7 @@ fun Application.configModule() {
 
             // if authentication fails, this would be the response
             challenge { _, _ ->
-                call.respondStatusCode(HttpStatusCode.NotFound)
+                call.respondStatusCode(HttpStatusCode.Forbidden)
             }
         }
     }

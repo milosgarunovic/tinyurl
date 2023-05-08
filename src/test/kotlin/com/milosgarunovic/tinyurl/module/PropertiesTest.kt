@@ -55,7 +55,7 @@ class PropertiesTest : AbstractTest() {
             bearerAuth(token)
         }
 
-        assertEquals(HttpStatusCode.NotFound, getPropertiesResponse.status)
+        assertEquals(HttpStatusCode.Forbidden, getPropertiesResponse.status)
     }
 
     @Test
