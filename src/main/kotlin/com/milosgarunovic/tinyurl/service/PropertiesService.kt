@@ -32,4 +32,12 @@ class PropertiesService : KoinComponent {
         propertiesRepository.disablePublicUrlCreation()
         return getProperties()
     }
+
+    fun isPublicUrlCreationEnabled(): Boolean {
+        return propertiesRepository.getProperties().publicUrlCreation
+    }
+
+    fun isRegistrationEnabled(): Boolean {
+        return propertiesRepository.getProperties().registrationEnabled
+    }
 }

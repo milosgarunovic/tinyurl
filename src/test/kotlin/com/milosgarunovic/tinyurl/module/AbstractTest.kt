@@ -43,7 +43,7 @@ abstract class AbstractTest {
         followRedirects = false
     }
 
-    suspend fun post(client: HttpClient, path: String, reqBody: String, token: String? = null): HttpResponse {
+    suspend fun post(client: HttpClient, path: String, reqBody: String? = null, token: String? = null): HttpResponse {
         return client.post(path) {
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)

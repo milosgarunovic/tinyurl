@@ -1,9 +1,11 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.exception.NotFoundException
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.ChangePasswordReq
 import com.milosgarunovic.tinyurl.json.DeleteAccountReq
 import com.milosgarunovic.tinyurl.json.UserAddJson
+import com.milosgarunovic.tinyurl.service.PropertiesService
 import com.milosgarunovic.tinyurl.service.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -17,10 +19,15 @@ fun Application.userModule() {
 
     val userService by inject<UserService>()
 
+    val propertiesService by inject<PropertiesService>()
+
     routing {
         route("/api/user") {
 
             post("/register") {
+                if (!propertiesService.isRegistrationEnabled()) {
+                    throw NotFoundException()
+                }
                 val req = call.receive<UserAddJson>()
                 req.validate()
                 userService.add(req)

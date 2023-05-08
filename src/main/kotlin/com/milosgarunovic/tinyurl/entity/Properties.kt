@@ -8,11 +8,11 @@ class Properties(
     /**
      * When true, users can register. When false, registration is disabled.
      */
-    private val registrationEnabled: Boolean,
+    val registrationEnabled: Boolean,
     /**
      * When true, anyone can create a URL, even without account. When false only registered users can create URL.
      */
-    private val publicUrlCreation: Boolean,
+    val publicUrlCreation: Boolean,
 //    val updatedBy: User?,
 //    val dateUpdated: Instant?,
 ) {

@@ -1,9 +1,11 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.exception.UnauthorizedException
 import com.milosgarunovic.tinyurl.ext.respondRedirect
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
 import com.milosgarunovic.tinyurl.json.UrlAddReq
+import com.milosgarunovic.tinyurl.service.PropertiesService
 import com.milosgarunovic.tinyurl.service.UrlService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -17,6 +19,8 @@ import org.koin.ktor.ext.inject
 fun Application.urlModule() {
 
     val urlService by inject<UrlService>()
+
+    val propertiesService by inject<PropertiesService>()
 
     routing {
 
@@ -48,8 +52,16 @@ fun Application.urlModule() {
                 post {
                     val req = call.receive<UrlAddReq>() // todo must be a valid url
                     val email = call.principal<JWTPrincipal>()?.get("email")
-                    val shortUrl = urlService.add(req, email)
-                    call.respond(HttpStatusCode.Created, shortUrl)
+                    if (propertiesService.isPublicUrlCreationEnabled()) { // anyone can create
+                        val shortUrl = urlService.add(req, email)
+                        call.respond(HttpStatusCode.Created, shortUrl)
+                    } else {
+                        if (email != null) { // user is required
+                            val shortUrl = urlService.add(req, email)
+                            call.respond(HttpStatusCode.Created, shortUrl)
+                        }
+                        throw UnauthorizedException()
+                    }
                 }
             }
 
