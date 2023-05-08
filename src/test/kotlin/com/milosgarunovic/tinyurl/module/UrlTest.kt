@@ -1,5 +1,6 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.repository.SQLite
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -218,15 +219,42 @@ class UrlTest : AbstractTest() {
         @Test
         @DisplayName("POST /api/url without authorization returns 201")
         fun `POST api-tinyUrl without authorization returns 201`() = testApplication {
-            // ARRANGE
-
-
             // ACT
             val reqBody = """{"url": "https://test.com"}"""
             val res = post(client, apiUrl, reqBody, token = null)
 
             // ASSERT
             assertEquals(HttpStatusCode.Created, res.status)
+        }
+
+        @Test
+        @DisplayName("POST /api/url with publicUrlCreation disabled returns 401")
+        fun `POST api-tinyUrl with publicUrlCreation disabled returns 401`() = testApplication {
+            // ARRANGE
+            SQLite.update("UPDATE properties SET public_url_creation = 0;")
+
+            // ACT
+            val reqBody = """{"url": "https://test.com"}"""
+            val res = post(client, apiUrl, reqBody, token = null)
+
+            // ASSERT
+            assertEquals(HttpStatusCode.Unauthorized, res.status)
+            SQLite.update("UPDATE properties SET public_url_creation = 1;") // reset state
+        }
+
+        @Test
+        @DisplayName("POST /api/url with publicUrlCreation disabled and with logged in user returns 201")
+        fun `POST api-tinyUrl with publicUrlCreation disabled and with logged in user returns 201`() = testApplication {
+            // ARRANGE
+            SQLite.update("UPDATE properties SET public_url_creation = 0;")
+
+            // ACT
+            val reqBody = """{"url": "https://test.com"}"""
+            val res = post(client, apiUrl, reqBody, token = user1Token)
+
+            // ASSERT
+            assertEquals(HttpStatusCode.Created, res.status)
+            SQLite.update("UPDATE properties SET public_url_creation = 1;") // reset state
         }
     }
 

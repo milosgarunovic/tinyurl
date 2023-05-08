@@ -1,5 +1,6 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.repository.SQLite
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -43,6 +44,27 @@ class UserTest : AbstractTest() {
             // ASSERT
             Assertions.assertEquals(HttpStatusCode.Conflict, response.status)
             Assertions.assertEquals("""{"message": "email already exists"}""", response.bodyAsText())
+        }
+
+        @Test
+        @DisplayName("POST /api/user/register with properties disabled returns 404")
+        fun `POST api user register with properties disabled returns 404`() = testApplication {
+            // ARRANGE
+            val registerUrl = "/api/user/register"
+            val reqBody = """{"email": "test3@test.com", "password": "Password123!"}"""
+            SQLite.update("UPDATE properties SET registration_enabled = 0;")
+
+            // ACT
+            // create a user once
+            post(client, registerUrl, reqBody)
+
+            // try to add user with the same email again
+            val response = post(client, registerUrl, reqBody)
+
+            // ASSERT
+            Assertions.assertEquals(HttpStatusCode.NotFound, response.status)
+
+            SQLite.update("UPDATE properties SET registration_enabled = 1;") // reset state
         }
     }
 

@@ -59,8 +59,9 @@ fun Application.urlModule() {
                         if (email != null) { // user is required
                             val shortUrl = urlService.add(req, email)
                             call.respond(HttpStatusCode.Created, shortUrl)
+                        } else {
+                            throw UnauthorizedException()
                         }
-                        throw UnauthorizedException()
                     }
                 }
             }
