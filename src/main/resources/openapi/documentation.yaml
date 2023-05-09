@@ -1,0 +1,287 @@
+openapi: "3.0.3"
+info:
+  title: "tinyurl API"
+  description: "tinyurl API"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+paths:
+  /login:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/LoginReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginRes"
+  /refreshToken:
+    get:
+      description: ""
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorWrapper"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginRes"
+  /properties:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PropertiesJson"
+  /properties/disablePublicUrlCreation:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PropertiesJson"
+  /properties/disableRegistration:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PropertiesJson"
+  /properties/enablePublicUrlCreation:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PropertiesJson"
+  /properties/enableRegistration:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PropertiesJson"
+  /api/user/changePassword:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/ChangePasswordReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NullBody"
+  /api/user/deleteAccount:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/DeleteAccountReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NullBody"
+  /api/user/register:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/UserAddJson"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /{path}:
+    get:
+      description: ""
+      parameters:
+        - name: "path"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "redirect"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK <br> Redirect"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /api/url:
+    patch:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/TinyUrlUpdateReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NullBody"
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/UrlAddReq"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/url/{id}:
+    delete:
+      description: ""
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NullBody"
+components:
+  schemas:
+    LoginReq:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    LoginRes:
+      type: "object"
+      properties:
+        accessToken:
+          type: "string"
+        refreshToken:
+          type: "string"
+    ErrorWrapper:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+    PropertiesJson:
+      type: "object"
+      properties:
+        registrationEnabled:
+          type: "boolean"
+        publicUrlCreation:
+          type: "boolean"
+    ChangePasswordReq:
+      type: "object"
+      properties:
+        oldPassword:
+          type: "string"
+        newPassword:
+          type: "string"
+        newPasswordRepeated:
+          type: "string"
+    NullBody:
+      type: "object"
+      properties: { }
+    DeleteAccountReq:
+      type: "object"
+      properties:
+        confirmPassword:
+          type: "string"
+    UserAddJson:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    TinyUrlUpdateReq:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        url:
+          type: "string"
+    Expires:
+      type: "object"
+      properties: { }
+    UrlAddReq:
+      type: "object"
+      properties:
+        url:
+          type: "string"
+        expires:
+          $ref: "#/components/schemas/Expires"

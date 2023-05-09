@@ -21,3 +21,7 @@ it's unavailable then, delete it.
 
 Do I need a "domain" field where we can have all short urls for 1 domain and if we change it migration would be easy..?
 Or just handle that with "get domain name" method + path and that's it.
+
+Write a plugin that uses withTimeout coroutine and make it configurable. In this specific service, we do not expect any
+request to take longer than 5 seconds, so we can say that something is not right if 5 seconds pass and it requires
+further debugging and optimizing.
