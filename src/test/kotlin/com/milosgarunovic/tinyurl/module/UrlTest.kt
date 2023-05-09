@@ -334,9 +334,6 @@ class UrlTest : AbstractTest() {
         @Test
         @DisplayName("DELETE /api/url without id returns 404")
         fun `DELETE api-tinyUrl without id returns 404`() = testApplication {
-            // ARRANGE
-
-
             // ACT
             val response = delete(client, "$apiUrl/", user1Token)
 
@@ -346,10 +343,7 @@ class UrlTest : AbstractTest() {
 
         @Test
         @DisplayName("DELETE /api/url without basic auth returns 401")
-        fun `DELETE api-tinyUrl without basic auth returns 401`() = testApplication {
-            // ARRANGE
-
-
+        fun `DELETE api-tinyUrl without jwt returns 401`() = testApplication {
             // ACT
             val id = post(client, apiUrl, """{"url": "https://test.com"}""", user1Token).bodyAsText()
 

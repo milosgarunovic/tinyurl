@@ -52,16 +52,17 @@ fun Application.urlModule() {
                 post {
                     val req = call.receive<UrlAddReq>() // todo must be a valid url
                     val email = call.principal<JWTPrincipal>()?.get("email")
-                    if (propertiesService.isPublicUrlCreationEnabled()) { // anyone can create
+                    val isPublicUrlCreatingEnabled = propertiesService.isPublicUrlCreationEnabled()
+                    // config either has to be enabled or if it's disabled, then user must be logged in
+                    // isPublicCreationEnabled      email != null       result
+                    // true                         true/false          true
+                    // false                        true                true
+                    // false                        false               false
+                    if (isPublicUrlCreatingEnabled || email != null) {
                         val shortUrl = urlService.add(req, email)
                         call.respond(HttpStatusCode.Created, shortUrl)
                     } else {
-                        if (email != null) { // user is required
-                            val shortUrl = urlService.add(req, email)
-                            call.respond(HttpStatusCode.Created, shortUrl)
-                        } else {
-                            throw UnauthorizedException()
-                        }
+                        throw UnauthorizedException()
                     }
                 }
             }

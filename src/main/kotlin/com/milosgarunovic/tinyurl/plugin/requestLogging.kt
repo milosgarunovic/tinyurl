@@ -2,6 +2,7 @@ package com.milosgarunovic.tinyurl.plugin
 
 import com.auth0.jwt.JWT
 import io.ktor.server.application.*
+import io.ktor.server.application.hooks.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.util.*
@@ -14,7 +15,7 @@ val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
     val usernameKey = AttributeKey<String>("username")
     val ipAddressKey = AttributeKey<String>("ipAddress")
 
-    onCall { call ->
+    on(CallSetup) { call ->
         val request = call.request
         val reqId = UUID.randomUUID().toString()
         val email = getEmail(request)
@@ -27,10 +28,10 @@ val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
         val httpMethod = request.httpMethod.value
         val url = request.uri
 
-        call.application.environment.log.info(commonMessage(reqId, email, ipAddress, httpMethod, url))
+        call.application.environment.log.info("Req " + commonMessage(reqId, email, ipAddress, httpMethod, url))
     }
 
-    onCallRespond { call, _ ->
+    on(ResponseSent) { call ->
         val request = call.request
 
         val reqStartTime = call.attributes[reqStartTimeKey]
@@ -43,8 +44,8 @@ val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
         val httpStatusCode = call.response.status()?.value
 
         val common = commonMessage(reqId, username, ipAddress, httpMethod, url)
-        val onRespond = "status=[$httpStatusCode]; elapsedTime=[${elapsedRequestTime}ms];"
-        call.application.environment.log.info("$common $onRespond")
+        val onRespond = "status=[ $httpStatusCode ]; elapsedTime=[ ${elapsedRequestTime}ms ];"
+        call.application.environment.log.info("Res $common $onRespond")
     }
 }
 
@@ -59,5 +60,5 @@ private fun getEmail(request: ApplicationRequest): String {
 }
 
 fun commonMessage(reqId: String, email: String, ipAddress: String, httpMethod: String, url: String): String {
-    return "Res id=[ $reqId ]; user=[ $email$ipAddress ]; url=[ $httpMethod $url ];"
+    return "id=[ $reqId ]; user=[ $email$ipAddress ]; url=[ $httpMethod $url ];"
 }

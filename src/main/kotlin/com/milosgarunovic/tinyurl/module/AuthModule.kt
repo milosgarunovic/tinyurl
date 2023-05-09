@@ -21,7 +21,7 @@ fun Application.authModule() {
 
             val res = authService.login(loginReq)
 
-            call.respond(res)
+            call.respond(HttpStatusCode.OK, res)
         }
 
         get("/refreshToken") {

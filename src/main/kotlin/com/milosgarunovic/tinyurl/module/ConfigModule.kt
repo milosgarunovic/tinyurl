@@ -35,6 +35,7 @@ fun Application.configModule() {
     install(RequestLogging)
 
     install(StatusPages) {
+
         exception<Throwable> { call, cause ->
             call.application.log.error(cause)
             call.respondStatusCode(HttpStatusCode.InternalServerError)
@@ -72,14 +73,11 @@ fun Application.configModule() {
     val userService by inject<UserService>()
     authentication {
         jwt(name = "jwt") {
-
-            verifier(
-                JWT.require(Algorithm.HMAC256(accessTokenSecret)).build()
-            )
+            verifier(JWT.require(Algorithm.HMAC256(accessTokenSecret)).build())
 
             // validate fields in payload if necessary and create JWTPrincipal
             validate { credentials ->
-                // if expiration is in the past
+                // if expiration is in the future
                 if (credentials.payload.getClaim("exp").asLong() > InstantUtil.now().toEpochMilli()) {
                     JWTPrincipal(credentials.payload)
                 } else {
@@ -94,24 +92,22 @@ fun Application.configModule() {
         }
 
         jwt(name = "jwt-admin") {
-            verifier(
-                JWT.require(Algorithm.HMAC256(accessTokenSecret)).build()
-            )
+            verifier(JWT.require(Algorithm.HMAC256(accessTokenSecret)).build())
 
             validate { credentials ->
-                if (credentials.payload.getClaim("exp").asLong() > InstantUtil.now().toEpochMilli()
-                    && userService.isAdmin(credentials.payload.getClaim("email").toString().removeSurrounding("\""))
+                // TODO figure out why there is ""test@email.com"" like it's a string with "
+                //  so we need removeSurrounding
+                val payload = credentials.payload
+                if (payload.getClaim("exp").asLong() > InstantUtil.now().toEpochMilli()
+                    && userService.isAdmin(payload.getClaim("email").toString().removeSurrounding("\""))
                 ) {
-                    JWTPrincipal(credentials.payload)
+                    JWTPrincipal(payload)
                 } else {
                     null
                 }
             }
 
-            // if authentication fails, this would be the response
-            challenge { _, _ ->
-                call.respondStatusCode(HttpStatusCode.Forbidden)
-            }
+            challenge { _, _ -> call.respondStatusCode(HttpStatusCode.Forbidden) }
         }
     }
 
