@@ -56,6 +56,12 @@ tasks.test {
 
 kotlin {
     jvmToolchain(17)
+    // k2 compiler
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
+    }
 }
 
 application {
