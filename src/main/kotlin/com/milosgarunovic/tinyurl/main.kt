@@ -25,5 +25,5 @@ fun Application.mainModule() {
 
     propertiesModule()
 
-    openApi()
+    openApiModule()
 }

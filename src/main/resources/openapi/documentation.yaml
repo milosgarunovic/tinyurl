@@ -11,7 +11,7 @@ paths:
       description: ""
       requestBody:
         content:
-          '*/*':
+          'application/json':
             schema:
               $ref: "#/components/schemas/LoginReq"
         required: true
@@ -19,7 +19,7 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/LoginRes"
   /refreshToken:
@@ -35,13 +35,13 @@ paths:
         "400":
           description: "Bad Request"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/ErrorWrapper"
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/LoginRes"
   /properties:
@@ -51,7 +51,7 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
   /properties/disablePublicUrlCreation:
@@ -61,7 +61,7 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
   /properties/disableRegistration:
@@ -71,7 +71,7 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
   /properties/enablePublicUrlCreation:
@@ -81,7 +81,7 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
   /properties/enableRegistration:
@@ -91,7 +91,7 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
   /api/user/changePassword:
@@ -99,39 +99,31 @@ paths:
       description: ""
       requestBody:
         content:
-          '*/*':
+          'application/json':
             schema:
               $ref: "#/components/schemas/ChangePasswordReq"
         required: true
       responses:
         "200":
           description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/NullBody"
   /api/user/deleteAccount:
     post:
       description: ""
       requestBody:
         content:
-          '*/*':
+          'application/json':
             schema:
               $ref: "#/components/schemas/DeleteAccountReq"
         required: true
       responses:
         "200":
           description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/NullBody"
   /api/user/register:
     post:
       description: ""
       requestBody:
         content:
-          '*/*':
+          'application/json':
             schema:
               $ref: "#/components/schemas/UserAddJson"
         required: true
@@ -139,7 +131,7 @@ paths:
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: "string"
   /{path}:
@@ -155,12 +147,12 @@ paths:
           in: "query"
           required: false
           schema:
-            type: "string"
+            type: "boolean"
       responses:
         "200":
           description: "OK <br> Redirect"
           content:
-            text/plain:
+            'text/plain':
               schema:
                 type: "string"
   /api/url:
@@ -168,22 +160,18 @@ paths:
       description: ""
       requestBody:
         content:
-          '*/*':
+          'application/json':
             schema:
               $ref: "#/components/schemas/TinyUrlUpdateReq"
         required: true
       responses:
         "200":
           description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/NullBody"
     post:
       description: ""
       requestBody:
         content:
-          '*/*':
+          'application/json':
             schema:
               $ref: "#/components/schemas/UrlAddReq"
         required: true
@@ -191,13 +179,13 @@ paths:
         "201":
           description: "Created"
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: "string"
         "200":
           description: "OK"
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: "string"
   /api/url/{id}:
@@ -212,10 +200,6 @@ paths:
       responses:
         "200":
           description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/NullBody"
 components:
   schemas:
     LoginReq:
@@ -253,9 +237,6 @@ components:
           type: "string"
         newPasswordRepeated:
           type: "string"
-    NullBody:
-      type: "object"
-      properties: { }
     DeleteAccountReq:
       type: "object"
       properties:
