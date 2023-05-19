@@ -43,9 +43,10 @@ For v1.0.0:
 - [x] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
   to create a tiny url
 - [ ] Add frontend (maybe with Kotlin/React)
-- [ ] Add openApi/swagger
+- [x] Add openApi/swagger
 - [ ] Add GraalVM for smaller footprint (cpu, memory..)
 - [ ] Add auditing
+- [ ] Add metrics
 
 Add later:
 

@@ -41,7 +41,7 @@ val RequestLogging = createApplicationPlugin(name = "RequestLogging") {
         val httpMethod = request.httpMethod.value
         val url = request.uri
         val elapsedRequestTime = Instant.now().toEpochMilli() - reqStartTime
-        val httpStatusCode = call.response.status()?.value
+        val httpStatusCode = call.response.status()!!.value
 
         val common = commonMessage(reqId, username, ipAddress, httpMethod, url)
         val onRespond = "status=[ $httpStatusCode ]; elapsedTime=[ ${elapsedRequestTime}ms ];"
