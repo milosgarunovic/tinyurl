@@ -201,6 +201,10 @@ paths:
         "200":
           description: "OK"
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     LoginReq:
       type: "object"
