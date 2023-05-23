@@ -32,6 +32,8 @@ class UrlService : KoinComponent {
 
         val url = urlAddReq.toTinyUrl(shortUrl)
         urlRepository.add(url, email)
+//        val resultingUrl = getUrl(shortUrl)
+//        println(resultingUrl)
         return url.shortUrl
     }
 

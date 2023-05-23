@@ -1,0 +1,12 @@
+###
+POST http://{{hostname}}/api/url
+Content-Type: application/json
+#Authorization: Bearer {{accessToken}}
+
+{
+  "url": "test.com"
+}
+
+###
+# @no-redirect
+GET http://{{hostname}}/tpxo4Oxf

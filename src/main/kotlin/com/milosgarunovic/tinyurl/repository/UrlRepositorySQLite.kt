@@ -33,8 +33,7 @@ class UrlRepositorySQLite : UrlRepository {
         val query = """SELECT url, short_url, expiry, user_id
             | FROM urls u 
             | WHERE short_url = ? 
-            | AND active = 1
-            | AND (SELECT active FROM users WHERE user_id = u.user_id) = 1;""".trimMargin()
+            | AND active = 1;""".trimMargin()
         return SQLite.query(query, 1 to shortUrl) {
             if (next()) {
                 val expiryAsString = getString("expiry")
