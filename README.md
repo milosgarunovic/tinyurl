@@ -66,11 +66,9 @@ but you can look it up manually. It should be found in `build/dokka/index.html`
 
 `./gradlew koverHtmlReport` generates html code coverage. This tasks will give you link to html.
 
-`./gradlew run`
+`./gradlew run` - part of application plugin
 
-`./gradlew build` to build with tests
-
-`./gradlew build -x test` to build without tests
+`./gradlew buildFatJar` - Builds a combined JAR of project and runtime dependencies.
 
 ### Plan for release of first stable version (without Frontend)
 

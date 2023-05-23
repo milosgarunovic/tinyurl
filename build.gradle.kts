@@ -3,6 +3,7 @@ plugins {
 
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
+    id("io.ktor.plugin") version "2.3.0"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("org.jetbrains.dokka") version "1.7.20"
     application // Apply the application plugin to add support for building a CLI application in Java.
@@ -66,6 +67,12 @@ kotlin {
 
 application {
     mainClass.set("com.milosgarunovic.tinyurl.MainKt")
+}
+
+ktor {
+    fatJar {
+        archiveFileName.set("tinyurl-fat.jar")
+    }
 }
 
 // configuration for Kover to exclude some classes/packages
