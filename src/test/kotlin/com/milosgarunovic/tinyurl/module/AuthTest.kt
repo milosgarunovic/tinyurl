@@ -57,7 +57,7 @@ class AuthTest : AbstractTest() {
         // ACT
         val token = login(client, userAuth).refreshToken!!
 
-        val get = client.get("/refreshToken") {
+        val get = client.get("/api/auth/refreshToken") {
             bearerAuth(token)
         }
 
@@ -67,7 +67,7 @@ class AuthTest : AbstractTest() {
         InstantUtil.plusDays(1)
         InstantUtil.plusSeconds(3)
 
-        val getAfterADay = client.get("/refreshToken") {
+        val getAfterADay = client.get("/api/auth/refreshToken") {
             bearerAuth(token)
         }
 
@@ -83,7 +83,7 @@ class AuthTest : AbstractTest() {
         val client = httpClient()
 
         // ACT
-        val get = client.get("/refreshToken")
+        val get = client.get("/api/auth/refreshToken")
 
         // ASSERT
         assertEquals(HttpStatusCode.BadRequest, get.status)

@@ -36,7 +36,7 @@ class PropertiesTest : AbstractTest() {
         val client = httpClient()
         val token = login(client, adminAuth).accessToken
 
-        val getPropertiesResponse = client.get("/properties") {
+        val getPropertiesResponse = client.get("/api/properties") {
             bearerAuth(token)
         }
         val body: PropertiesJson = getPropertiesResponse.body<PropertiesJson>()
@@ -51,7 +51,7 @@ class PropertiesTest : AbstractTest() {
         val client = httpClient()
         val token = login(client, userAuth).accessToken
 
-        val getPropertiesResponse = client.get("/properties") {
+        val getPropertiesResponse = client.get("/api/properties") {
             bearerAuth(token)
         }
 
@@ -63,22 +63,22 @@ class PropertiesTest : AbstractTest() {
         val client = httpClient()
         val token = login(client, adminAuth).accessToken
 
-        val disableRegistration = post(client, "/properties/disableRegistration", token = token)
+        val disableRegistration = post(client, "/api/properties/disableRegistration", token = token)
         assertEquals(HttpStatusCode.OK, disableRegistration.status)
         assertTrue(disableRegistration.body<PropertiesJson>().publicUrlCreation)
         assertFalse(disableRegistration.body<PropertiesJson>().registrationEnabled)
 
-        val disablePublicUrlCreation = post(client, "/properties/disablePublicUrlCreation", token = token)
+        val disablePublicUrlCreation = post(client, "/api/properties/disablePublicUrlCreation", token = token)
         assertEquals(HttpStatusCode.OK, disablePublicUrlCreation.status)
         assertFalse(disablePublicUrlCreation.body<PropertiesJson>().publicUrlCreation)
         assertFalse(disablePublicUrlCreation.body<PropertiesJson>().registrationEnabled)
 
-        val enableRegistration = post(client, "/properties/enableRegistration", token = token)
+        val enableRegistration = post(client, "/api/properties/enableRegistration", token = token)
         assertEquals(HttpStatusCode.OK, enableRegistration.status)
         assertFalse(enableRegistration.body<PropertiesJson>().publicUrlCreation)
         assertTrue(enableRegistration.body<PropertiesJson>().registrationEnabled)
 
-        val enablePublicUrlCreation = post(client, "/properties/enablePublicUrlCreation", token = token)
+        val enablePublicUrlCreation = post(client, "/api/properties/enablePublicUrlCreation", token = token)
         assertEquals(HttpStatusCode.OK, enablePublicUrlCreation.status)
         assertTrue(enablePublicUrlCreation.body<PropertiesJson>().publicUrlCreation)
         assertTrue(enablePublicUrlCreation.body<PropertiesJson>().registrationEnabled)

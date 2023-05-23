@@ -14,7 +14,7 @@ fun Application.propertiesModule() {
 
     routing {
         authenticate("jwt-admin") {
-            route("/properties") {
+            route("/api/properties") {
                 get {
                     call.respond(HttpStatusCode.OK, propertiesService.getProperties())
                 }

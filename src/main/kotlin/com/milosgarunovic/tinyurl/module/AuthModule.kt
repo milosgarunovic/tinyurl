@@ -15,24 +15,29 @@ fun Application.authModule() {
     val authService by inject<AuthService>()
 
     routing {
+        route("/api/auth") {
 
-        post("/login") {
-            val loginReq = call.receive<LoginReq>()
+            post("/login") {
+                val loginReq = call.receive<LoginReq>()
 
-            val res = authService.login(loginReq)
+                val res = authService.login(loginReq)
 
-            call.respond(HttpStatusCode.OK, res)
-        }
-
-        get("/refreshToken") {
-            val authorization = call.request.headers["Authorization"]
-            if (authorization == null) {
-                call.respond(HttpStatusCode.BadRequest, ErrorWrapper("Expected refresh token in Authorization header."))
-                return@get
+                call.respond(HttpStatusCode.OK, res)
             }
 
-            val loginRes = authService.refreshToken(authorization.drop("Bearer ".length))
-            call.respond(HttpStatusCode.OK, loginRes)
+            get("/refreshToken") {
+                val authorization = call.request.headers["Authorization"]
+                if (authorization == null) {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorWrapper("Expected refresh token in Authorization header.")
+                    )
+                    return@get
+                }
+
+                val loginRes = authService.refreshToken(authorization.drop("Bearer ".length))
+                call.respond(HttpStatusCode.OK, loginRes)
+            }
         }
     }
 }

@@ -43,6 +43,7 @@ fun Application.userModule() {
                     call.respondStatusCode(HttpStatusCode.OK)
                 }
 
+                // Delete account is POST because it needs to have a body. DELETE method doesn't have body.
                 post("/deleteAccount") {
                     val req = call.receive<DeleteAccountReq>()
                     val email = call.principal<JWTPrincipal>()?.get("email")!!

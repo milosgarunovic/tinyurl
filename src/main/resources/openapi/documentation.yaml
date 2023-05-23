@@ -6,7 +6,7 @@ info:
 servers:
   - url: "http://localhost:8080"
 paths:
-  /login:
+  /api/auth/login:
     post:
       description: ""
       requestBody:
@@ -22,7 +22,7 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/LoginRes"
-  /refreshToken:
+  /api/auth/refreshToken:
     get:
       description: ""
       parameters:
@@ -44,7 +44,7 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/LoginRes"
-  /properties:
+  /api/properties:
     get:
       description: ""
       responses:
@@ -54,7 +54,7 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
-  /properties/disablePublicUrlCreation:
+  /api/properties/disablePublicUrlCreation:
     post:
       description: ""
       responses:
@@ -64,7 +64,7 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
-  /properties/disableRegistration:
+  /api/properties/disableRegistration:
     post:
       description: ""
       responses:
@@ -74,7 +74,7 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
-  /properties/enablePublicUrlCreation:
+  /api/properties/enablePublicUrlCreation:
     post:
       description: ""
       responses:
@@ -84,7 +84,7 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
-  /properties/enableRegistration:
+  /api/properties/enableRegistration:
     post:
       description: ""
       responses:
