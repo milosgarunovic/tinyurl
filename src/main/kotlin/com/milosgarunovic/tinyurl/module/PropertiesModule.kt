@@ -1,5 +1,6 @@
 package com.milosgarunovic.tinyurl.module
 
+import com.milosgarunovic.tinyurl.module.AuthType.JWT_ADMIN
 import com.milosgarunovic.tinyurl.service.PropertiesService
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -13,7 +14,7 @@ fun Application.propertiesModule() {
     val propertiesService by inject<PropertiesService>()
 
     routing {
-        authenticate("jwt-admin") {
+        authenticate(JWT_ADMIN.type) {
             route("/api/properties") {
                 get {
                     call.respond(HttpStatusCode.OK, propertiesService.getProperties())

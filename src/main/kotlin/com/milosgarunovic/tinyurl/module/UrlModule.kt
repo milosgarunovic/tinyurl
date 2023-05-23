@@ -5,6 +5,7 @@ import com.milosgarunovic.tinyurl.ext.respondRedirect
 import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.TinyUrlUpdateReq
 import com.milosgarunovic.tinyurl.json.UrlAddReq
+import com.milosgarunovic.tinyurl.module.AuthType.JWT
 import com.milosgarunovic.tinyurl.service.PropertiesService
 import com.milosgarunovic.tinyurl.service.UrlService
 import io.ktor.http.*
@@ -48,7 +49,7 @@ fun Application.urlModule() {
              * Authentication strategy here is optional because anyone can create a short url, even if people don't have
              * an account, the only difference is that they won't have all the functionalities related to links.
              */
-            authenticate("jwt", strategy = AuthenticationStrategy.Optional) {
+            authenticate(JWT.type, strategy = AuthenticationStrategy.Optional) {
                 post {
                     val req = call.receive<UrlAddReq>() // todo must be a valid url
                     val email = call.principal<JWTPrincipal>()?.get("email")
@@ -67,7 +68,7 @@ fun Application.urlModule() {
                 }
             }
 
-            authenticate("jwt") {
+            authenticate(JWT.type) {
                 patch {
                     val req = call.receive<TinyUrlUpdateReq>() // todo must be a valid url
                     urlService.update(req.id, req.url, call.principal<JWTPrincipal>()?.get("email")!!)

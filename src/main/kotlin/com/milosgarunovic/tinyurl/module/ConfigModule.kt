@@ -10,7 +10,8 @@ import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.plugin.RequestLogging
 import com.milosgarunovic.tinyurl.repository.*
 import com.milosgarunovic.tinyurl.service.*
-import com.milosgarunovic.tinyurl.util.InstantUtil
+import com.milosgarunovic.tinyurl.util.getEmail
+import com.milosgarunovic.tinyurl.util.isNotExpired
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -72,13 +73,13 @@ fun Application.configModule() {
     val accessTokenSecret = environment.config.property("jwt.accessTokenSecret").getString()
     val userService by inject<UserService>()
     authentication {
-        jwt(name = "jwt") {
+        jwt(name = AuthType.JWT.type) {
             verifier(JWT.require(Algorithm.HMAC256(accessTokenSecret)).build())
 
             // validate fields in payload if necessary and create JWTPrincipal
             validate { credentials ->
                 // if expiration is in the future
-                if (credentials.payload.getClaim("exp").asLong() > InstantUtil.now().toEpochMilli()) {
+                if (credentials.payload.isNotExpired()) {
                     JWTPrincipal(credentials.payload)
                 } else {
                     null
@@ -91,16 +92,14 @@ fun Application.configModule() {
             }
         }
 
-        jwt(name = "jwt-admin") {
+        jwt(name = AuthType.JWT_ADMIN.type) {
             verifier(JWT.require(Algorithm.HMAC256(accessTokenSecret)).build())
 
             validate { credentials ->
                 // TODO figure out why there is ""test@email.com"" like it's a string with "
                 //  so we need removeSurrounding
                 val payload = credentials.payload
-                if (payload.getClaim("exp").asLong() > InstantUtil.now().toEpochMilli()
-                    && userService.isAdmin(payload.getClaim("email").toString().removeSurrounding("\""))
-                ) {
+                if (payload.isNotExpired() && userService.isAdmin(payload.getEmail())) {
                     JWTPrincipal(payload)
                 } else {
                     null

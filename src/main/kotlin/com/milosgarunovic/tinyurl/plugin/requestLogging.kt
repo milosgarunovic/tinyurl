@@ -1,6 +1,7 @@
 package com.milosgarunovic.tinyurl.plugin
 
 import com.auth0.jwt.JWT
+import com.milosgarunovic.tinyurl.util.getEmail
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
 import io.ktor.server.plugins.*
@@ -53,8 +54,7 @@ private fun getEmail(request: ApplicationRequest): String {
 //  val username = call.principal<UserIdPrincipal>("auth-basic")?.name ?: "" // doesn't work
     // workaround is to parse basic auth myself
     if (request.authorization()?.removePrefix("Bearer ") != null) {
-        return JWT.decode(request.authorization()?.removePrefix("Bearer ")).getClaim("email").toString()
-            .removeSurrounding("\"") + "@"
+        return JWT.decode(request.authorization()?.removePrefix("Bearer ")).getEmail() + "@"
     }
     return ""
 }

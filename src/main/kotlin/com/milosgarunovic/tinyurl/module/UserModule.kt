@@ -5,6 +5,7 @@ import com.milosgarunovic.tinyurl.ext.respondStatusCode
 import com.milosgarunovic.tinyurl.json.ChangePasswordReq
 import com.milosgarunovic.tinyurl.json.DeleteAccountReq
 import com.milosgarunovic.tinyurl.json.UserAddJson
+import com.milosgarunovic.tinyurl.module.AuthType.JWT
 import com.milosgarunovic.tinyurl.service.PropertiesService
 import com.milosgarunovic.tinyurl.service.UserService
 import io.ktor.http.*
@@ -34,7 +35,7 @@ fun Application.userModule() {
                 call.respondStatusCode(HttpStatusCode.Created)
             }
 
-            authenticate("jwt") {
+            authenticate(JWT.type) {
                 post("/changePassword") {
                     val req = call.receive<ChangePasswordReq>()
                     req.validate()

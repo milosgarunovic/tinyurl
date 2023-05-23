@@ -54,6 +54,12 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/PropertiesJson"
+        "403":
+          description: "Forbidden - user does not have admin rights."
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/PropertiesJson"
   /api/properties/disablePublicUrlCreation:
     post:
       description: ""

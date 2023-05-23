@@ -30,10 +30,7 @@ class UrlRepositorySQLite : UrlRepository {
      */
     override fun getUrl(shortUrl: String): Triple<String, String, String?>? {
         //language=SQLite
-        val query = """SELECT url, short_url, expiry, user_id
-            | FROM urls u 
-            | WHERE short_url = ? 
-            | AND active = 1;""".trimMargin()
+        val query = "SELECT url, short_url, expiry, user_id FROM urls u  WHERE short_url = ?  AND active = 1;"
         return SQLite.query(query, 1 to shortUrl) {
             if (next()) {
                 val expiryAsString = getString("expiry")
@@ -65,7 +62,7 @@ class UrlRepositorySQLite : UrlRepository {
      */
     override fun delete(shortUrl: String, email: String): Boolean {
         //language=SQLite
-        val query = """UPDATE urls SET active = false, date_deactivated = ? 
+        val query = """UPDATE urls SET active = 0, date_deactivated = ? 
             WHERE short_url = ? 
             AND active = 1
             AND user_id = (SELECT id FROM users WHERE email = ?);"""
