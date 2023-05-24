@@ -62,13 +62,21 @@ Add later:
 ### Gradle tasks
 
 `./gradlew dokkaHtml` to generate html documentation for the code. This task doesn't print out location of created,
-but you can look it up manually. It should be found in `build/dokka/index.html`
+but you can look it up manually. It should be found in `build/dokka/index.html`.
 
 `./gradlew koverHtmlReport` generates html code coverage. This tasks will give you link to html.
 
-`./gradlew run` - part of application plugin
+`./gradlew run` - part of application plugin.
 
 `./gradlew buildFatJar` - Builds a combined JAR of project and runtime dependencies.
+
+### Running with java
+
+`java -jar build/libs/tinyurl-fat.jar` starts a fat jar. It will also create tinyUrl.sqlite file.
+
+`java -jar build/libs/tinyurl-fat.jar -config=pathToCustomConfig.yaml` starts a fat jar with custom configuration. This
+option is used for deployments where you can add SSL, change JWT properties etc. Note that `=` must be used for
+arguments because Ktor treats them as separate arguments if there is just a space instead of equals.
 
 ### Plan for release of first stable version (without Frontend)
 

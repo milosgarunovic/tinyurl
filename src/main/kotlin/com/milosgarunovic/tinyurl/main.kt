@@ -1,3 +1,5 @@
+@file:JvmName("main")
+
 package com.milosgarunovic.tinyurl
 
 import com.milosgarunovic.tinyurl.module.*

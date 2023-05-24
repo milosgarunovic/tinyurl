@@ -10,4 +10,4 @@ ktor:
     port: 8080
   application:
     modules:
-      - com.milosgarunovic.tinyurl.MainKt.mainModule
+      - com.milosgarunovic.tinyurl.main.mainModule

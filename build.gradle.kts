@@ -66,7 +66,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("com.milosgarunovic.tinyurl.MainKt")
+    mainClass.set("com.milosgarunovic.tinyurl.main")
 }
 
 ktor {
@@ -80,7 +80,7 @@ kover {
     filters {
         classes {
             excludes += listOf(
-                "com.milosgarunovic.tinyurl.MainKt", // main doesn't make sense to be tested
+                "com.milosgarunovic.tinyurl.main", // main doesn't make sense to be tested
                 "com.milosgarunovic.tinyurl.json.*", // json doesn't make sense to be tested
             )
         }
