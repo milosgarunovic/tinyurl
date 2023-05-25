@@ -80,9 +80,9 @@ fun Application.configModule() {
             validate { credentials ->
                 // if expiration is in the future
                 if (credentials.payload.isNotExpired()) {
-                    JWTPrincipal(credentials.payload)
+                    return@validate JWTPrincipal(credentials.payload)
                 } else {
-                    null
+                    return@validate null
                 }
             }
 
@@ -96,13 +96,11 @@ fun Application.configModule() {
             verifier(JWT.require(Algorithm.HMAC256(accessTokenSecret)).build())
 
             validate { credentials ->
-                // TODO figure out why there is ""test@email.com"" like it's a string with "
-                //  so we need removeSurrounding
                 val payload = credentials.payload
                 if (payload.isNotExpired() && userService.isAdmin(payload.getEmail())) {
-                    JWTPrincipal(payload)
+                    return@validate JWTPrincipal(payload)
                 } else {
-                    null
+                    return@validate null
                 }
             }
 
