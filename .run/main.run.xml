@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="MainKt" type="JetRunConfigurationType" nameIsGenerated="true">
-        <option name="MAIN_CLASS_NAME" value="com.milosgarunovic.tinyurl.MainKt"/>
+    <configuration default="false" name="main" type="JetRunConfigurationType" nameIsGenerated="true">
+        <option name="MAIN_CLASS_NAME" value="com.milosgarunovic.tinyurl.main"/>
         <module name="tinyurl.main"/>
         <shortenClasspath name="NONE"/>
         <method v="2">
