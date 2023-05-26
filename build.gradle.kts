@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("org.jetbrains.dokka") version "1.7.20"
     application // Apply the application plugin to add support for building a CLI application in Java.
+    id("org.jreleaser.jdks") version "1.6.0" // downloads JDK necessary to run the app
 }
 
 group = "com.milosgarunovic"
@@ -84,5 +85,23 @@ kover {
                 "com.milosgarunovic.tinyurl.json.*", // json doesn't make sense to be tested
             )
         }
+    }
+}
+
+jdks {
+    create("corretto17Linux") {
+        platform.set("linux")
+        url.set("https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.deb")
+        checksum.set("8fdc8cc490d4ffc8d37a0fd81431b5d9de2bcbbafc4effa6b00b7fa6a7ce453c")
+    }
+    create("corretto17Windows") {
+        platform.set("windows")
+        url.set("https://corretto.aws/downloads/latest/amazon-corretto-17-x64-windows-jdk.msi")
+        checksum.set("049f15b909ea66ee9ba9cd6396119a0c78c73e3d10d962d4e16fb0d296c160cd")
+    }
+    create("corretto17Mac") {
+        platform.set("mac")
+        url.set("https://corretto.aws/downloads/latest/amazon-corretto-17-x64-macos-jdk.pkg")
+        checksum.set("8af9245c4a7893960e942dfbf40cb12e18dcfc16eae8cc9c92f544d775fb8150")
     }
 }
