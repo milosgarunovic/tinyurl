@@ -78,9 +78,15 @@ but you can look it up manually. It should be found in `build/dokka/index.html`.
 option is used for deployments where you can add SSL, change JWT properties etc. Note that `=` must be used for
 arguments because Ktor treats them as separate arguments if there is just a space instead of equals.
 
-### Plan for release of first stable version (without Frontend)
+## Released on May 27. 2023
 
-In order to provide a challenge, it's good to have a due date which we need to strive for. I'll give it my best to
-launch first stable version on **June 1. 2023**
+I've successfully released the server with swagger, the URL is [https://tajni.link/swagger]().
+I've searched for names that could work for this and didn't find any of them available except tajni.link. It's hosted
+for $5 a year + $0.5 monthly for hosted zone and $3.5 monthly for AWS Lightsail instance.
 
-This is two months from the date I'm writing this.
+There are some stability issues which I'll address in next couple of days to make everything to work.
+
+### What does tajni mean?
+
+"tajni" is how "tiny" it's read in Serbian (my home country), but it doesn't have the same meaning. In Serbian, it means
+"secret", but that was just a coincidence. So [https://tajni.link]() is like secret.link translated.  
