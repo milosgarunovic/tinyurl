@@ -23,6 +23,7 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.util.logging.*
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -46,6 +47,7 @@ fun Application.configModule() {
         exception<BadRequestException> { call, cause -> call.respond(cause.statusCode, cause.message) }
         exception<ConflictException> { call, cause -> call.respond(cause.statusCode, cause.message) }
         exception<UnauthorizedException> { call, cause -> call.respond(cause.statusCode, cause.message) }
+        exception<SerializationException> { call, cause -> call.respond(HttpStatusCode.BadRequest, cause.message!!) }
     }
 
     install(Koin) {

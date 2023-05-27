@@ -4,7 +4,10 @@ info:
   description: "tinyurl API"
   version: "1.0.0"
 servers:
+  - url: "https://tajni.link"
+    description: Production server (uses live data)
   - url: "http://localhost:8080"
+    description: Use this if you're developing/testing on your machine
 paths:
   /api/auth/login:
     post:
