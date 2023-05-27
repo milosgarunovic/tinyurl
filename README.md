@@ -34,29 +34,28 @@ For v1.0.0:
   - [x] in memory SQLite for tests
   - [x] add user
   - [x] add liquibase
-  - [ ] add JPA
-  - [ ] see if queries are blocking and wrap them in runBlocking
 - [x] Add statistics for how many times a route has been called
-  - [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
-    alternative for this
 - [x] Add ability to limit creation of account to only one user
 - [x] Add ability to limit creation of links to only logged-in user, or to be public and allow anyone on the internet
   to create a tiny url
-- [ ] Add frontend (maybe with Kotlin/React)
 - [x] Add openApi/swagger
-- [ ] Add GraalVM for smaller footprint (cpu, memory..)
 - [ ] Add auditing
 - [ ] Add metrics
 
 Add later:
 
+- [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
+  alternative for this
+- [ ] Add frontend (maybe with Kotlin/React)
+- [ ] Add GraalVM for smaller footprint (cpu, memory..)
 - [ ] Add Oauth2 for 3rd party services if possible so user can register via google, git etc...
 - [ ] Add Postgres (as another implementation)
   - [ ] Docker and testcontainers (docker should be added anyway so people can deploy in their local env in minutes and
     test stuff out)
 - [ ] Add a job to check links periodically to see if there are any broken links, and then check with user what to do
   about those links - delete them, replace them or whatever.
-
+- [ ] add JPA
+- [ ] see if queries are blocking and wrap them in runBlocking
 ---
 
 ### Gradle tasks
@@ -82,11 +81,15 @@ arguments because Ktor treats them as separate arguments if there is just a spac
 
 I've successfully released the server with swagger, the URL is [https://tajni.link/swagger]().
 I've searched for names that could work for this and didn't find any of them available except tajni.link. It's hosted
-for $5 a year + $0.5 monthly for hosted zone and $3.5 monthly for AWS Lightsail instance.
+for:
+
+* Domain name $5 a year
+* $0.5 monthly for hosted zone
+* $3.5 monthly for AWS Lightsail instance.
 
 There are some stability issues which I'll address in next couple of days to make everything to work.
 
-### What does tajni mean?
+### What does "tajni" mean?
 
 "tajni" is how "tiny" it's read in Serbian (my home country), but it doesn't have the same meaning. In Serbian, it means
 "secret", but that was just a coincidence. So [https://tajni.link]() is like secret.link translated.  
