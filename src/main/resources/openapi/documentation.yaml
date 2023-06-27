@@ -1,17 +1,22 @@
 openapi: "3.0.3"
 info:
-  title: "tinyurl API"
-  description: "tinyurl API"
+  title: "tinyURL"
+  description: "[https://tajni.link]() is tiny url clone, where you can shorten very long links and share them with 
+  anyone. The goal is to have open source version which can serve for learning, developing, testing and of course, for 
+  using API for it's intended use. This projects repository is on [github](https://github.com/milosgarunovic/tinyurl)."
   version: "1.0.0"
+
 servers:
   - url: "https://tajni.link"
     description: Production server (uses live data)
   - url: "http://localhost:8080"
     description: Use this if you're developing/testing on your machine
+
 paths:
   /api/auth/login:
     post:
-      description: ""
+      description: "Logs in with correct username and password. Use accessToken for working with further requests. When 
+      accessToken expires use refreshToken on /api/auth/refreshToken"
       requestBody:
         content:
           'application/json':
@@ -129,7 +134,8 @@ paths:
           description: "OK"
   /api/user/register:
     post:
-      description: ""
+      description: "Registers a user with email and password. For now email can be anything, it's still not implemented
+      to check and send email for conformation."
       requestBody:
         content:
           'application/json':
@@ -137,15 +143,15 @@ paths:
               $ref: "#/components/schemas/UserAddJson"
         required: true
       responses:
-        "200":
-          description: "OK"
-          content:
-            'application/json':
-              schema:
-                type: "string"
+        "201":
+          description: "Created"
+        "404":
+          description: "Not found if Admin disables user registration."
+        "409":
+          description: "User with email already exists."
   /{path}:
     get:
-      description: ""
+      description: "Redirects from short to actual URL."
       parameters:
         - name: "path"
           in: "path"
@@ -159,11 +165,16 @@ paths:
             type: "boolean"
       responses:
         "200":
-          description: "OK <br> Redirect"
+          description: "With query parameter ?redirect=false it doesn't redirects but gives URL in response body. This
+          can be used for debugging if you're going to be redirected to the correct URL."
           content:
             'text/plain':
               schema:
                 type: "string"
+        "301":
+          description: "Redirects to actual URL"
+        "404":
+          description: "Passed path is not found."
   /api/url:
     patch:
       description: ""

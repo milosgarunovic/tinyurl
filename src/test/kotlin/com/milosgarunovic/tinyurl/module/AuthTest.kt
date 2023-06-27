@@ -1,6 +1,7 @@
 package com.milosgarunovic.tinyurl.module
 
 import com.milosgarunovic.tinyurl.json.ErrorWrapper
+import com.milosgarunovic.tinyurl.json.LoginRes
 import com.milosgarunovic.tinyurl.util.InstantUtil
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -10,6 +11,7 @@ import io.ktor.server.testing.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class AuthTest : AbstractTest() {
 
@@ -22,6 +24,28 @@ class AuthTest : AbstractTest() {
         testApplication {
             post(client, "/api/user/register", userAuth, token = null)
         }
+    }
+
+    @Test
+    fun `login returns 200 and correct response body`() = testApplication {
+        val client = httpClient()
+        val res = post(client, "/api/auth/login", userAuth)
+
+        assertEquals(HttpStatusCode.OK, res.status)
+        val body = res.body<LoginRes>()
+        assertTrue(body.accessToken.isNotBlank())
+        assertTrue(body.refreshToken!!.isNotBlank()) // refresh token must exist in this response
+    }
+
+    @Test
+    fun `login with wrong credentials returns 401`() = testApplication {
+        val client = httpClient()
+        val userAuth = """{"email": "wrong@email.com", "password": "WrongPassword"}"""
+        val res = post(client, "/api/auth/login", userAuth)
+
+        assertEquals(HttpStatusCode.Unauthorized, res.status)
+        val body = res.bodyAsText()
+        assertEquals("Username or password do not match.", body)
     }
 
     @Test

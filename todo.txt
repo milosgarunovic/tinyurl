@@ -25,3 +25,7 @@ Or just handle that with "get domain name" method + path and that's it.
 Write a plugin that uses withTimeout coroutine and make it configurable. In this specific service, we do not expect any
 request to take longer than 5 seconds, so we can say that something is not right if 5 seconds pass and it requires
 further debugging and optimizing.
+
+Must store values as http/https, or else it would think the path is on this server. For example we create a url
+milosgarunovic.com, we get 66IcBq3k, when we call tajni.link/66IcBq3k we get tajni.link/milosgarunovic.com. So it
+doesn't redirect as it should. But if we put https://milosgarunovic.com, then it will redirect as it should.

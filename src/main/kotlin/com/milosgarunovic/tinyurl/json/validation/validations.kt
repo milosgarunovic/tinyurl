@@ -7,7 +7,7 @@ fun validatePassword(password: String, fieldName: String = "password") {
         throw BadRequestException("$fieldName must be at least 8 characters long")
     }
     // TODO need to test this for possible combinations
-    if (!Regex("^[a-zA-Z0-9!-\\/:-@[-`{-~]]*$").matches(password)) {
+    if (!Regex("^[a-zA-Z0-9!-/:-@-`{-~^]*$").matches(password)) { // TODO test passwords with characters generated in keeper
         throw BadRequestException("$fieldName must contain lower case letters, upper case letters, numbers and special characters")
     }
 }

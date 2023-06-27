@@ -10,6 +10,5 @@ suspend inline fun ApplicationCall.respondStatusCode(status: HttpStatusCode) {
 }
 
 suspend inline fun ApplicationCall.respondRedirect(url: String) {
-    response.status(HttpStatusCode.MovedPermanently)
     respondRedirect(url, true)
 }
