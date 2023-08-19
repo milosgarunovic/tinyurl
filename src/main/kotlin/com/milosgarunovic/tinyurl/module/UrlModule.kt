@@ -25,12 +25,9 @@ fun Application.urlModule() {
 
     routing {
 
-        get("/{path}") {
-            val path = call.parameters["path"]!!
-            if (path.length != 8) { // 8 is generated in UrlPathGenerator.kt TODO maybe move this in a configuration file
-                call.respondStatusCode(HttpStatusCode.NotFound)
-                return@get
-            }
+        get(Regex("^[A-Za-z0-9]{8}\$")) {
+            val path = call.request.path()
+                .substring(1) // removes "/" from the path
 
             val redirect = call.request.queryParameters["redirect"]?.toBoolean() ?: true
             // TODO queryParameter origin or source or something like that so we can group from which website this url

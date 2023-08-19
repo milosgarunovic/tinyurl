@@ -1,11 +1,11 @@
 plugins {
-    val kotlinVersion = "1.8.20"
+    val kotlinVersion = "1.9.0"
 
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
-    id("io.ktor.plugin") version "2.3.0"
-    id("org.jetbrains.kotlinx.kover") version "0.6.1"
-    id("org.jetbrains.dokka") version "1.7.20"
+    id("io.ktor.plugin") version "2.3.3"
+    id("org.jetbrains.kotlinx.kover") version "0.6.1" // TODO update version and migrate
+    id("org.jetbrains.dokka") version "1.8.20"
     application // Apply the application plugin to add support for building a CLI application in Java.
 }
 
@@ -16,7 +16,7 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "2.3.0"
+val ktorVersion = "2.3.3"
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -41,7 +41,7 @@ dependencies {
 
     implementation("commons-lang:commons-lang:2.6")
 
-    implementation("org.xerial:sqlite-jdbc:3.41.0.0")
+    implementation("org.xerial:sqlite-jdbc:3.42.0.0")
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")

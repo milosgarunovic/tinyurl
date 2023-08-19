@@ -38,6 +38,11 @@ fun Application.configModule() {
 
     install(StatusPages) {
 
+        unhandled { call ->
+            // TODO log ip address for user and block if he's here a couple of times
+            call.application.log.error("I'm here")
+        }
+
         exception<Throwable> { call, cause ->
             call.application.log.error(cause)
             call.respondStatusCode(HttpStatusCode.InternalServerError)
