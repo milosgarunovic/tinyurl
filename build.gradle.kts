@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
     id("io.ktor.plugin") version "2.3.3"
-    id("org.jetbrains.kotlinx.kover") version "0.6.1" // TODO update version and migrate
+    id("org.jetbrains.kotlinx.kover") version "0.7.3"
     id("org.jetbrains.dokka") version "1.8.20"
     application // Apply the application plugin to add support for building a CLI application in Java.
 }
@@ -81,12 +81,12 @@ ktor {
 
 // configuration for Kover to exclude some classes/packages
 kover {
-    filters {
-        classes {
-            excludes += listOf(
-                "com.milosgarunovic.tinyurl.main", // main doesn't make sense to be tested
-                "com.milosgarunovic.tinyurl.json.*", // json doesn't make sense to be tested
-            )
-        }
+    excludeInstrumentation {
+        classes(
+            "com.milosgarunovic.tinyurl.main", // main doesn't make sense to be tested
+        )
+        packages(
+            "com.milosgarunovic.tinyurl.json.*", // json doesn't make sense to be tested
+        )
     }
 }
