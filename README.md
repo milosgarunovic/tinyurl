@@ -44,6 +44,11 @@ For v1.0.0:
 
 Add later:
 
+- [ ] dependabot for automatic dependency pull requests, then check if everything works
+- [ ] unused endpoints statistic. Something like "last used" date, and then every day a cron job runs and checks if
+  there are any links older than n days (maybe admin should set this number in UI)
+- [ ] also last visited site by query, like /asdf1234 last used 17 Oct 2023, then in a couple of years if it's unused
+  memory from those can be cleared
 - [ ] Add source query parameter so statistics can be more accurate from where request originated. See if there's any
   alternative for this
 - [ ] Add frontend (maybe with Kotlin/React)
@@ -80,14 +85,6 @@ arguments because Ktor treats them as separate arguments if there is just a spac
 ## Released on May 27. 2023
 
 I've successfully released the server with swagger, the URL is [https://tajni.link/swagger]().
-I've searched for names that could work for this and didn't find any of them available except tajni.link. It's hosted
-for:
-
-* Domain name $5 a year
-* $0.5 monthly for hosted zone
-* $3.5 monthly for AWS Lightsail instance.
-
-There are some stability issues which I'll address in next couple of days to make everything to work.
 
 ### What does "tajni" mean?
 
