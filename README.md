@@ -74,6 +74,8 @@ but you can look it up manually. It should be found in `build/dokka/index.html`.
 
 `./gradlew buildFatJar` - Builds a combined JAR of project and runtime dependencies.
 
+`./gradlew dependencyUpdates` - Check for newer versions of dependencies and gradle itself
+
 ### Running with java
 
 `java -jar build/libs/tinyurl-fat.jar` starts a fat jar. It will also create tinyUrl.sqlite file.
